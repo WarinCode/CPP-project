@@ -1,0 +1,6 @@
+1   iPhone 15   1000   20   smartphone
+2   iPhone 15 Pro Max   3000   20   smartphone
+3   samsung s24 ultra   2000   20   smartphone
+4   Acer Aspire 3 A315-59-31F5   7000   20   laptop
+5   Lenovo IdeaPad 1 15AMN7-82VG00C4TA   7000   20   laptop
+6   iPad Pro 2024   6700   20   tablet
