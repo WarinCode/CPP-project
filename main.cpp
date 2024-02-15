@@ -6,88 +6,23 @@
  */
 
 #include <iostream>
+#include <string>
 #include <fstream>
 #include <sstream>
 #include <vector>
 
-using std::cout;
-using std::cin;
-using std::endl;
-using std::string;
+using namespace std;
 using std::ifstream;
 using std::ofstream;
 using std::ios;
 using std::vector;
 
-// กำหนดปริมาณของจำนวนสินค้า
-#define STOCK 20
-
-// ประกาศโครงสร้างข้อมูลโดยอ้างอิงเก็บข้อมูลในไฟล์ data.txt โดยการจัดเก็บข้อความคือ id name price stock category โดยจะเว้นระยะห่าง 1tab
+string categories[] = { "phone", "tablet", "laptop", "computer" };
 typedef struct {
-    int id;
     string name;
+    int id;
     float price;
-    int stock;
-    string category;
 } product;
-vector<product> products;
-
-// class File ใช้ในการจัดการไฟล์ data.txt เพื่อเขียนและอ่านข้อมูล
-class File {
-private:
-    ifstream readFile;
-    ofstream writeFile;
-    const string PATH = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)";
-public:
-    // อ่านข้อมูลในไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร products
-    void read(){
-        product p;
-        readFile.open(PATH ,ios::in); // เปิดไฟล์อ่านข้อมูล
-        if(readFile.is_open()){
-            string line;
-            while(std::getline(readFile, line)){
-                std::stringstream ss(line);
-                ss >> p.id >> p.name >> p.price >> p.stock >> p.category;
-                products.push_back(p);
-            }
-            cout << "read file completed." << endl;
-        } else {
-            cout << "Error: Cannot open file data.txt to read data!" << endl;
-        }
-        readFile.close();
-    };
-
-    // Override method: เขียนข้อมูลในไฟล์ data.txt ด้วยข้อมูลใน products
-    void write(){
-        writeFile.open(PATH, ios::out);
-        if(writeFile.is_open()){
-            string oneTab = "   ";
-            for(product item : products){
-                writeFile << item.id << oneTab << item.name << oneTab << item.price << oneTab << item.stock << oneTab << item.category << endl;
-            }
-            cout << "write file completed." << endl;
-        } else {
-            cout << "Error: Cannot open file data.txt to write data!" << endl;
-        }
-        writeFile.close();
-    }
-
-    // Override method: เขียนข้อมูลในไฟล์ data.txt โดยแนบ parameter เข้าไปด้วย
-    void write(product p){
-        writeFile.open(PATH, ios::out);
-
-        if(writeFile.is_open()){
-            for(product item : products){
-                writeFile << item.id << " " << item.name << " " << item.price << " " << item.stock << endl;
-            }
-            writeFile << p.id << " " << p.name << " " << p.price << " " << p.stock << endl;
-            cout << "write file completed." << endl;
-        } else {
-            cout << "Error: Cannot open file data.txt to write data!" << endl;
-        }
-        writeFile.close();
-    }
-};
 
 // Superclass class Product เป็น class ต้นแบบที่ให้ subclass สืบทอดคุถสมบัติและพฤติกรรมต่างๆของคลาสนี้
 class Product {
@@ -96,23 +31,22 @@ public:
     int id;
     string name;
     float price;
-    int stock = 20;
-    product product1;
+    int stock;
+    string category;
 
     // constructor method
-    Product(int Id, string Name, float Price, int Stock = STOCK, string Category = "any"){
+    Product(int Id, string Name, float Price, int Stock = 20, string Category = "any"){
         // เมื่อสร้าง object ให้รับค่า arguments ที่ส่งมาจาก constructor แล้วมาเก็บไว้ใน attributes
-        id = Id;
-        name = Name;
-        price = Price;
-        stock = Stock;
-        product1 = {
-                .id = Id, .name = Name, .price = Price, .stock = Stock, .category = Category
-        };
-        products.push_back(product1);
+        setId(Id);
+        setName(Name);
+        setPrice(Price);
+        setStock(Stock);
+        setCategory(Category);
     }
 
-    Product(){}
+    Product(string Category = "any"){
+        setCategory(Category);
+    }
 
     // getter methods
     int getId(){
@@ -127,6 +61,9 @@ public:
     int getStock(){
         return stock;
     }
+    string getCategory(){
+        return category;
+    };
 
     // setter methods
     void setId(int Id){
@@ -141,120 +78,97 @@ public:
     void setStock(int Stock){
         stock = Stock;
     }
-
-    void addProduct(){
-        product newProduct = {
-                .id = getId(),
-                .name = getName(),
-                .price = getPrice(),
-                .stock = getStock(),
-                .category = "any"
-        };
-        products.push_back(newProduct);
-        File().write();
-        cout << "Added a new product" << endl;
-    }
-
-
-    // Override method: แก้ไขชื่อสินค้า
-    void editProduct(int Id, string Name){
-        bool find = false;
-        for(int i = 0; i < products.size(); i++){
-            if(products.at(i).id == Id){
-                find = true;
-                products.at(i).name = Name;
-                setName(Name);
-            }
-        }
-        if(!find){
-            cout << "Error: Cannot find id: " << Id << endl;
-        } else {
-            File().write();
-            cout << "Successfully edited product" << endl;
-        }
-    }
-
-    // Override method: แก้ไขราคาสินค้า
-    void editProduct(int Id, float Price){
-        bool find = false;
-        for(int i = 0; i < products.size(); i++){
-            if(products.at(i).id == Id){
-                find = true;
-                products.at(i).price = Price;
-                setPrice(Price);
-            }
-        }
-        if(!find){
-            cout << "Error: Cannot find id: " << Id << endl;
-        } else {
-            File().write();
-        }
-    }
-
-    // Override method: แก้ไขราคาสินค้า
-    void editProduct(int Id, int Stock){
-        bool find = false;
-        for(int i = 0; i < products.size(); i++){
-            if(products.at(i).id == Id){
-                find = true;
-                products.at(i).stock = Stock;
-                setStock(Stock);
-            }
-        }
-        if(!find){
-            cout << "Error: Cannot find id: " << Id << endl;
-        } else {
-            File().write();
-        }
+    void setCategory(string Category){
+        category = Category;
     }
 };
-vector<Product> vecProdcut;
+vector<Product> data = {};
+
+// class File ใช้ในการจัดการไฟล์ data.txt เพื่อเขียนและอ่านข้อมูล
+class File {
+private:
+    ifstream readFile;
+    ofstream writeFile;
+    const string PATH = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)";
+public:
+    // อ่านข้อมูลในไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
+    void read(){
+        readFile.open(PATH ,ios::in); // เปิดไฟล์อ่านข้อมูล
+        if(readFile.is_open()){
+            string line;
+            while(std::getline(readFile, line)){
+                Product getProducts = Product();
+                std::stringstream ss(line);
+                ss >> getProducts.id >> getProducts.name >> getProducts.price >> getProducts.stock >> getProducts.category;
+                data.push_back(getProducts);
+            }
+            cout << "read file completed." << endl;
+        } else {
+            cout << "Error: Cannot open file data.txt to read data!" << endl;
+        }
+        readFile.close();
+    };
+
+    // เขียนข้อมูลลงในไฟล์ data.txt ด้วยข้อมูล vector Product
+    void write(){
+        writeFile.open(PATH, ios::out);
+        if(writeFile.is_open()){
+            for(Product item : data){
+                writeFile << item.id << "\t" << item.name << "\t" << item.price << "\t" << item.stock << "\t" << item.category << endl;
+            }
+            cout << "write file completed." << endl;
+        } else {
+            cout << "Error: Cannot open file data.txt to write data!" << endl;
+        }
+        writeFile.close();
+    }
+};
 
 // Subclass
 class Phone: public Product {
 public:
-    Phone(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, "smartphone"){
-        cout << "New Product:" << Name << ", id: " << Id << ", price: " << Price << endl;
+    Phone(int Id, string Name, float Price, int Stock = 20): Product(Id, Name, Price, Stock, categories[0]){
+        cout << "New Product: " << Name << "\tID: " << Id << "\tPrice: " << Price << endl;
     }
-    Phone(){}
+    Phone(): Product(categories[0]){}
 };
 
 // Subclass
 class Tablet: public Product {
 public:
-    Tablet(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, "tablet"){
-        cout << "New Product:" << Name << ", id: " << Id << ", price: " << Price << endl;
+    Tablet(int Id, string Name, float Price, int Stock = 20): Product(Id, Name, Price, Stock, categories[1]){
+        cout << "New Product: " << Name << "\tID: " << Id << "\tPrice: " << Price << endl;
     }
-    Tablet(){}
+    Tablet(): Product(categories[1]){}
 };
 
 // Subclass
 class Laptop: public Product {
 public:
-    Laptop(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, "laptop"){
-        cout << "New Product:" << Name << ", id: " << Id << ", price: " << Price << endl;
+    Laptop(int Id, string Name, float Price, int Stock = 20): Product(Id, Name, Price, Stock, categories[2]){
+        cout << "New Product: " << Name << "\tID: " << Id << "\tPrice: " << Price << endl;
     }
-    Laptop(){}
+    Laptop(): Product(categories[2]){}
 };
 
 // Subclass
 class Computer: public Product {
 public:
-    Computer(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, "laptop"){
-        cout << "New Product:" << Name << ", id: " << Id << ", price: " << Price << endl;
+    Computer(int Id, string Name, float Price, int Stock = 20): Product(Id, Name, Price, Stock, categories[3]){
+        cout << "New Product: " << Name << "\tID: " << Id << "\tPrice: " << Price << endl;
     }
-    Computer(){}
+    Computer(): Product(categories[3]){}
 };
 
 class ProductManagement {
 public:
     // method แสดงรายการสินค้า
     static void showListProducts(){
-        if(products.size() == 0){
+        if(data.size() == 0){
             cout << "Out of stock!" << endl;
         } else {
             int number = 1;
-            for(product item : products){
+            for(Product item : data){
                 cout << "No: " << number << "\tID: " << item.id << "\tName: " << item.name << "\tPrice: " << item.price << "\tStock: "<< item.stock << "\tCategory: " << item.category << endl;
                 number++;
             }
@@ -262,32 +176,72 @@ public:
     }
 
     // method เพิ่มสินค้า
-//    static void addProduct(){
-//        product newProduct;
-//        cout << "Product Name :" << endl;
-//        cin >> newProduct.name;
-//        cout << "Product ID :" << endl;
-//        cin >> newProduct.id;
-//        cout << "pricing :" << endl;
-//        cin >> newProduct.price;
-//        newProduct.stock = STOCK;
-//        newProduct.category = "any";
-//        products.push_back(newProduct);
-//        File().write();
-//        cout << "Added a new product" << endl;
-//    }
+    static void addProduct(){
+        string selectCategory;
+        bool isCategory = false;
+
+        cout << "Product categories ";
+        char comma = ',';
+        int count = 0;
+        for(string category : categories){
+            cout << "\"" << category << "\" ";
+            if(count != 3)cout << comma << ' ';
+            count++;
+        }
+
+        cout << endl << "Select product category:";
+        cin >> selectCategory;
+
+        for(string category : categories){
+            if(selectCategory == category) isCategory = true;
+        }
+
+        if(isCategory){
+            product newProduct;
+            Product newElement;
+
+            cout << "Product Name:";
+            cin >> newProduct.name;
+            cout << "Product ID:";
+            cin >> newProduct.id;
+            cout << "pricing:";
+            cin >> newProduct.price;
+
+            if(selectCategory == categories[0]){
+                Phone phone = Phone(newProduct.id, newProduct.name, newProduct.price);
+                newElement = phone;
+            } else if(selectCategory == categories[1]){
+                Tablet tablet = Tablet(newProduct.id, newProduct.name, newProduct.price);
+                newElement = tablet;
+            } else if(selectCategory == categories[2]){
+                Laptop laptop = Laptop(newProduct.id, newProduct.name, newProduct.price);
+                newElement = laptop;
+            } else if(selectCategory == categories[3]){
+                Computer computer = Computer(newProduct.id, newProduct.name, newProduct.price);
+                newElement = computer;
+            }
+
+            data.push_back(newElement);
+            File().write();
+            cout << "Added a new product" << endl;
+
+        } else {
+            cout << "Error: " << "\"" << selectCategory << "\"" << " is not in categories of products" << endl;
+        }
+    }
 
     // method ลบสินค้า
     static void deleteProduct(){
-        int id;
-        cout << "Enter the product id :";
-        cin >> id;
+        string input;
+        cout << "Enter the product id or product name :";
+        cin >> input;
         int index = 0;
         bool isSuccess = false;
-        for(product item : products) {
-            if(item.id == id){
+
+        for(Product item : data) {
+            if(to_string(item.getId()) == input || item.getName() == input){
                 isSuccess = true;
-                products.erase(products.begin() + index);
+                data.erase(data.begin() + index);
             }
             index++;
         }
@@ -295,71 +249,154 @@ public:
             cout << "Successfully deleted product" << endl;
             File().write();
         } else {
-            cout << "This product id is not in stock!" << endl;
+            cout << input << " is not in stock!" << endl;
+        }
+    }
+
+    // Override method: แก้ไขชื่อสินค้า
+    static void editProduct(int Id, string Name){
+        bool find = false;
+        for(int i = 0; i < data.size(); i++){
+            if(data.at(i).getId() == Id){
+                find = true;
+                data.at(i).setName(Name);
+            }
+        }
+        if(!find){
+            cout << "Error: Cannot find id: " << Id << endl;
+        } else {
+            cout << "Successfully edited product" << endl;
+            File().write();
+        }
+    }
+
+//    // Override method: แก้ไขราคาสินค้า
+//    void editProduct(int Id, float Price){
+//        bool find = false;
+//        for(int i = 0; i < products.size(); i++){
+//            if(products.at(i).id == Id){
+//                find = true;
+//                products.at(i).price = Price;
+//                setPrice(Price);
+//            }
+//        }
+//        if(!find){
+//            cout << "Error: Cannot find id: " << Id << endl;
+//        } else {
+////            File().write();
+//        }
+//    }
+//
+//    // Override method: แก้ไขราคาสินค้า
+//    void editProduct(int Id, int Stock){
+//        bool find = false;
+//        for(int i = 0; i < products.size(); i++){
+//            if(products.at(i).id == Id){
+//                find = true;
+//                products.at(i).stock = Stock;
+//                setStock(Stock);
+//            }
+//        }
+//        if(!find){
+//            cout << "Error: Cannot find id: " << Id << endl;
+//        } else {
+////            File().write();
+//        }
+//    }
+
+    static void sellProducts(){
+        string input;
+        product p;
+        int quantity;
+        float total = 0;
+        bool find = false;
+
+        cout << "Enter product name of product id:";
+        cin >> input;
+
+        for(int i = 0; i < data.size(); i++){
+            Product item = data.at(i);
+
+            if(to_string(item.getId()) == input || item.getName() == input){
+                    find = true;
+                    p.name = item.getName();
+                    p.id = item.getId();
+                    p.price = item.getPrice();
+
+                    cout << "quantity:";
+                    cin >> quantity;
+
+                    if(quantity <= 0) {
+                        cout << "Error: invalid quantity!";
+                        find = false;
+                        return;
+                    } else if((quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - quantity) >= 0)){
+                        data.at(i).setStock(item.getStock() - quantity);
+                    } else {
+                        cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
+                        find = false;
+                        return;
+                    }
+            } else {
+                continue;
+            }
+        }
+
+        if(find){
+            total = quantity * p.price;
+            cout << p.name << " amount = " << quantity << " total = " << total << endl;
+            File().write();
+        } else {
+            cout << "Error:" << input << "is not in stock!" << endl;
         }
     }
 };
 
-// functions
+// function แสดงตัวเลือกการทำงานของโปรแกรม
 void showOptions(){
-    cout << "Enter a number" << endl;
-    cout << "1.) Add product" << endl;
-    cout << "2.) Delete product" << endl;
-    cout << "3.) Edit product" << endl;
-    cout << "4.) Show list of all products" << endl;
-    cout << "5.) Buy proudcts" << endl;
+    cout << endl << "Program" << endl;
+    cout << "1.) Show list of all products" << endl;
+    cout << "2.) Add product" << endl;
+    cout << "3.) Delete product" << endl;
+    cout << "4.) Edit product" << endl;
+    cout << "5.) sell proudcts" << endl;
     cout << "6.) Exit program" << endl;
-    cout << "user :";
+    cout << "Enter a number:";
 }
 
 int main(){
     // สร้าง opject ไฟล์เพื่อจัดการกับไฟล์ข้อมูล
     File file = File();
-    // เริ่มโปรแกรมให้อ่านข้อมูลจากไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร products
+    // เริ่มโปรแกรมให้อ่านข้อมูลจากไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
     file.read();
-    // สร้าง objects สินค้า
-    Phone phone = Phone();
-    Tablet tablet = Tablet();
-    Laptop laptop = Laptop();
-    Computer computer = Computer();
 
-    // ตัวเลือกที่ผู้ใช้งานเลือก
-    int select;
+    int select; // ตัวเลือกที่ผู้ใช้งานเลือกว่าจะใช้ง่านคำสั่งอะไร
+    cout << endl;
+
     // วน loop ไปเรื่อยๆเพื่อรอผู้ใช้งานป้อนตัวเลขให้โปรแกรมทำงานตามหมายเลขนั้น
     while(true){
         showOptions();
         cin >> select;
-        // เพิ่มข้อมูลสินค้า
+
+        // แสดงรายการสินค้าทั้งหมด
         if(select == 1){
-            string category;
-            cout << "Select product category :" << endl;
-            cin >> category;
-            if(category == "phone"){
-
-            } else if(category == "tablet"){
-
-            } else if(category == "laptop"){
-
-            } else {
-
-            }
-
+            ProductManagement::showListProducts();
+        }
+        // เพิ่มสินค้า
+        else if(select == 2){
+            ProductManagement::addProduct();
         }
         // ลบสินค้า
-        else if(select == 2){
+        else if(select == 3){
             ProductManagement::deleteProduct();
         }
         // แก้ไขสินค้า
-        else if(select == 3){
-
-        }
-        // แสดงรายการสินค้าทั้งหมด
         else if(select == 4){
-            ProductManagement::showListProducts();
+//            ProductManagement::editProduct();
         }
         // ซื้อสินค้า
         else if(select == 5){
-
+            ProductManagement::sellProducts();
         }
         // ออกจากโปรแกรม
         else if(select == 6){
@@ -367,7 +404,7 @@ int main(){
         }
         // ไม่มีในตัวเลือกวน loop ให้เลือกใหม่
         else {
-            cout << select << " is not available. Please select a number between 1 - 6" << endl;
+            cout << endl << select << " is not available. Please select a number between 1 - 6" << endl;
         }
     };
     return 0;
