@@ -334,26 +334,26 @@ public:
             Product item = data.at(i);
 
             if(to_string(item.getId()) == input || item.getName() == input){
-                    find = true;
-                    p.name = item.getName();
-                    p.id = item.getId();
-                    p.price = item.getPrice();
+                find = true;
+                p.name = item.getName();
+                p.id = item.getId();
+                p.price = item.getPrice();
 
-                    cout << "quantity:";
-                    cin >> quantity;
+                cout << "quantity:";
+                cin >> quantity;
 
-                    // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
-                    if(quantity <= 0) {
-                        cout << "Error: invalid quantity!";
-                        find = false;
-                        return;
-                    } else if((quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - quantity) >= 0)){
-                        data.at(i).setStock(item.getStock() - quantity);
-                    } else {
-                        cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
-                        find = false;
-                        return;
-                    }
+                // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
+                if(quantity <= 0) {
+                    cout << "Error: invalid quantity!";
+                    find = false;
+                    return;
+                } else if((quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - quantity) >= 0)){
+                    data.at(i).setStock(item.getStock() - quantity);
+                } else {
+                    cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
+                    find = false;
+                    return;
+                }
             } else {
                 continue;
             }
@@ -410,27 +410,27 @@ int main(){
         if(select == 1){
             ProductManagement::showListProducts();
         }
-        // เพิ่มสินค้า
+            // เพิ่มสินค้า
         else if(select == 2){
             ProductManagement::addProduct();
         }
-        // ลบสินค้า
+            // ลบสินค้า
         else if(select == 3){
             ProductManagement::deleteProduct();
         }
-        // แก้ไขสินค้า
+            // แก้ไขสินค้า
         else if(select == 4){
 //            ProductManagement::editProduct();
         }
-        // ซื้อสินค้า
+            // ซื้อสินค้า
         else if(select == 5){
             ProductManagement::sellProducts();
         }
-        // ออกจากโปรแกรม
+            // ออกจากโปรแกรม
         else if(select == 6){
             break;
         }
-        // ไม่มีในตัวเลือกวน loop ให้เลือกใหม่
+            // ไม่มีในตัวเลือกวน loop ให้เลือกใหม่
         else {
             cout << endl << select << " is not available. Please select a number between 1 - 6" << endl;
         }
