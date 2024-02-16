@@ -7,5 +7,4 @@ include_directories(.)
 
 add_executable(CPP_project
         main.cpp
-#        test.cpp
 )

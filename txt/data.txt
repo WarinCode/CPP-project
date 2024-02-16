@@ -1,7 +1,8 @@
-1345	iPhone15	1000	1	smartphone
-2235	iPhone15	3000	20	smartphone
+1345	item1	1000	16	smartphone
+2235	iPhone15-pro-max	3000	20	smartphone
 4164	Acer-Aspire-3	7000	20	laptop
 5064	Lenovo-IdeaPad-1	7000	20	laptop
 6326	iPad-Pro-2024	6700	20	tablet
 23423	dsdcvedf	3443	20	phone
 231234	computer1	4333	20	computer
+1234	phonea	900	20	phone
