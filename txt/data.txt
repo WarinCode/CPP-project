@@ -1,8 +1,8 @@
-1345	item1	1000	15	smartphone
 2235	iPhone15-pro-max	3000	18	smartphone
 4164	Acer-Aspire-3	7000	20	laptop
 5064	Lenovo-IdeaPad-1	7000	20	laptop
 6326	iPad-Pro-2024	6700	20	tablet
-23423	dsdcvedf	3443	20	phone
-111	computer1	100	20	computer
-1234	phonea	900	16	phone
+7834	phone-abc	950	20	phone
+8930	laptop-4352	6000	20	laptop
+1904	car1	15000	20	car
+3304	item1	20	20	pet
