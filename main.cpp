@@ -28,6 +28,7 @@ typedef struct {
     float price;
     int stock;
     string category;
+    int quantity;
 } product;
 
 // Superclass class Product เป็น class ต้นแบบที่ให้ subclass สืบทอดคุถสมบัติและพฤติกรรมต่างๆของคลาสนี้
@@ -98,11 +99,11 @@ vector<Product> data = {};
 class File {
 public:
     // method อ่านข้อมูลในไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
-    static void read(string PATH = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)"){
+    static void read(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)", bool showMessage = false){
         // ตัวแปรสำหรับอ่านไฟลืข้อมูล
         ifstream readFile;
         // เปิดไฟล์อเพื่อ่านข้อมูล
-        readFile.open(PATH ,ios::in);
+        readFile.open(path ,ios::in);
         // เช็คว่าสามารถเเปิดไฟล์ได้หรือไม่
         if(readFile.is_open()){
             // ล้างข้อมูลทั้งหมดที่เก็บไว้ในตัวแปร data
@@ -119,19 +120,19 @@ public:
                 // เก็บข้อมูลทีละ object
                 data.push_back(getProducts);
             }
-            cout << "Read file completed." << endl;
+            showMessage && cout << "Read file completed." << endl;
         } else {
-            cout << "Error: Cannot open file data.txt to read data!" << endl;
+            showMessage && cout << "Error: Cannot open file data.txt to read data!" << endl;
         }
         readFile.close();
     };
 
     // method เขียนข้อมูลลงในไฟล์ data.txt ด้วยข้อมูล vector Product
-    static void write(string PATH = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)"){
+    static void write(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)", bool showMessage = false){
         // ตัวแปรสำหรับเขียนไฟล์ข้อมูล
         ofstream writeFile;
         // เปิดไฟล์เพื่อเขียนข้อมูล
-        writeFile.open(PATH, ios::out);
+        writeFile.open(path, ios::out);
         // เช็คว่าสามารถเเปิดไฟล์ได้หรือไม่
         if(writeFile.is_open()){
             // loop ข้อมูลตัวแปร data
@@ -139,9 +140,36 @@ public:
                 // เขียนข้อมูลทีละบรรทัด โดยข้อมูลสินค้าแต่ละส่วนจะเว้นระยะห่าง 1 tab
                 writeFile << item.id << "\t" << item.name << "\t" << item.price << "\t" << item.stock << "\t" << item.category << endl;
             }
-            cout << "Write file completed." << endl;
+            showMessage && cout << "Write file completed." << endl;
         } else {
-            cout << "Error: Cannot open file data.txt to write data!" << endl;
+            showMessage && cout << "Error: Cannot open file data.txt to write data!" << endl;
+        }
+        writeFile.close();
+    }
+
+    // method (override) เขียนข้อมูลรายการสินค้าที่สั่งซื้อไปลงไฟล์ orders.txt โดยเอาข้อมูลจาก parameter orders มาเขียน
+    static void write(vector<product> orders, int totalNumbers, int totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\orders.txt)", bool showMessage = false){
+        // ตัวแปรสำหรับเขียนไฟล์ข้อมูล
+        ofstream writeFile;
+        // เปิดไฟล์เพื่อเขียนข้อมูล
+        writeFile.open(path, ios::app);
+        // เช็คว่าสามารถเเปิดไฟล์ได้หรือไม่
+        if(writeFile.is_open()){
+            // loop ข้อมูลตัวแปร data
+            for(product order : orders){
+                writeFile << "name = " <<  order.name << "\tprice = " << order.price << "\t quantity = " << order.quantity << "\t category = " << order.category << endl;
+            }
+
+            writeFile << endl << "Total number of products = " << totalNumbers << endl;
+            writeFile << "Total amount = " << totalAmount << endl;
+
+            for(int i = 1; i <= 60; i++){
+                writeFile <<  "-";
+                i == 40 && writeFile << endl;
+            }
+            showMessage && cout << "Write file completed." << endl;
+        } else {
+            showMessage && cout << "Error: Cannot open file data.txt to write data!" << endl;
         }
         writeFile.close();
     }
@@ -319,11 +347,13 @@ public:
 
             // loop เช็คข้อมูลสินค้าทีละอัน เมื่อเช็คสินค้าเจอให้เพิ่มจำนวนสินค้าที่ระบุ
             for(Product item : data){
+                // เช็ค ชื่อ หรือ id สินค้า ว่าตรงกันไหม
                 if(input == to_string(item.getId()) || input == item.getName()){
-                    // เพิ่มจำนวนสินค้าที่มีอยู่ก่อนแล้ว
-                    number += item.getStock();
+                    // นำจำนวนค้าที่เหลือไปบวกกับจำนวนค้าที่เพิ่มเข้ามา
+                    int remain = number + item.getStock();
                     // แก้ไขจำนวนใน stock
-                    data.at(index).setStock(number);
+                    data.at(index).setStock(remain);
+                    // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
                     break;
                 }
                 index++;
@@ -346,9 +376,13 @@ public:
         // ถ้ามีสินค้านั้นอย่ในข้อมูล
         if (findProduct(input)) {
             int index = 0;
+            // loop ข้อมูลใน data
             for (Product item : data) {
+                // เช็คชื่อ และ id สินค้าว่าตรงกันไหม
                 if (to_string(item.getId()) == input || item.getName() == input) {
+                    // ลบสินค้า(สมาชิกใน data)ออกจากตัวแปร data โดยเอาเลข index เป็นตัวบ่งบอกตำแหน่งของสมาชิกใน data
                     data.erase(data.begin() + index);
+                    // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
                     break;
                 }
                 index++;
@@ -374,16 +408,20 @@ public:
             // สร้างตัวแปรมารอรับข้อมูลที่ผู้ใช้งานป้อนเข้ามา
             product p;
             // คำตอบที่ผู้ใช้งานตอบมีแค่ y หรือ n เท่านั้น
-            char yesOrNo;
+            typedef struct {
+                char yn1, yn2, yn3, yn4;
+            } yesOrNo;
+            yesOrNo yn;
             // loop ข้อมูลสินค้าทั้งหมด
             for (Product item : data) {
                 // เช็คว่าเป็นสินค้าชิ้นนั้น
                 if (to_string(item.getId()) == input || item.getName() == input) {
                     // ถามว่าต้องการแก้ไขข้อมูลสินค้าในส่วนไหนบ้างโดยตอบ y และ n
                     // ถ้าตอบ y ให้ดำเนินการแก้ไขข้อมูลในส่วนนั้น ถ้าตอบ n หรืออื่นๆคือผ่าน
+                    // ถามว่าต้องการแก้ไขชื่อสินค้าไหม
                     cout << "Do you want to edit the product name (y/n):";
-                    cin >> yesOrNo;
-                    if(tolower(yesOrNo) == 'y'){
+                    cin >> yn.yn1;
+                    if(tolower(yn.yn1) == 'y'){
                         cout << "New product name:";
                         cin >> p.name;
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
@@ -395,11 +433,13 @@ public:
                         }
                     }
 
+                    // ถามว่าต้องการแก้ไขชื่อรหัสสินค้าไหม
                     cout << "Do you want to edit the product id (y/n):";
-                    cin >> yesOrNo;
-                    if(tolower(yesOrNo) == 'y'){
+                    cin >> yn.yn2;
+                    if(tolower(yn.yn2) == 'y'){
                         cout << "New product id:";
                         cin >> p.id;
+                        getchar();
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.id)){
                             cout << "Error: Cannot edit to id " << "\"" <<p.id << "\"" << " because the id is the same as an existing product id." << endl;
@@ -409,9 +449,10 @@ public:
                         }
                     }
 
+                    // ถามว่าต้องการแก้ไขราคาสินค้าไหม
                     cout << "Do you want to edit the product price (y/n):";
-                    cin >> yesOrNo;
-                    if(tolower(yesOrNo) == 'y'){
+                    cin >> yn.yn3;
+                    if(tolower(yn.yn3) == 'y'){
                         cout << "New product price:";
                         cin >> p.price;
                         // ตรวจสอบว่าเป็นเลขจำนวนเต็มบวกหรือไม่
@@ -423,9 +464,10 @@ public:
                         }
                     }
 
+                    // ถามว่าต้องการแก้ไขหมวดหมู่สินค้าไหม
                     cout << "Do you want to edit the product category (y/n):";
-                    cin >> yesOrNo;
-                    if(tolower(yesOrNo) == 'y'){
+                    cin >> yn.yn4;
+                    if(tolower(yn.yn4) == 'y'){
                         cout << "New product category:";
                         cin >> p.category;
                         // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
@@ -435,6 +477,7 @@ public:
                             data.at(index).setCategory(p.category);
                         }
                     }
+                    // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
                     break;
                 }
                 index++;
@@ -450,49 +493,86 @@ public:
     // method ในการขายสินค้า
     static void sellProducts(){
         string input;
+        bool isRunning = true;
+        char e;
+        // รายการสินค้าที่สั่งซื้อ
+        vector<product> list = {};
+        // สินค้า 1 อย่างที่สั่งซือ
+        product p;
 
-        cout << "Enter product name of product id:";
-        cin >> input;
+        cout << "Enter \"e\" to exit the sale." << endl;
 
-        if(findProduct(input)){
-            product p;
-            int quantity;
-            float total = 0;
-            bool isValid = false;
+        // loop ไปเรื่อยๆจนกว่าผู้ใช้จะพิมพ์ตัว e
+        while(isRunning){
+            cout << "Enter product name of product id:";
+            cin >> input;
 
-            for(int i = 0; i < data.size(); i++){
-                Product item = data.at(i);
+            // เอาอักษรตัวแรกของ string input
+            e = input.at(0);
+            // เช็คว่าอักตรตัว e หรือไม่ ถ้าใช้ ให้ออกจากการขายสินค้า
+            if(tolower(e) == 'e'){
+                int total = 0; // จำนวนเงินทั้งหมด
+                int quantity = 0; // จำนวนสินค้าทั้งหมด
+                int i = 1; // ลำดับสินค้าที่สั่ง
+                // ออกจากการขายสินค้าและคำนวณราคาสินค้าทั้งหมด
+                isRunning = false;
 
-                if(to_string(item.getId()) == input || item.getName() == input){
-                    p.name = item.getName();
-                    p.id = item.getId();
-                    p.price = item.getPrice();
+                if(list.size() != 0){
+                    cout << endl << "\t\tYou order products." << endl;
 
-                    cout << "quantity:";
-                    cin >> quantity;
-
-                    // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
-                    if(quantity <= 0) {
-                        cout << "Error: invalid quantity!";
-                        return;
-                    } else if((quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - quantity) >= 0)){
-                        isValid = true;
-                        data.at(i).setStock(item.getStock() - quantity);
-                    } else {
-                        cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
-                        return;
+                    // คำนวณจำนวนเงินทั้งหมดที่สั่งสินค้า และ แสดงรายการสินค้าที่สั่งซื้อ
+                    for(product item : list){
+                        cout << i << ". " << "Product: "<< item.name << "\tPrice: " << item.price << "\tQuantity: " << item.quantity << "\t Total price: " << (item.quantity * item.price) << endl;
+                        // คำนวณเงินที่ต้องจ่ายทั้งหมดที่สั่งสินค้ามา
+                        total += item.price * item.quantity;
+                        // เพิ่มจำนวนสินค้า
+                        quantity += item.quantity;
+                        i++;
                     }
+                    // แสดงจำนวนเงินทั้งหมดที่ต้องจ่าย
+                    cout << endl << "Total number of products = " << quantity << endl;
+                    cout << "Total amount = " << total << endl;
+
+                    File::write(list, quantity, total);
+                    // ลบรายการสินค้าทั้งหมดที่สั่ง
+                    list.clear();
+                    File::update();
+                }
+            } else {
+                // เช็คว่า ชื่อ หรือ id ที่พิมพ์มาอยู่ใน data หรือไม่
+                if(findProduct(input)){
+                    int j = 0;
+                    for(Product item : data){
+                        if(to_string(item.getId()) == input || item.getName() == input){
+                            p.name = item.getName();
+                            p.id = item.getId();
+                            p.price = item.getPrice();
+                            p.category = item.getCategory();
+
+                            cout << "quantity:";
+                            cin >> p.quantity;
+
+                            // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
+                            if(p.quantity <= 0) {
+                                cout << "Error: invalid quantity!";
+                                isRunning = false;
+                                return;
+                            } else if((p.quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - p.quantity) >= 0)){
+                                data.at(j).setStock(item.getStock() - p.quantity);
+                                list.push_back(p);
+                                File::write();
+                            } else {
+                                cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
+                                isRunning = false;
+                                return;
+                            }
+                        }
+                        j++;
+                    }
+                } else {
+                    cout << "Error: " << input << " is not in data!" << endl;
                 }
             }
-
-            if(isValid){
-                total = quantity * p.price;
-                cout << p.name << " amount = " << quantity << " total = " << total << endl;
-                File::write();
-            }
-
-        } else {
-            cout << "Error: " << input << " is not in data!" << endl;
         }
     }
 };
@@ -505,7 +585,8 @@ void showOptions(){
     cout << "3.) Add product" << endl;
     cout << "4.) Delete product" << endl;
     cout << "5.) Edit product" << endl;
-    cout << "6.) Exit program" << endl;
+    cout << "6.) Add product to stock" << endl;
+    cout << "7.) Exit program" << endl;
     cout << "Enter a number:";
 }
 
@@ -539,8 +620,12 @@ int main(){
         else if(select == 5){
             ProductManagement::editProduct();
         }
-        // ออกจากโปรแกรม
+        // เพิ่มจำนวนสินค้าในคลัง
         else if(select == 6){
+            ProductManagement::addStockProduct();
+        }
+        // ออกจากโปรแกรม
+        else if(select == 7){
             cout << endl << "Exit The Program." << endl;
             break;
         }

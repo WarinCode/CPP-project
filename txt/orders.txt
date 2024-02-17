@@ -1,0 +1,7 @@
+name = item1	price = 1000	 quantity = 2	 category = smartphone
+name = iPhone15-pro-max	price = 3000	 quantity = 2	 category = smartphone
+name = phonea	price = 900	 quantity = 4	 category = phone
+
+Total number of products = 8
+Total amount = 11600
+----------------------------------------
