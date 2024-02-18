@@ -1,8 +1,4 @@
-2235	iPhone15-pro-max	3000	18	smartphone
-4164	Acer-Aspire-3	7000	20	laptop
-5064	Lenovo-IdeaPad-1	7000	20	laptop
-6326	iPad-Pro-2024	6700	20	tablet
-7834	phone-abc	950	20	phone
-8930	laptop-4352	6000	20	laptop
-1904	car1	15000	20	car
-3304	item1	20	20	pet
+9452	iPhone15pro	1368.17	20	apple	phone
+3423	iPhone15promax	1172.31	20	apple	phone
+1093	iPhone15	920.5	20	apple	phone
+8394	iPhone15plus	1060.4	20	apple	phone

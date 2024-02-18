@@ -10,6 +10,15 @@
  * 1. นาย วรินทร์ สายปัญญา รหัสนิสิต 6630250435 หมู่เรียน ภาคปฎิบัติ 881
 */
 
+/* ข้อบังคับการใช้งานโปรแกรม
+ * 1. การตั้งชื่อตัวแปรต้องตั้งชื่อที่ติดกันไม้เว้นวรรคเพราะหากตั้งชื่อที่มีความยาวและเว้นวรรคชื่อจะทำให้การอ่านไฟล์ข้อมูลผิดพลาดหากจะตั้งชื่อยาวให้ใช้ - หรือ _
+ * ขั้นแต่ละคำไว้
+ * 2. การแก้ไขไฟล์ data.txt มีผลโดยตรงต่อตัวโปรแกรมเพราะฉะนั้นห้ามแก้ไขไฟล์ data.txt
+ * 3. ห้ามย้ายไฟลื หรือ ลบโฟลเดอร์ txt เพราะจะมีผลกับการอ่านข้อมูลในตัวโปรแกรม หัามลบโฟลเดอร์ txt และ ไฟล์ data.txt
+ * 4. หากมีผู้ใดสนใจจะนำโปรแกรมนี้ไปพัฒนาต่อยอดสามารถเชิญนำไปพัฒนาต่อได้เลย
+ * 5. ห้าม คัดลอก (copy code) ไฟล์โปรเจค main.cpp ไปส่งเป็นงานโปรเจคคของกลุ่มตัวเองเป็นเด็ดขาด ถ้าหากจับว่าทำผิดจริง จะไปฟ้องอาจารย์
+ **/
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -28,9 +37,9 @@ using std::vector;
 // ประเภท หรือ หมวดหมู่สินค้า
 // ยึดตาม ตย.รูปภาพนี้ http://ctnphrae.com/ckfinder/userfiles/images/%E0%B8%97%E0%B8%94%E0%B8%AA%E0%B8%AD%E0%B8%9A%E0%B8%AB%E0%B8%B2%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%B4%E0%B8%97%E0%B8%98%E0%B8%B4%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B9%80%E0%B8%A7%E0%B9%87%E0%B8%9A%E0%B9%84%E0%B8%8B%E0%B8%95%E0%B9%8C.png
 const string productCategories[NUMBER_CATEGORIES] = { "phone", "tablet", "laptop", "computer", "car",
-                                     "health and beauty","game", "bag", "electrical appliance", "pet",
-                                     "camera", "shoes", "watch", "sport", "musical instrument",
-                                     "furniture"
+                                                      "health and beauty","game", "bag", "electrical appliance", "pet",
+                                                      "camera", "shoes", "watch", "sport", "musical instrument",
+                                                      "furniture"
 };
 // สร้่าง struct ไว้จัดการเก็บข้อมูลเป็นกลุ่มเมื่อ loop ข้อมูลมาจากตัวแปร data ได้
 typedef struct {
@@ -39,6 +48,7 @@ typedef struct {
     float price;
     int stock;
     string category;
+    string brand;
     int quantity;
     int sum;
 } product;
@@ -52,22 +62,25 @@ public:
     float price; // ราคาสินค้า
     int stock; // จำนวนสินค้าที่เก็บไว้ในคลัง
     string category; // ประเภทของสินค้า
+    string brand; // แบรนด์ของสินค้า
 
     // constructor method
-    Product(int Id, string Name, float Price, int Stock = STOCK, string Category = "any"){
+    Product(int Id, string Name, float Price, int Stock = STOCK, string Category = "any", string Brand = "no-brand-name"){
         // เมื่อสร้าง object ให้รับค่า arguments ที่ส่งมาจาก constructor แล้วมาเก็บไว้ใน attributes
         setId(Id);
         setName(Name);
         setPrice(Price);
         setStock(Stock);
         setCategory(Category);
+        setBrand(Brand);
     }
     // constructor method (override) สำหรับการสร้าง object ให้มีค่าเริ่มต้น
-    Product(string Category = "any"){
+    Product(string Category = "any", string Brand = "no-brand-name"){
         setId(0);
         setName("");
         setStock(STOCK);
         setCategory(Category);
+        setBrand(Brand);
     }
 
     // getter methods ให้ข้อมูลใน attribute
@@ -85,7 +98,10 @@ public:
     }
     string getCategory(){
         return category;
-    };
+    }
+    string getBrand(){
+        return brand;
+    }
 
     // setter methods แก้ไขข้อมูลใน attribute
     void setId(int Id){
@@ -103,7 +119,11 @@ public:
     void setCategory(string Category){
         category = Category;
     }
+    void setBrand(string Brand){
+        brand = Brand;
+    }
 };
+// จุดสำคัญของโปรแกรม
 // สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟลื data.txt และ ข้อมูล ที่ เพิ่ม ลบ แก้ไขเข้ามา
 vector<Product> data = {};
 
@@ -128,7 +148,8 @@ public:
                 // สร้างตัวแปร string stream สำหรับเก็บข้อความทีละบรรทัด
                 stringstream ss(line);
                 // ให้ตัวแปร ss นำเข้าข้อมูลสินค้าทีละตัวแปร
-                ss >> getProducts.id >> getProducts.name >> getProducts.price >> getProducts.stock >> getProducts.category;
+                // ในไฟลื data.txt จะอ่านข้อมูลตามนี้ในแต่ละบรรทัด: id   name    price   stock   brand   category
+                ss >> getProducts.id >> getProducts.name >> getProducts.price >> getProducts.stock >> getProducts.brand >>getProducts.category;
                 // เก็บข้อมูลทีละ object
                 data.push_back(getProducts);
             }
@@ -150,7 +171,7 @@ public:
             // loop ข้อมูลตัวแปร data
             for(Product item : data){
                 // เขียนข้อมูลทีละบรรทัด โดยข้อมูลสินค้าแต่ละส่วนจะเว้นระยะห่าง 1 tab
-                writeFile << item.id << "\t" << item.name << "\t" << item.price << "\t" << item.stock << "\t" << item.category << endl;
+                writeFile << item.getId() << "\t" << item.getName() << "\t" << item.getPrice() << "\t" << item.getStock() << "\t" << item.getBrand() << "\t" << item.getCategory() << endl;
             }
             showMessage && cout << "Write file completed." << endl;
         } else {
@@ -170,9 +191,9 @@ public:
             // loop ข้อมูลตัวแปร orders
             for(product order : orders){
                 // เขียนข้อมูลสินค้าที่สั่งซื้อ
-                writeFile << "name = " <<  order.name << ",\tprice = " << order.price << ",\t quantity = " << order.quantity << ",\t category = " << order.category << endl;
+                writeFile << "name = " <<  order.name << ",\tprice = " << order.price << ",\t quantity = " << order.quantity << ",\t sum = " << order.sum << ",\t brand = " << order.brand << ",\t category = " << order.category << endl;
             }
-            // เขียนสรุป ยอดจำนวนเงิน และ จำนวนที่สั่งซื้อ
+            // เขียนสรุป จำนวนที่สั่งซื้อ และ ยอดจำนวนเงิน
             writeFile << endl << "Total number of products = " << totalNumbers << endl;
             writeFile << "Total amount = " << totalAmount << endl;
             // เขียนเส้นตัดบรรทัด
@@ -198,112 +219,112 @@ public:
 // Subclass
 class Phone: public Product {
 public:
-    Phone(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[0]){}
+    Phone(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[0], Brand){}
     Phone(): Product(productCategories[0]){}
 };
 
 // Subclass
 class Tablet: public Product {
 public:
-    Tablet(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[1]){}
+    Tablet(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[1], Brand){}
     Tablet(): Product(productCategories[1]){}
 };
 
 // Subclass
 class Laptop: public Product {
 public:
-    Laptop(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[2]){}
+    Laptop(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[2], Brand){}
     Laptop(): Product(productCategories[2]){}
 };
 
 // Subclass
 class Computer: public Product {
 public:
-    Computer(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[3]){}
+    Computer(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[3], Brand){}
     Computer(): Product(productCategories[3]){}
 };
 
 // Subclass
 class Car: public Product {
 public:
-    Car(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[4]){}
+    Car(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[4], Brand){}
     Car(): Product(productCategories[4]){}
 };
 
 // Subclass
 class HealthAndBeauty: public Product {
 public:
-    HealthAndBeauty(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[5]){}
+    HealthAndBeauty(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[5], Brand){}
     HealthAndBeauty(): Product(productCategories[5]){}
 };
 
 // Subclass
 class Game: public Product {
 public:
-    Game(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[6]){}
+    Game(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[6], Brand){}
     Game(): Product(productCategories[6]){}
 };
 
 // Subclass
 class Bag: public Product {
 public:
-    Bag(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[7]){}
+    Bag(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[7], Brand){}
     Bag(): Product(productCategories[7]){}
 };
 
 // Subclass
 class ElectricalAppliance: public Product {
 public:
-    ElectricalAppliance(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[8]){}
+    ElectricalAppliance(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[8], Brand){}
     ElectricalAppliance(): Product(productCategories[8]){}
 };
 
 // Subclass
 class Pet: public Product {
 public:
-    Pet(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[9]){}
+    Pet(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[9], Brand){}
     Pet(): Product(productCategories[9]){}
 };
 
 // Subclass
 class Camera: public Product {
 public:
-    Camera(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[10]){}
+    Camera(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[10], Brand){}
     Camera(): Product(productCategories[10]){}
 };
 
 // Subclass
 class Shoes: public Product {
 public:
-    Shoes(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[11]){}
+    Shoes(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[11], Brand){}
     Shoes(): Product(productCategories[11]){}
 };
 
 // Subclass
 class Watch: public Product {
 public:
-    Watch(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[12]){}
+    Watch(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[12], Brand){}
     Watch(): Product(productCategories[12]){}
 };
 
 // Subclass
 class Sport: public Product {
 public:
-    Sport(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[13]){}
+    Sport(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[13], Brand){}
     Sport(): Product(productCategories[13]){}
 };
 
 // Subclass
 class MusicalInstrument: public Product {
 public:
-    MusicalInstrument(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[14]){}
+    MusicalInstrument(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[14], Brand){}
     MusicalInstrument(): Product(productCategories[14]){}
 };
 
 // Subclass
 class Furniture: public Product {
 public:
-    Furniture(int Id, string Name, float Price, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[15]){}
+    Furniture(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[15], Brand){}
     Furniture(): Product(productCategories[15]){}
 };
 
@@ -342,48 +363,89 @@ public:
         return false;
     }
 
+    // method ในการเช็คว่าข้อมูลตอนนี้ว่างเปล่าหรือไม่ (ไม่มีสินค้าอยู่ในไฟล์ data.txt) ถ้าว่างเปล่าคืน true ถ่าไม่ว่างเปล่าคืน false
+    static bool isEmpty(){
+        return data.size() == 0;
+    }
+
     // method แสดงรายการสินค้า
     static void showListProducts(){
-        if(data.size() == 0){
+        if(isEmpty()){
             cout << "Out of stock!" << endl;
         } else {
             int number = 1;
             cout << endl << "\t\tList of all products" << endl;
             // แสดงรายการสินค้าทั้งหมด
             for(Product item : data){
-                cout << "No: " << number << "\tID: " << item.id << "\tName: " << item.name << "\tPrice: " << item.price << "\tStock: "<< item.stock << "\tCategory: " << item.category << endl;
+                cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tCategory: " << item.getCategory() << "\tBrand: " << item.getBrand() << endl;
                 number++;
             }
         }
     }
 
     // method แสดงสินค้าเฉพาะสินค้าหมวดหมู่นั้น
-    static void showProductCategories(){
+    static void showProductCategory(){
         string category;
+
         cout << "Enter category:";
         cin >> category;
 
-        // เช็คว่าอยู่ในหมวดหมู่สินค้านั้นหรือไม่
-        if(isCategory(category)){
+        // เช็คว่ามีสินค้าหรือไม่
+        if(isEmpty()){
+            cout << "Out of stock!" << endl;
+        } else {
+            // เช็คว่าอยู่ในหมวดหมู่สินค้านั้นหรือไม่
+            if(isCategory(category)){
+                int number = 1;
+                // ตรวจสอบว่ามีสินค้านั้นอยู่ในคลังหรือไม่
+                bool inStock = false;
+                // loop ข้อมูลสินค้า
+                for(Product item : data){
+                    // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
+                    if(item.getCategory() == category){
+                        cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
+                        inStock = true;
+                        number++;
+                    }
+                }
+                // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
+                if(!inStock){
+                    cout << "No product category " <<  "\"" << category << "\"" << " in stock" << endl;
+                }
+
+            } else {
+                cout << "Error: " << "\"" << category << "\"" << " is not in categories of products" << endl;
+            }
+        }
+    }
+
+    // method แสดงสินค้าเฉพาะสินค้าหมวดหมู่นั้น
+    static void showProductBrand(){
+        string brand;
+        bool inStock = false; // ตรวจสอบว่าหาแบรนด์สินค้าเจอ
+
+        cout << "Enter brand name:";
+        cin >> brand;
+
+        if(isEmpty()){
+            cout << "Out of stock!" << endl;
+        } else {
             int number = 1;
-            // ตรวจสอบว่ามีสินค้านั้นอยู่ในคลังหรือไม่
-            bool inStock = false;
             // loop ข้อมูลสินค้า
-            for(Product item : data){
+            for(Product item : data) {
                 // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
-                if(item.getCategory() == category){
-                    cout << "No: " << number << "\tID: " << item.id << "\tName: " << item.name << "\tPrice: " << item.price << "\tStock: "<< item.stock << "\tCategory: " << item.category << endl;
+                if (item.getBrand() == brand) {
+                    cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: "
+                         << item.getPrice() << "\tStock: " << item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory()
+                         << endl;
                     inStock = true;
                     number++;
                 }
             }
-            // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
+            // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
             if(!inStock){
-                cout << "No product category " <<  "\"" << category << "\"" << " in stock" << endl;
+                cout << "This product brand " << "\"" << brand << "\"" << " was not found in stock!" << endl;
             }
-
-        } else {
-            cout << "Error: " << "\"" << category << "\"" << " is not in categories of products" << endl;
         }
     }
 
@@ -417,6 +479,7 @@ public:
                 cout << "Error: The new product name must not be duplicated with the product that already has this name!" << endl;
                 return;
             }
+
             cout << "Product ID:";
             cin >> p.id;
             // ตรวจสอบว่า id ซ้ำกันไหม
@@ -424,8 +487,13 @@ public:
                 cout << "Error: The new product id must not be duplicated with the product that already has this id!" << endl;
                 return;
             }
+
             cout << "Pricing:";
             cin >> p.price;
+
+            cout << "If there is no product brand name, Enter -" << endl;
+            cout << "Product brand name:";
+            cin >> p.brand;
 
             // สร้าง array ชื่อ products ทำหน้าที่เก็บหมวดหมู่สินค้าทั้งหมด
             Product products[NUMBER_CATEGORIES] = {
@@ -438,10 +506,14 @@ public:
             for(int i = 0; i < NUMBER_CATEGORIES; i++){
                 // เช็คหมวดหมู่สินค้าว่าตรงกันไหม
                 if(selectCategory == products[i].getCategory()){
-                    // แก้ไขค่า สมาชิกใน array (แก้ไข ชื่อสินค้า รหัสสินค้า และ ราคา)
+                    // แก้ไขค่า สมาชิกใน array (แก้ไข ชื่อสินค้า รหัสสินค้า ราคา และ ชื่อแบรนด์)
                     products[i].setId(p.id);
                     products[i].setName(p.name);
                     products[i].setPrice(p.price);
+                    // ดึง substring ออกมาแล้วเช็คว่าเป็น - หรือไม่ ถ้าไม่มี brand พิมพ์ - แบรนด์จะมีค่า no-brand-name แต่ถ้าไม่ได้พิมพ์ - แบรนด์จะเป็นค่าที่ผู้ใช้งานป้อนมา
+                    if(p.brand.at(0) != '-'){
+                        products[i].setBrand(p.brand);
+                    }
                     // นำ newProduct เป็นค่า element ตัวนั้น
                     newProduct = products[i];
                     // หยุด loop
@@ -543,7 +615,7 @@ public:
             product p;
             // คำตอบที่ผู้ใช้งานตอบมีแค่ y หรือ n เท่านั้น
             typedef struct {
-                char yn1, yn2, yn3, yn4;
+                char yn1, yn2, yn3, yn4, yn5;
             } yesOrNo;
             yesOrNo yn;
 
@@ -617,6 +689,16 @@ public:
                             data.at(index).setCategory(p.category);
                         }
                     }
+
+                    // ถามว่าต้องการแก้ไขหมวดหมู่สินค้าไหม
+                    cout << "Do you want to edit the brand product (y/n):";
+                    cin >> yn.yn5;
+                    if(tolower(yn.yn5) == 'y'){
+                        cout << "New brand product:";
+                        cin >> p.brand;
+                        // แก้ไขแบรนด์สินค้า
+                        data.at(index).setBrand(p.brand);
+                    }
                     // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
                     break;
                 }
@@ -661,6 +743,9 @@ public:
                     for(product item : orders){
                         // คำนวณยอดเงินสินค้าต่อ 1 รายการ
                         item.sum = item.quantity * item.price;
+                        // แก้ไขค่ายอดรวมของสินค้าของแต่ละสินค้า
+                        orders.at(i).sum = item.sum;
+                        // แสดงรายละเอียดสินค้า
                         cout << i << ". " << "Product: "<< item.name << "\tPrice: " << item.price << "\tQuantity: " << item.quantity << "\t Total price: " << item.sum << endl;
                         // คำนวณเงินที่ต้องจ่ายทั้งหมดที่สั่งสินค้ามา
                         total += item.sum;
@@ -670,7 +755,7 @@ public:
                     }
                     // แสดงจำนวนเงินทั้งหมดที่ต้องจ่าย
                     cout << endl << "Total number of products = " << quantity << endl;
-                    cout << "Total amount = " << total << endl;
+                    cout << "Total amount = " << total << " dollar" << endl;
                     // เขียนข้อมูลลงในไฟล์ orders.txt
                     File::write(orders, quantity, total);
                     // ลบรายการสินค้าทั้งหมดที่สั่ง
@@ -679,7 +764,7 @@ public:
                     File::update();
                 }
             }
-            // ดำเนินการสั่งสินค้าต่อ
+                // ดำเนินการสั่งสินค้าต่อ
             else {
                 // เช็คว่า ชื่อ หรือ id ที่พิมพ์มาอยู่ใน data หรือไม่
                 if(findProduct(input)){
@@ -693,6 +778,7 @@ public:
                             order.id = item.getId();
                             order.price = item.getPrice();
                             order.category = item.getCategory();
+                            order.brand = item.getBrand();
                             order.sum = 0; // ยอดรวมสินค้านั้นมีค่าเริ่มต้นเป็น 0
 
                             // รับค้าจำนวนสินค้าที่สั่ง
@@ -705,15 +791,15 @@ public:
                                 isRunning = false;
                                 return;
                             }
-                            // สินค้าในคลังหมดไม่สามารถสั่งได้
+                                // สินค้าในคลังหมดไม่สามารถสั่งได้
                             else if(item.getStock() == 0){
                                 cout << "This product " << "\"" << item.getName() << "\"" << " is out of stock." << endl;
                             }
-                            /* เงื่อนไข
-                             * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
-                             * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
-                             * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
-                             */
+                                /* เงื่อนไข
+                                 * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
+                                 * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
+                                 * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
+                                 */
                             else if((order.quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - order.quantity) >= 0)){
                                 // จำนวนที่เหลือของสินค้าในคลัง โดยหักลบกับจำนวนสินค้าที่สั่ง
                                 int remain = item.getStock() - order.quantity;
@@ -724,7 +810,7 @@ public:
                                 // เขียนไฟลืข้อมูล
                                 File::write();
                             }
-                            // สั่งสินค้าเกินจำนวนในคลัง
+                                // สั่งสินค้าเกินจำนวนในคลัง
                             else {
                                 cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
                                 isRunning = false;
@@ -745,14 +831,15 @@ public:
 void showOptions(){
     cout << endl << "Program" << endl;
     cout << "1.) Show list of all products" << endl;
-    cout << "2.) Show list of category" << endl;
-    cout << "3.) Sell proudcts" << endl;
-    cout << "4.) Add product" << endl;
-    cout << "5.) Delete product" << endl;
-    cout << "6.) Edit product" << endl;
-    cout << "7.) Add product to stock" << endl;
-    cout << "8.) Clear console screen" << endl;
-    cout << "9.) Exit program" << endl;
+    cout << "2.) Show list of product category" << endl;
+    cout << "3.) Show list of product brand" << endl;
+    cout << "4.) Sell proudcts" << endl;
+    cout << "5.) Add product" << endl;
+    cout << "6.) Delete product" << endl;
+    cout << "7.) Edit product" << endl;
+    cout << "8.) Add product to stock" << endl;
+    cout << "9.) Clear console screen" << endl;
+    cout << "10.) Exit program" << endl;
     cout << "Enter a number:";
 }
 
@@ -773,40 +860,44 @@ int main(){
         }
         // แสดงเฉพาะหมวดหมู่สินค้าที่เลือก
         else if(select == 2){
-            ProductManagement::showProductCategories();
+            ProductManagement::showProductCategory();
+        }
+        // แสดงเฉพาะแบรนด์สินค้าที่เลือก
+        else if(select == 3){
+            ProductManagement::showProductBrand();
         }
         // สั่งซื้อสินค้า
-        else if(select == 3){
+        else if(select == 4){
             ProductManagement::sellProducts();
         }
         // เพิ่มสินค้า
-        else if(select == 4){
+        else if(select == 5){
             ProductManagement::addProduct();
         }
         // ลบสินค้า
-        else if(select == 5){
+        else if(select == 6){
             ProductManagement::deleteProduct();
         }
         // แก้ไขสินค้า
-        else if(select == 6){
+        else if(select == 7){
             ProductManagement::editProduct();
         }
         // เพิ่มจำนวนสินค้าในคลัง
-        else if(select == 7){
+        else if(select == 8){
             ProductManagement::addStockProduct();
         }
         // ล้างหน้าจอ
-        else if(select == 8){
+        else if(select == 9){
             system("cls");
         }
         // ออกจากโปรแกรม
-        else if(select == 9){
-            cout << endl << "Exit The Program." << endl;
+        else if(select == 10){
+            cout << endl << "Exit program." << endl;
             break;
         }
         // ไม่มีในตัวเลือก
         else {
-            cout << endl << select << " is not available. Please select a number between 1 - 6" << endl;
+            cout << endl << select << " is not available. Please select a number between 1 - 9" << endl;
         }
     };
 
