@@ -4,6 +4,7 @@
  *  https://www.devdit.com/post/4200/c-plus-plus-vector-%E0%B8%84%E0%B8%B7%E0%B8%AD%E0%B8%AD%E0%B8%B0%E0%B9%84%E0%B8%A3-%E0%B8%97%E0%B8%B3%E0%B8%87%E0%B8%B2%E0%B8%99%E0%B8%A2%E0%B8%B1%E0%B8%87%E0%B9%84%E0%B8%87#gsc.tab=0
  *  https://medium.com/@marktbss/c-hackerrank-vector-erase-11c65b830a43
  *  https://www.geeksforgeeks.org/how-to-clear-console-in-cpp
+ *  https://www.javatpoint.com/cpp-date-and-time
  */
 
 /* รายชื่อสมาชิกในกลุ่มที่เขียนโปรแกรมนี้
@@ -24,6 +25,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 using std::ifstream;
@@ -50,7 +52,7 @@ typedef struct {
     string category;
     string brand;
     int quantity;
-    int sum;
+    float sum;
 } product;
 
 // Superclass class Product เป็น class ต้นแบบที่ให้ subclass สืบทอดคุถสมบัติและพฤติกรรมต่างๆของคลาสนี้
@@ -127,6 +129,77 @@ public:
 // สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟลื data.txt และ ข้อมูล ที่ เพิ่ม ลบ แก้ไขเข้ามา
 vector<Product> data = {};
 
+class Time{
+public:
+    time_t now; // เวลาปัจจุบัน
+    string dt; // datetime
+    tm* ltm; // localtime ต้องใช้เป็น pointer
+
+    // attributes วันที่และเวลา
+    int year;
+    int month;
+    int weekday;
+    int day;
+    int hours;
+    int minutes;
+    int seconds;
+
+    // array วัน และ เดือน
+    string days[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+    string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+    // constructor method
+    Time(){
+        // เวลาปัจจุบัน
+        now = time(0);
+        // ส่ง address now เข้าไปใน function ctime และ localtime
+        dt = ctime(&now);
+        ltm = localtime(&now);
+        // เข้าถึงตัวแปรข้างในของ struct tm
+        hours = ltm -> tm_hour;
+        minutes = ltm -> tm_min;
+        seconds = ltm -> tm_sec;
+        year = ltm -> tm_year + 1900; // ต้องบวก 1900 ไปด้วยถึงจะเป็นปีล่าสุด
+        // attribute month และ weekday ใช้คู่กับ array ได้เพราะสามารถใช้เลขเป็นเลข index ของ array
+        month = ltm -> tm_mon; // เลขระหว่าง 0 - 11
+        weekday = ltm -> tm_wday; // เลขระหว่าง 1 - 6
+        day = ltm -> tm_mday; // วันที่ เลขระหว่าง
+    }
+
+    // getter methods
+    string getDate(){
+        return dt;
+    }
+    int getYear(){
+        return year;
+    }
+    int getMonth(){
+        // ต้องบวก 1 เพราะ tm_mon คืนเลขกลับมาเป็น 1 - 11
+        return month + 1;
+    }
+    int getDay(){
+        return day;
+    }
+    int getHours(){
+        return hours;
+    }
+    int getMinutes(){
+        return minutes;
+    }
+    int getSeconds(){
+        return seconds;
+    }
+    // คืนกลับมาเป็นข้อความ สมาชิกใน array
+    string getDays(){
+        return days[weekday];
+    }
+    string getMonths(){
+        // ลบเลขออกไป 1 ถึงจะใช้เลข index 1 - 11 ได้พอดี
+        return months[getMonth() - 1];
+    }
+
+};
+
 // class File ใช้ในการจัดการไฟล์ data.txt เพื่อเขียนและอ่านข้อมูล
 class File {
 public:
@@ -181,13 +254,17 @@ public:
     }
 
     // method (override) เขียนข้อมูลรายการสินค้าที่สั่งซื้อไปลงไฟล์ orders.txt โดยเอาข้อมูลจาก parameter orders มาเขียน
-    static void write(vector<product> orders, int totalNumbers, int totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\orders.txt)", bool showMessage = false){
+    static void write(vector<product> orders, int totalNumbers, float totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\orders.txt)", bool showMessage = false){
         // ตัวแปรสำหรับเขียนไฟล์ข้อมูล
         ofstream writeFile;
         // เปิดไฟล์เพื่อเขียนข้อมูล
         writeFile.open(path, ios::app);
         // เช็คว่าสามารถเเปิดไฟล์ได้หรือไม่
         if(writeFile.is_open()){
+            // สร้าง object time
+            Time time = Time();
+            // เขียนเวลาล่าสุดที่เขียนในไฟล์ orders.txt
+            writeFile << "Time: " << time.getDate() << endl;
             // loop ข้อมูลตัวแปร orders
             for(product order : orders){
                 // เขียนข้อมูลสินค้าที่สั่งซื้อ
@@ -197,9 +274,9 @@ public:
             writeFile << endl << "Total number of products = " << totalNumbers << endl;
             writeFile << "Total amount = " << totalAmount << endl;
             // เขียนเส้นตัดบรรทัด
-            for(int i = 1; i <= 60; i++){
+            for(int i = 1; i <= 70; i++){
                 writeFile <<  "-";
-                i == 40 && writeFile << endl;
+                i == 70 && writeFile << endl;
             }
             showMessage && cout << "Write file completed." << endl;
         } else {
@@ -328,7 +405,7 @@ public:
     Furniture(): Product(productCategories[15]){}
 };
 
-// class ProductManagement มีหน้าที่จัดการเกี่ยวกับสินค้าต่างๆ
+// class ProductManagement มีหน้าที่จัดการเกี่ยวกับสินค้าต่างๆภายในโปรแกรม
 class ProductManagement {
 public:
 
@@ -724,21 +801,21 @@ public:
 
         // loop ไปเรื่อยๆจนกว่าผู้ใช้จะพิมพ์ตัว e
         while(isRunning){
-            cout << "Enter product name of product id:";
+            cout << "Enter product name or product id:";
             cin >> input;
 
             // เอา substring ตัวแรกของตัวแปร input
             e = input.at(0);
             // เช็คว่าอักตรตัว e หรือไม่ ถ้าใช้ ให้ออกจากการขายสินค้า
             if(tolower(e) == 'e'){
-                int total = 0; // จำนวนเงินทั้งหมด
+                float total = 0; // จำนวนเงินทั้งหมด
                 int quantity = 0; // จำนวนสินค้าทั้งหมด
-                int i = 1; // ลำดับสินค้าที่สั่ง
+                int i = 0; // ลำดับสินค้าที่สั่ง
                 // ออกจากการขายสินค้าและคำนวณราคาสินค้าทั้งหมด
                 isRunning = false;
                 // ถ้ายังไม่มีการสั่งสินค้าไม่ต้องแสดงรายละเอียดการสั่งซื้อ
                 if(orders.size() != 0){
-                    cout << endl << "\t\tYou order products." << endl;
+                    cout << endl << "\t\tYour order products." << endl;
                     // คำนวณจำนวนเงินทั้งหมดที่สั่งสินค้า และ แสดงรายการสินค้าที่สั่งซื้อ
                     for(product item : orders){
                         // คำนวณยอดเงินสินค้าต่อ 1 รายการ
@@ -746,7 +823,7 @@ public:
                         // แก้ไขค่ายอดรวมของสินค้าของแต่ละสินค้า
                         orders.at(i).sum = item.sum;
                         // แสดงรายละเอียดสินค้า
-                        cout << i << ". " << "Product: "<< item.name << "\tPrice: " << item.price << "\tQuantity: " << item.quantity << "\t Total price: " << item.sum << endl;
+                        cout << i + 1 << ". " << "Product: "<< item.name << "\tPrice: " << item.price << "\tQuantity: " << item.quantity << "\t Total price: " << item.sum << endl;
                         // คำนวณเงินที่ต้องจ่ายทั้งหมดที่สั่งสินค้ามา
                         total += item.sum;
                         // เพิ่มจำนวนสินค้า
@@ -829,7 +906,11 @@ public:
 
 // function แสดงตัวเลือกการทำงานของโปรแกรม
 void showOptions(){
-    cout << endl << "Program" << endl;
+    // สร้าง object time ไว้แสดงเวลาสุดทุกครั้งที่ใข้งาน
+    Time time = Time();
+
+    cout << endl << "Product management program" << endl;
+    cout << "Current Time " << time.getHours() << ":" << time.getMinutes() << ":" << time.getSeconds() << endl;
     cout << "1.) Show list of all products" << endl;
     cout << "2.) Show list of product category" << endl;
     cout << "3.) Show list of product brand" << endl;
@@ -846,11 +927,11 @@ void showOptions(){
 int main(){
     // เริ่มโปรแกรมให้อ่านข้อมูลจากไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
     File::read();
-
     // ตัวเลือกที่ผู้ใช้งานเลือกว่าจะใช้ง่านคำสั่งอะไร
     int select;
     // วน loop ไปเรื่อยๆเพื่อรอให้ผู้ใช้งานป้อนตัวเลขให้โปรแกรมทำงานตามหมายเลขนั้น
     while(true){
+        // แสดงตัวเลือกที่ผู้ใช้จะเลือกใช้งานคำสั่งของโปรแกรม โดยผู้ใช้งานจะต้องป้อนตัวเลข 1 - 10 เข้ามา
         showOptions();
         cin >> select;
 
@@ -897,7 +978,7 @@ int main(){
         }
         // ไม่มีในตัวเลือก
         else {
-            cout << endl << select << " is not available. Please select a number between 1 - 9" << endl;
+            cout << endl << select << " is not available. Please select a number between 1 - 10" << endl;
         }
     };
 

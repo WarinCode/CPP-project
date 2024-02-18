@@ -1,7 +1,15 @@
-name = item1	price = 1000	 quantity = 2	 category = smartphone
-name = iPhone15-pro-max	price = 3000	 quantity = 2	 category = smartphone
-name = phonea	price = 900	 quantity = 4	 category = phone
+Time: Sun Feb 18 20:49:18 2024
 
-Total number of products = 8
-Total amount = 11600
-----------------------------------------
+name = iPhone15pro,	price = 1368.17,	 quantity = 2,	 sum = 2736.34,	 brand = apple,	 category = phone
+name = iPhone15promax,	price = 1172.31,	 quantity = 1,	 sum = 1172.31,	 brand = apple,	 category = phone
+
+Total number of products = 3
+Total amount = 3908.65
+----------------------------------------------------------------------
+Time: Sun Feb 18 20:50:00 2024
+
+name = iPhone15pro,	price = 1368.17,	 quantity = 13,	 sum = 17786.2,	 brand = apple,	 category = phone
+
+Total number of products = 13
+Total amount = 17786.2
+----------------------------------------------------------------------
