@@ -620,8 +620,6 @@ public:
                 // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                 if (item.getBrand() == brand) {
                     inStock = true;
-//                    cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: " << item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
-//                    number++;
                     list.push_back(item);
                 }
             }
@@ -675,13 +673,6 @@ public:
                 return;
             }
 
-//            cout << "Product ID:";
-//            cin >> p.id;
-//            // ตรวจสอบว่า id ซ้ำกันไหม
-//            if(findProduct(p.id)){
-//                cout << "Error: The new product id must not be duplicated with the product that already has this id!" << endl;
-//                return;
-//            }
             // รับค่า parameter มาโดย id จะมีค่าเริ่มต้นที่สุ่มเอาไว้ให้
             p.id = id;
 
@@ -825,9 +816,11 @@ public:
             for (Product item : data) {
                 // เช็คว่าเป็นสินค้าชิ้นนั้น
                 if (to_string(item.getId()) == input || item.getName() == input) {
-                    // ถามว่าต้องการแก้ไขข้อมูลสินค้าในส่วนไหนบ้างโดยตอบ y และ n
-                    // ถ้าตอบ y ให้ดำเนินการแก้ไขข้อมูลในส่วนนั้น ถ้าตอบ n หรืออื่นๆคือผ่าน
-                    // ถามว่าต้องการแก้ไขชื่อสินค้าไหม
+                    /*
+                     * ถามว่าต้องการแก้ไขข้อมูลสินค้าในส่วนไหนบ้างโดยตอบ y และ n
+                     * ถ้าตอบ y ให้ดำเนินการแก้ไขข้อมูลในส่วนนั้น ถ้าตอบ n หรืออื่นๆคือผ่าน
+                     * ถามว่าต้องการแก้ไขชื่อสินค้าไหม
+                    */
                     cout << "Do you want to edit the product name (y/n):";
                     cin >> yn.yn1;
                     if(tolower(yn.yn1) == 'y'){
