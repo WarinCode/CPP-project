@@ -8,9 +8,3 @@ include_directories(.)
 add_executable(CPP_project
         main.cpp
 )
-
-add_subdirectory(libs/libfort)
-
-target_link_libraries(CPP_project PRIVATE fort)
-
-

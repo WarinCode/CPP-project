@@ -30,14 +30,12 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
-#include <fort.hpp>
 
 using namespace std;
 using std::ifstream;
 using std::ofstream;
 using std::ios;
 using std::vector;
-using namespace fort;
 
 // กำหนดจำนวนสินค้าตอนเริ่มต้น มี 20 จำนวน ของแต่ละสินค้า
 #define STOCK 20
@@ -422,77 +420,6 @@ public:
     Food(): Product(productCategories[16]){}
 };
 
-// class สำหรับแสดงตารางสินค้าจากข้อมูลของตัวแปร data หรือ จากค่า argument ที่ส่งมา
-class Table{
-private:
-    // ตารางสำหรับแสดงสินค้า
-    char_table table;
-    int number; // ตัวเลขอันดับสินค้าใน column No
-public:
-    // constructor method สำหรับตั้งค่าเริ่มต้นในการสร้างตาราง
-    Table(){
-        // ค่าเริ่มต้นของอันดับตัวเลขสินค้ามีค่าเป็น 1
-        number = 1;
-        // เปลี่ยนเส้นขอบของตาราง
-        table.set_border_style(FT_BASIC2_STYLE);
-        // จัดกึ่งกลางเนื้อหาของตาราง
-        table.set_cell_text_align(text_align::center);
-    }
-
-    // method แสดงตารางสินค้า
-    void showTable(){
-        if(data.size() == 0){
-            cout << "Out of stock!" << endl;
-        } else {
-            cout << endl << "\t\tList of all products" << endl;
-            // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
-            table << header << "No" <<"Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
-            // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
-            for(Product item : data){
-                table << number << item.getName() << item.getId() << item.getPrice() << item.getStock() << item.getBrand() << item.getCategory() << endr;
-                number++;
-            }
-            // แสดงตาราง
-            cout << endl << table.to_string() << endl;
-        }
-    }
-
-    // method (overloading) สำหรับเแสดงตารางสินค้า orders สินค้าที่สั่งไป
-    void showTable(vector<product> list){
-        if(list.size() == 0){
-            cout << "Out of stock!" << endl;
-        } else {
-            // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
-            table << header << "No" << "Product" << "ID" << "$Price" << "Quantity" << "Sum" << "Brand" << "Category" << endr;
-            // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
-            for(product item : list){
-                table << number << item.name << item.id << item.price << item.quantity << item.sum << item.brand << item.category << endr;
-                number++;
-            }
-            // แสดงตาราง
-            cout << endl << table.to_string() << endl;
-        }
-    }
-
-    // method (overloading) สำหรับแสดงตารางสินค้าด้วยชื่อ Brand หรือ Category (ใช้คู่กับ method showProductCategory และ showProductBrand)
-    void showTable(vector<Product> list){
-        if(list.size() == 0){
-            cout << "Out of stock!" << endl;
-        } else {
-            cout << endl << "\t\tList of all products" << endl;
-            // สร้างหัว columns
-            table << header << "No" << "Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
-            // loop ข้อมูลจาก parameter list โดยสร้างแต่ละ row
-            for(Product item : list){
-                table << number << item.getId() << item.getName() << item.getPrice() << item.getStock() << item.getBrand() << item.getCategory() << endr;
-                number++;
-            }
-            // แสดงตาราง
-            cout << endl << table.to_string() << endl;
-        }
-    }
-};
-
 // class ProductManagement มีหน้าที่จัดการเกี่ยวกับสินค้าต่างๆภายในโปรแกรม
 class ProductManagement {
 public:
@@ -544,15 +471,12 @@ public:
             cout << "Out of stock!" << endl;
         } else {
             int number = 1;
-//            cout << endl << "\t\tList of all products" << endl;
+            cout << endl << "\t\tList of all products" << endl;
             // แสดงรายการสินค้าทั้งหมด
-//            for(Product item : data){
-//                cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tCategory: " << item.getCategory() << "\tBrand: " << item.getBrand() << endl;
-//                number++;
-//            }
-            // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
-            Table table = Table();
-            table.showTable();
+            for(Product item : data){
+                cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tCategory: " << item.getCategory() << "\tBrand: " << item.getBrand() << endl;
+                number++;
+            }
         }
     }
 
@@ -567,7 +491,6 @@ public:
         if(isEmpty()){
             cout << "Out of stock!" << endl;
         } else {
-            vector<Product> list;
             // เช็คว่าอยู่ในหมวดหมู่สินค้านั้นหรือไม่
             if(isCategory(category)){
                 int number = 1;
@@ -578,23 +501,15 @@ public:
                     // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                     if(item.getCategory() == category){
                         inStock = true;
-//                        cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
-//                        number++;
-                        list.push_back(item);
+                        cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
+                        number++;
                     }
                 }
                 // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
                 if(!inStock){
                     cout << "Error: No product category " <<  "\"" << category << "\"" << " in stock." << endl;
                     return;
-                } else {
-                    // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
-                    Table table = Table();
-                    table.showTable(list);
-                    // ล้างข้อมูลใน list ใหม่
-                    list.clear();
                 }
-
             } else {
                 cout << "Error: " << "\"" << category << "\"" << " is not in categories of products." << endl;
             }
@@ -612,7 +527,6 @@ public:
             cout << "Out of stock!" << endl;
         } else {
             int number = 1;
-            vector<Product> list;
             // ตรวจสอบว่าหาแบรนด์สินค้าเจอ
             bool inStock = false;
             // loop ข้อมูลสินค้า
@@ -620,21 +534,14 @@ public:
                 // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                 if (item.getBrand() == brand) {
                     inStock = true;
-//                    cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: " << item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
-//                    number++;
-                    list.push_back(item);
+                    cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: " << item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
+                    number++;
                 }
             }
             // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
             if(!inStock){
                 cout << "This product brand " << "\"" << brand << "\"" << " was not found in stock!" << endl;
                 return;
-            } else {
-                // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
-                Table table = Table();
-                table.showTable(list);
-                // ล้างข้อมูลใน list ใหม่
-                list.clear();
             }
         }
     }
@@ -675,13 +582,6 @@ public:
                 return;
             }
 
-//            cout << "Product ID:";
-//            cin >> p.id;
-//            // ตรวจสอบว่า id ซ้ำกันไหม
-//            if(findProduct(p.id)){
-//                cout << "Error: The new product id must not be duplicated with the product that already has this id!" << endl;
-//                return;
-//            }
             // รับค่า parameter มาโดย id จะมีค่าเริ่มต้นที่สุ่มเอาไว้ให้
             p.id = id;
 
@@ -940,23 +840,20 @@ public:
                 isRunning = false;
                 // ถ้ายังไม่มีการสั่งสินค้าไม่ต้องแสดงรายละเอียดการสั่งซื้อ
                 if(orders.size() != 0){
+                    cout << endl << "\t\tThe products you ordered." << endl;
                     // คำนวณจำนวนเงินทั้งหมดที่สั่งสินค้า และ แสดงรายการสินค้าที่สั่งซื้อ
                     for(product item : orders){
                         // คำนวณยอดเงินสินค้าต่อ 1 รายการ
                         item.sum = item.quantity * item.price;
                         // แก้ไขค่ายอดรวมของสินค้าของแต่ละสินค้า
                         orders.at(i).sum = item.sum;
+                        cout << i + 1 << ".) " << "Product = " <<  item.name << ",\tID = " << item.id << ",\tPrice = " << item.price << ",\tQuantity = " << item.quantity << ",\tSum = " << item.sum << ",\tBrand = " << item.brand << ",\tCategory = " << item.category << endl;
                         // คำนวณเงินที่ต้องจ่ายทั้งหมดที่สั่งสินค้ามา
                         total += item.sum;
                         // เพิ่มจำนวนสินค้า
                         quantity += item.quantity;
                         i++;
                     }
-                    cout << endl << "\t\tThe products you ordered." << endl;
-                    // สร้าง object table เพื่อจะแสดงตารางสินค้า
-                    Table table = Table();
-                    // แสดงตารางรายละเอียดสินค้าและสรุปการสั่งซื้อสินค้า
-                    table.showTable(orders);
                     // แสดงจำนวนเงินทั้งหมดที่ต้องจ่าย
                     cout << endl << "Total number of products = " << quantity << '.' << endl;
                     cout << "Total amount = " << total << " dollar." << endl;
