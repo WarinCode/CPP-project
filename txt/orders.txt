@@ -1,0 +1,9 @@
+DATE: Sat Feb 24 20:06:57 2024
+LIST:
+1.) PRODUCT_NAME = Xiaomi-Pad6,		ID = 7526,		PRICE = 361.54,		 QUANTITY = 1,		 SUM = 361.54,		 BRAND = XIAOMI,		 CATEGORY = tablet
+2.) PRODUCT_NAME = OPPO-Pad-Neo-LTE,		ID = 8365,		PRICE = 303.37,		 QUANTITY = 2,		 SUM = 606.74,		 BRAND = OPPO,		 CATEGORY = tablet
+3.) PRODUCT_NAME = Huewei-MataPad11,		ID = 5033,		PRICE = 389.37,		 QUANTITY = 1,		 SUM = 389.37,		 BRAND = Huewei,		 CATEGORY = tablet
+CONCLUSION:
+Total number of products = 4.
+Total amount = 1357.65dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
