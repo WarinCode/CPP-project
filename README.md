@@ -8,6 +8,10 @@
 
 <h1 align="center">โปรแกรมระบบจัดการสินค้า</h1>
 
+โดยโปรเจคนี้มีทั้งหมด 2 branches ได้แก่
+1. <code>main</code> เป็น branch ที่มีการใช้ library เกี่ยวกับตารางโดยจะต้องมีการติดตั้ง library ซึ่งค่อนข้างยุ่งยากถ้าหากไม่สามารถใช้งาน branch นี้ได้ให้ใช้อีก branch นึงคือ
+2. <code>main2</code> เป็น branch ที่ไม่มีการใช้งาน library ใดๆสามารถ run โปรแกรมและใช้งานได้เลยโดยกดที่ลิ้งนี้ <a href="https://github.com/WarinCode/CPP-project/tree/main2">main2</a>
+
 รายละเอียดโปรเจค : โปรเจคนี้ทำเกี่ยวกับ โปรเแกรมระบบจัดการสินค้าใน ร้านสินค้า , ร้านขายของ , ร้านสดวกซื้อ โดยการใช้งานเมื่อรันโปรแกรมผ่าน CLI ของโปรแกรมจะมีตัวเลือกคือตัวเลขให้ผู้ใช้งานป้อนตัวเลขใน
 cmd , terminal หรือ powershell ก็จะแสดงข้อมูล หรือ การจัดการกับสินค้าต่างๆ ตามฟีเจอร์ที่ได้ระบุไว้ และ เมื่อมีการจัดการกับข้อมูลสินค้าโปรแกรมจะมีการเขียนไฟล์ข้อมูล <code>data.txt</code>
 เพื่อจัดเก็บข้อมูลการเปลี่ยนแปลงต่างๆของสินค้า
@@ -47,18 +51,17 @@ git clone https://github.com/WarinCode/CPP-project.git
 cd CPP-project
 ```
 
-3. compile ไฟล์ main.cpp จะได้ตัวโปรแกรม program.exe ขึ้นมา
+3. compile ไฟล์ main.cpp จะได้โปรแกรมขึ้นมา
 ```
 g++ main.cpp -o program.exe
 ```
 
-4. เปิดตัวโปรแกรม program.exe หรือใช้คำสั่งนี้จะเปิดโปรแกรมขึ้นมาใน terminal แทน
+4. เปิดโปรแกรม program.exe ขึ้นมาหรือใช้คำสั่งนี้จะเปิดโปรแกรมนี้ขึ้นมาใน terminal แทน
 ```
 ./program.exe
 ```
-
 <div align="center">
-<img src="imgs/preview.jpg" alt="preview" height="100%" width="100%"/>
+<img src="imgs/preview2.jpg" alt="preview" height="100%" width="100%"/>
 </div>
 
 5. ถ้าทำตามขั้นตอนที่ว่ามาทั้งหมดก็ถือว่าพร้อมใช้งานแต่ที่สำคัญในส่วนของการอ่านและเขียนไฟล์ข้อมูลให้ทำการเขียนทับ path ในส่วนของ method read และ write ของ class File

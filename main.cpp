@@ -474,7 +474,7 @@ public:
             cout << endl << "\t\tList of all products" << endl;
             // แสดงรายการสินค้าทั้งหมด
             for(Product item : data){
-                cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tCategory: " << item.getCategory() << "\tBrand: " << item.getBrand() << endl;
+                cout << "No: " << number << "\tName: " << item.getName() << "\tID: " << item.getId() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
                 number++;
             }
         }
@@ -576,7 +576,7 @@ public:
                 cout << endl << "Error: The new product name must not be duplicated with the product that already has this name!" << endl;
                 return;
             }
-            // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
+                // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
             else if(isdigit(p.name.at(0))){
                 cout << "Do not name the product beginning with a number!" << endl;
                 return;
@@ -725,9 +725,11 @@ public:
             for (Product item : data) {
                 // เช็คว่าเป็นสินค้าชิ้นนั้น
                 if (to_string(item.getId()) == input || item.getName() == input) {
-                    // ถามว่าต้องการแก้ไขข้อมูลสินค้าในส่วนไหนบ้างโดยตอบ y และ n
-                    // ถ้าตอบ y ให้ดำเนินการแก้ไขข้อมูลในส่วนนั้น ถ้าตอบ n หรืออื่นๆคือผ่าน
-                    // ถามว่าต้องการแก้ไขชื่อสินค้าไหม
+                    /*
+                     * ถามว่าต้องการแก้ไขข้อมูลสินค้าในส่วนไหนบ้างโดยตอบ y และ n
+                     * ถ้าตอบ y ให้ดำเนินการแก้ไขข้อมูลในส่วนนั้น ถ้าตอบ n หรืออื่นๆคือผ่าน
+                     * ถามว่าต้องการแก้ไขชื่อสินค้าไหม
+                    */
                     cout << "Do you want to edit the product name (y/n):";
                     cin >> yn.yn1;
                     if(tolower(yn.yn1) == 'y'){
@@ -865,7 +867,7 @@ public:
                     File::update();
                 }
             }
-            // ดำเนินการสั่งสินค้าต่อ
+                // ดำเนินการสั่งสินค้าต่อ
             else {
                 // เช็คว่า ชื่อ หรือ id ที่พิมพ์มาอยู่ใน data หรือไม่
                 if(findProduct(input)){
@@ -892,14 +894,14 @@ public:
                                 isRunning = false;
                                 return;
                             }
-                            // สินค้าในคลังหมดไม่สามารถสั่งได้
+                                // สินค้าในคลังหมดไม่สามารถสั่งได้
                             else if(item.getStock() == 0){
                                 cout << "This product " << "\"" << item.getName() << "\"" << " is out of stock." << endl;
                             }
                             /* เงื่อนไข
-                            * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
-                            * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
-                            * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
+                                * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
+                                * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
+                                * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
                             */
                             else if((order.quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - order.quantity) >= 0)){
                                 // จำนวนที่เหลือของสินค้าในคลัง โดยหักลบกับจำนวนสินค้าที่สั่ง
