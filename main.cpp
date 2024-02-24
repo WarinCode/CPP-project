@@ -5,6 +5,8 @@
  *  https://medium.com/@marktbss/c-hackerrank-vector-erase-11c65b830a43
  *  https://www.geeksforgeeks.org/how-to-clear-console-in-cpp
  *  https://www.javatpoint.com/cpp-date-and-time
+ *  https://github.com/seleznevae/libfort
+ *  https://seleznevae.github.io/libfort/index.html
  */
 
 /* รายชื่อสมาชิกในกลุ่มที่เขียนโปรแกรมนี้
@@ -26,12 +28,14 @@
 #include <sstream>
 #include <vector>
 #include <ctime>
+#include <fort.hpp>
 
 using namespace std;
 using std::ifstream;
 using std::ofstream;
 using std::ios;
 using std::vector;
+using namespace fort;
 
 // กำหนดจำนวนสินค้าตอนเริ่มต้น มี 20 จำนวน ของแต่ละสินค้า
 #define STOCK 20
@@ -76,7 +80,7 @@ public:
         setCategory(Category);
         setBrand(Brand);
     }
-    // constructor method (override) สำหรับการสร้าง object ให้มีค่าเริ่มต้น
+    // constructor method (overloading) สำหรับการสร้าง object ให้มีค่าเริ่มต้น
     Product(string Category = "any", string Brand = "no-brand-name"){
         setId(0);
         setName("");
@@ -129,6 +133,7 @@ public:
 // สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟลื data.txt และ ข้อมูล ที่ เพิ่ม ลบ แก้ไขเข้ามา
 vector<Product> data = {};
 
+// class Time สำหรับการใช้บอกวันเวลาปัจจุบัน
 class Time{
 public:
     time_t now; // เวลาปัจจุบัน
@@ -253,7 +258,7 @@ public:
         writeFile.close();
     }
 
-    // method (override) เขียนข้อมูลรายการสินค้าที่สั่งซื้อไปลงไฟล์ orders.txt โดยเอาข้อมูลจาก parameter orders มาเขียน
+    // method (overloading) เขียนข้อมูลรายการสินค้าที่สั่งซื้อไปลงไฟล์ orders.txt โดยเอาข้อมูลจาก parameter orders มาเขียน
     static void write(vector<product> orders, int totalNumbers, float totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\orders.txt)", bool showMessage = false){
         // ตัวแปรสำหรับเขียนไฟล์ข้อมูล
         ofstream writeFile;
@@ -405,6 +410,78 @@ public:
     Furniture(): Product(productCategories[15]){}
 };
 
+// class สำหรับแสดงตารางสินค้าจากข้อมูลของตัวแปร data หรือ จากค่า argument ที่ส่งมา
+class Table{
+private:
+    // ตารางสำหรับแสดงสินค้า
+    char_table table;
+    int number; // ตัวเลขอันดับสินค้าใน column No
+public:
+    // constructor method สำหรับตั้งค่าเริ่มต้นในการสร้างตาราง
+    Table(){
+        // ค่าเริ่มต้นของอันดับตัวเลขสินค้ามีค่าเป็น 1
+        number = 1;
+        // เปลี่ยนเส้นขอบของตาราง
+        table.set_border_style(FT_BASIC2_STYLE);
+        // จัดกึ่งกลางเนื้อหาของตาราง
+        table.set_cell_text_align(text_align::center);
+    }
+
+    // method แสดงตารางสินค้า
+    void showTable(){
+        if(data.size() == 0){
+            cout << "Out of stock!" << endl;
+        } else {
+            cout << endl << "\t\tList of all products" << endl;
+            // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
+            table << header << "No" <<"Product" << "ID" << "Price $" << "Stock" << "Brand" << "Category" << endr;
+            // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
+            for(Product item : data){
+                table << number << item.getName() << item.getId() << item.getPrice() << item.getStock() << item.getBrand() << item.getCategory() << endr;
+                number++;
+            }
+            // แสดงตาราง
+            cout << endl << table.to_string() << endl;
+        }
+    }
+
+    // method (overloading) สำหรับเแสดงตารางสินค้า orders สินค้าที่สั่งไป
+    void showTable(vector<product> list){
+        if(list.size() == 0){
+            cout << "Out of stock!" << endl;
+        } else {
+            cout << endl << "\t\t\tList of all products" << endl;
+            // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
+            table << header << "No" << "Product" << "Price $" << "Quantity" << "Sum" << "Brand" << "Category" << endr;
+            // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
+            for(product item : list){
+                table << number << item.name << item.price << item.quantity << item.sum << item.brand << item.category << endr;
+                number++;
+            }
+            // แสดงตาราง
+            cout << endl << table.to_string() << endl;
+        }
+    }
+
+    // method (overloading) สำหรับแสดงตารางสินค้าด้วยชื่อ Brand หรือ หมวดหมู่สินค้า Category (ใช้คู่กับ method showProductCategory และ showProductBrand)
+    void showTable(vector<Product> list){
+        if(list.size() == 0){
+            cout << "Out of stock!" << endl;
+        } else {
+            cout << endl << "\t\tList of all products" << endl;
+            // สร้างหัว columns
+            table << header << "No" << "Product" << "ID" << "Price $" << "Stock" << "Brand" << "Category" << endr;
+            // loop ข้อมูลจาก parameter list โดยสร้างแต่ละ row
+            for(Product item : list){
+                table << number << item.getId() << item.getName() << item.getPrice() << item.getStock() << item.getBrand() << item.getCategory() << endr;
+                number++;
+            }
+            // แสดงตาราง
+            cout << endl << table.to_string() << endl;
+        }
+    }
+};
+
 // class ProductManagement มีหน้าที่จัดการเกี่ยวกับสินค้าต่างๆภายในโปรแกรม
 class ProductManagement {
 public:
@@ -420,7 +497,7 @@ public:
         return false;
     }
 
-    // method (override) เฉพาะสำหรับตรวจสอบเลข id
+    // method (overloading) เฉพาะสำหรับตรวจสอบเลข id
     static bool findProduct(int id){
         for(Product item : data){
             if(item.getId() == id){
@@ -451,12 +528,14 @@ public:
             cout << "Out of stock!" << endl;
         } else {
             int number = 1;
-            cout << endl << "\t\tList of all products" << endl;
+//            cout << endl << "\t\tList of all products" << endl;
             // แสดงรายการสินค้าทั้งหมด
-            for(Product item : data){
-                cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tCategory: " << item.getCategory() << "\tBrand: " << item.getBrand() << endl;
-                number++;
-            }
+//            for(Product item : data){
+//                cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tCategory: " << item.getCategory() << "\tBrand: " << item.getBrand() << endl;
+//                number++;
+//            }
+            Table table = Table();
+            table.showTable();
         }
     }
 
@@ -471,23 +550,29 @@ public:
         if(isEmpty()){
             cout << "Out of stock!" << endl;
         } else {
+            vector<Product> list;
             // เช็คว่าอยู่ในหมวดหมู่สินค้านั้นหรือไม่
             if(isCategory(category)){
                 int number = 1;
-                // ตรวจสอบว่ามีสินค้านั้นอยู่ในคลังหรือไม่
+                // ตรวจสอบว่ามีหมวดหมู่สินค้านั้นอยู่ในคลัง
                 bool inStock = false;
                 // loop ข้อมูลสินค้า
                 for(Product item : data){
                     // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                     if(item.getCategory() == category){
-                        cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
                         inStock = true;
-                        number++;
+//                        cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
+//                        number++;
+                        list.push_back(item);
                     }
                 }
                 // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
                 if(!inStock){
                     cout << "No product category " <<  "\"" << category << "\"" << " in stock" << endl;
+                } else {
+                    // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
+                    Table table = Table();
+                    table.showTable(list);
                 }
 
             } else {
@@ -499,7 +584,6 @@ public:
     // method แสดงสินค้าเฉพาะสินค้าหมวดหมู่นั้น
     static void showProductBrand(){
         string brand;
-        bool inStock = false; // ตรวจสอบว่าหาแบรนด์สินค้าเจอ
 
         cout << "Enter brand name:";
         cin >> brand;
@@ -508,20 +592,26 @@ public:
             cout << "Out of stock!" << endl;
         } else {
             int number = 1;
+            vector<Product> list;
+            // ตรวจสอบว่าหาแบรนด์สินค้าเจอ
+            bool inStock = false;
             // loop ข้อมูลสินค้า
             for(Product item : data) {
                 // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                 if (item.getBrand() == brand) {
-                    cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: "
-                         << item.getPrice() << "\tStock: " << item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory()
-                         << endl;
                     inStock = true;
-                    number++;
+//                    cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: " << item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
+//                    number++;
+                    list.push_back(item);
                 }
             }
             // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
             if(!inStock){
                 cout << "This product brand " << "\"" << brand << "\"" << " was not found in stock!" << endl;
+            } else {
+                // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
+                Table table = Table();
+                table.showTable(list);
             }
         }
     }
@@ -554,6 +644,11 @@ public:
             // ตรวจสอบว่า name ว่าซ้ำกันไหม
             if(findProduct(p.name)){
                 cout << "Error: The new product name must not be duplicated with the product that already has this name!" << endl;
+                return;
+            }
+            // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
+            else if(isdigit(p.name.at(0))){
+                cout << "Do not name the product beginning with a number!" << endl;
                 return;
             }
 
@@ -822,14 +917,16 @@ public:
                         item.sum = item.quantity * item.price;
                         // แก้ไขค่ายอดรวมของสินค้าของแต่ละสินค้า
                         orders.at(i).sum = item.sum;
-                        // แสดงรายละเอียดสินค้า
-                        cout << i + 1 << ". " << "Product: "<< item.name << "\tPrice: " << item.price << "\tQuantity: " << item.quantity << "\t Total price: " << item.sum << endl;
                         // คำนวณเงินที่ต้องจ่ายทั้งหมดที่สั่งสินค้ามา
                         total += item.sum;
                         // เพิ่มจำนวนสินค้า
                         quantity += item.quantity;
                         i++;
                     }
+                    // สร้าง object table เพื่อจะแสดงตารางสินค้า
+                    Table table = Table();
+                    // แสดงตารางรายละเอียดสินค้าและสรุปการสั่งซื้อสินค้า
+                    table.showTable(orders);
                     // แสดงจำนวนเงินทั้งหมดที่ต้องจ่าย
                     cout << endl << "Total number of products = " << quantity << endl;
                     cout << "Total amount = " << total << " dollar" << endl;
@@ -841,7 +938,7 @@ public:
                     File::update();
                 }
             }
-                // ดำเนินการสั่งสินค้าต่อ
+            // ดำเนินการสั่งสินค้าต่อ
             else {
                 // เช็คว่า ชื่อ หรือ id ที่พิมพ์มาอยู่ใน data หรือไม่
                 if(findProduct(input)){
@@ -858,7 +955,7 @@ public:
                             order.brand = item.getBrand();
                             order.sum = 0; // ยอดรวมสินค้านั้นมีค่าเริ่มต้นเป็น 0
 
-                            // รับค้าจำนวนสินค้าที่สั่ง
+                            // รับค้าจำวนสินค้าที่สั่ง
                             cout << "Quantity:";
                             cin >> order.quantity;
 
@@ -868,26 +965,47 @@ public:
                                 isRunning = false;
                                 return;
                             }
-                                // สินค้าในคลังหมดไม่สามารถสั่งได้
+                            // สินค้าในคลังหมดไม่สามารถสั่งได้
                             else if(item.getStock() == 0){
                                 cout << "This product " << "\"" << item.getName() << "\"" << " is out of stock." << endl;
                             }
-                                /* เงื่อนไข
-                                 * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
-                                 * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
-                                 * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
-                                 */
+                            /* เงื่อนไข
+                            * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
+                            * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
+                            * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
+                            */
                             else if((order.quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - order.quantity) >= 0)){
                                 // จำนวนที่เหลือของสินค้าในคลัง โดยหักลบกับจำนวนสินค้าที่สั่ง
                                 int remain = item.getStock() - order.quantity;
                                 // เปลี่ยนค่าใน stock มีจำนวนสินค้าที่เหลือตาม remain
                                 data.at(j).setStock(remain);
-                                // เพิ่มสินค้าเข้าใน orders ที่สั่ง
-                                orders.push_back(order);
-                                // เขียนไฟลืข้อมูล
+
+                                // ต้องการตรวจสอบข้อมูลสินค้าที่สั่ง (order) นั้นเป็นสินค้าชิ้นเดียวกับที่เราพึ่งสั่งไป(สำค้าอันเดียวกับใน orders)
+                                // ให้เก็บข้อมูลนั้นเป็นข้อมูลเดียวกันโดยไม่ต้องเพิ่ม element ตัวใหม่เข้าไป
+                                int k = 0; // เลข index
+                                bool isDuplicate = false; // เป็นสินค้าซ้ำกันหรือไม่
+                                // loop ข้อมูลเพื่อเช็คว่าซ้ำกันไหม
+                                for(product o: orders){
+                                    // ถ้าชื่อหรือ id ซ้ากับสินค้าที่สั่งอยู่ให้ isDuplicate เป็น true
+                                    if(o.name == order.name || o.id == order.id){
+                                        isDuplicate = true;
+                                        break;
+                                    }
+                                    k++;
+                                }
+                                // ถ้าข้อมูลนั้นซ้ำกันให้เพิ่มจำนวนสินค้าที่สั่งอยู่
+                                if(isDuplicate){
+                                    orders.at(k).quantity += order.quantity;
+                                }
+                                // ถ้าข้อมูลไม่ซ้ำกัยให้ orders เพิ่ม element(สินค้า) ตัวใหม่เข้าไป
+                                else {
+                                    // เพิ่มสินค้าเข้าใน orders ที่สั่ง
+                                    orders.push_back(order);
+                                }
+                                // เขียนไฟล์ข้อมูล
                                 File::write();
                             }
-                                // สั่งสินค้าเกินจำนวนในคลัง
+                            // สั่งสินค้าเกินจำนวนในคลัง
                             else {
                                 cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
                                 isRunning = false;
@@ -923,6 +1041,7 @@ void showOptions(){
     cout << "10.) Exit program" << endl;
     cout << "Enter a number:";
 }
+//git submodule add https://github.com/seleznevae/libfort.git
 
 int main(){
     // เริ่มโปรแกรมให้อ่านข้อมูลจากไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data

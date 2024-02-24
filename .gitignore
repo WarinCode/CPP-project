@@ -3,3 +3,9 @@ cmake-build-debug/*
 *.idea
 .idea
 .idea/*
+libs
+libs/*
+libs/libfort
+libs/libfort/*
+.vs
+.vs/*
