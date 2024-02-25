@@ -65,9 +65,9 @@ g++ main.cpp -o program.exe
 </div>
 
 5. ถ้าทำตามขั้นตอนที่ว่ามาทั้งหมดก็ถือว่าพร้อมใช้งานแต่ที่สำคัญในส่วนของการอ่านและเขียนไฟล์ข้อมูลให้ทำการเขียนทับ path ในส่วนของ method read และ write ของ class File
-<code>string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)"</code> โดยให้เปลี่ยนเป็นชื่อผู้ใช้งานแทน <code>string path = R"(C:\Users\user\Desktop\CPP-project\txt\data.txt)"</code>
-ให้เปลี่ยนจาก <code>user</code> เป็นเครื่องชื่อผู้ใช้งานแทนหรือส่งค่า argument ด้วย path ของไฟล์ก็ได้
-ตัวอย่างเมื่อมีการดรียกใช้ method read และ write
+   <code>string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)"</code> โดยให้เปลี่ยนเป็นชื่อผู้ใช้งานแทน <code>string path = R"(C:\Users\user\Desktop\CPP-project\txt\data.txt)"</code>
+   ให้เปลี่ยนจาก <code>user</code> เป็นเครื่องชื่อผู้ใช้งานแทนหรือส่งค่า argument ด้วย path ของไฟล์ก็ได้
+   ตัวอย่างเมื่อมีการดรียกใช้ method read และ write
 
 ``` c++
 // ตัวอย่าางการเปลี่ยนค่าใน path file เป็น path file ในเครื่องของผู้ใช้งาน
@@ -99,6 +99,10 @@ public:
     static void write(vector<product> orders, int totalNumbers, float totalAmount, string path = path.orders, bool showMessage = false){
         // ...
     }
+    
+    static void update(string path = path.data){
+        // ... 
+    }
 };
 
 // ตัวอย่างแบบที่ 2 คือการส่งค่า argument เข้าไปแทนใน default parameter เมื่อมีการเรียกใช้ method ในแต่ละบรรทัด
@@ -106,6 +110,7 @@ File::read(path.data);
 File::write(path.data);
 // ถ้าเป็น method แบบ overloading ให้ส่งค่า args ตัวอื่นไปก่อนตามลำดับ
 File::write(orders, quantity, total, path.orders);
+File::update(path.data);
 ```
 
 ปล. สามารถนำโปรเจคนี้ไปใช้งานหรือพัฒนาต่อยอดได้ฟรี แต่ข้อห้ามคือห้าม copy code ไปส่งเป็นงานกลุ่มโปรเจคของตัวเองทั้งที่ไม่ได้ทำเอง หรือ นำโปรแกรมไปขาย
