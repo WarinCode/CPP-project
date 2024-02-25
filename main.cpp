@@ -281,8 +281,8 @@ public:
             }
             // เขียนสรุป จำนวนที่สั่งซื้อ และ ยอดจำนวนเงิน
             writeFile << "CONCLUSION:" << endl;
-            writeFile << "Total number of products = " << totalNumbers << '.' << endl;
-            writeFile << "Total amount = " << totalAmount << "dollar." << endl;
+            writeFile << "Total number of products = " << totalNumbers << endl;
+            writeFile << "Total amount = " << totalAmount << " dollar." << endl;
             // เขียนเส้นตัดบรรทัดจบ
             for(int j = 1; j <= 170; j++){
                 writeFile <<  "-";
@@ -951,7 +951,7 @@ public:
                     // แสดงตารางรายละเอียดสินค้าและสรุปการสั่งซื้อสินค้า
                     table.showTable(orders);
                     // แสดงจำนวนเงินทั้งหมดที่ต้องจ่าย
-                    cout << endl << "Total number of products = " << quantity << '.' << endl;
+                    cout << endl << "Total number of products = " << quantity << endl;
                     cout << "Total amount = " << total << " dollar." << endl;
                     // เขียนข้อมูลลงในไฟล์ orders.txt
                     File::write(orders, quantity, total);

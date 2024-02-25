@@ -1,7 +1,7 @@
 9452	iPhone15Pro	1368.17	20	Apple	phone
 3423	iPhone15ProMax	1172.31	20	Apple	phone
-1093	iPhone15	920.5	15	Apple	phone
-8394	iPhone15Plus	1060.4	15	Apple	phone
+1093	iPhone15	920.5	20	Apple	phone
+8394	iPhone15Plus	1060.4	20	Apple	phone
 9304	iPhone14Pro	1168.94	20	Apple	phone
 4053	iPhone14Promax	1001.95	20	Apple	phone
 9405	iPhone14Plus	915.67	20	Apple	phone
@@ -17,15 +17,15 @@
 1054	iPhoneSE-Gen2	498.19	20	Apple	phone
 9034	iPhone11Pro	665.18	20	Apple	phone
 4954	iPhone11ProMax	720.85	20	Apple	phone
-9543	iPhone11	403.56	19	Apple	phone
+9543	iPhone11	403.56	20	Apple	phone
 1932	iPhoneXS	361.54	20	Apple	phone
 1231	iPhoneXSMAX	237.96	20	Apple	phone
 3043	iPhoneXR	414.7	20	Apple	phone
-1092	iPhoneX	120.79	18	Apple	phone
+1092	iPhoneX	120.79	20	Apple	phone
 4323	iPhone8Plus	231	20	Apple	phone
 9432	iPhone8	175.06	20	Apple	phone
 1132	iPhone7Plus	139.16	20	Apple	phone
-1121	iPhone7	303.37	19	Apple	phone
+1121	iPhone7	303.37	20	Apple	phone
 9832	iPhone6sPlus	66.8	20	Apple	phone
 8453	iPhone6s	91.23	20	Apple	phone
 3402	iPhone6Plus	83.22	20	Apple	phone
@@ -35,7 +35,7 @@
 4045	Lenovo-Yoga-Slim7	1001.67	20	Lenovo	laptop
 1041	SamsungGalaxy-S24	1082.66	20	Samsung	phone
 7896	SamsungGalaxy-Tab-S9	528.53	20	Samsung	tablet
-5033	Huewei-MataPad11	389.37	19	Huewei	tablet
+5033	Huewei-MataPad11	389.37	20	Huewei	tablet
 2904	Microsoft-Surface-Pro9	1530.48	20	Microsoft	tablet
 2948	OPPO-Reno11	417.2	17	Oppo	phone
 4352	SamsungGalaxy-A05s	138.88	20	Samsung	phone
@@ -46,5 +46,5 @@
 6066	Asus-TUF-Gaming-F15	556.36	20	ASUS	laptop
 6435	Lenovo-Tab-P11	389.37	20	Lenovo	tablet
 7526	Xiaomi-Pad6	361.54	17	XIAOMI	tablet
-8365	OPPO-Pad-Neo-LTE	303.37	17	OPPO	tablet
-8777	Asus-ROG-Phone-8Pro	1057.33	20	ASUS	phone
+8365	OPPO-Pad-Neo-LTE	303.37	15	OPPO	tablet
+8777	Asus-ROG-Phone-8Pro	1057.33	19	ASUS	phone

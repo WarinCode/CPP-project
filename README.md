@@ -65,7 +65,17 @@ git clone https://github.com/WarinCode/CPP-project.git
 cd CPP-project
 ```
 
-3. เปิด CLion ขึ้นมาแล้ว build โปรแกรม และ run ไฟล์ main.cpp ในโปรแกรม CLion จะได้โปรแกรมหน้าตาประมาณนี้
+2. เข้าไปใน directory ของโปรเจค
+```
+cd CPP-project
+```
+
+3. ดาวโหลด์ library ลงโปรเจคจะได้ directory <code>libfort</code>
+```
+git submodule add https://github.com/seleznevae/libfort.git
+```
+
+4. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp ในโปรแกรม CLion จะได้โปรแกรมหน้าตาประมาณนี้
 
 <div align="center">
 <img src="imgs/preview.jpg" alt="preview" height="100%" width="100%"/>

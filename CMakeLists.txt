@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.27)
-project(CPP_project)
+project(CPP-project)
 
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-add_executable(CPP_project
+add_executable(CPP-project
         main.cpp
 )
 
-add_subdirectory(libs/libfort)
+add_subdirectory(libfort)
 
-target_link_libraries(CPP_project PRIVATE fort)
-
-
+target_link_libraries(CPP-project PRIVATE fort)
