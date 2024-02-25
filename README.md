@@ -72,7 +72,7 @@ cd CPP-project
 </div>
 
 4. ถ้าทำตามขั้นตอนที่ว่ามาทั้งหมดก็ถือว่าพร้อมใช้งานแต่ที่สำคัญในส่วนของการอ่านและเขียนไฟล์ข้อมูลให้ทำการเขียนทับ path ในส่วนของ method read และ write ของ class File
-<code>string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)"</code> โดยให้เปลี่ยนเป็นชื่อผู้ใช้งานแทน <code>string path = R"(C:\Users\user\Desktop\CPP-project\txt\data.txt)"</code>
+<code>string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\data.txt)"</code> โดยให้เปลี่ยนเป็นชื่อผู้ใช้งานแทน <code>string path = R"(C:\Users\user\Desktop\CPP-project\txts\data.txt)"</code>
 ให้เปลี่ยนจาก <code>user</code> เป็นเครื่องชื่อผู้ใช้งานแทน
 
 ``` c++
@@ -86,8 +86,8 @@ typedef struct {
 } textFiles;
 // ให้แทนค่าตรงคำว่า user เป็นเครื่องผู้ใช้งานแทน
 const textFiles path = { 
-    .data=R"(C:\Users\user\Desktop\CPP-project\txt\data.txt)", 
-    .orders=R"(C:\Users\user\Desktop\CPP-project\txt\data.txt)"
+    .data=R"(C:\Users\user\Desktop\CPP-project\txts\data.txt)", 
+    .orders=R"(C:\Users\user\Desktop\CPP-project\txts\orders.txt)"
 };
 
 // ตัวอย่างแบบที่ 1 คือการเข้าไปแก้ไขค่าใน default parameter ใน method read และ write

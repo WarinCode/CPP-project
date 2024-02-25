@@ -210,7 +210,7 @@ public:
 class File {
 public:
     // method อ่านข้อมูลในไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
-    static void read(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)", bool showMessage = false){
+    static void read(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\data.txt)", bool showMessage = false){
         // ตัวแปรสำหรับอ่านไฟลืข้อมูล
         ifstream readFile;
         // เปิดไฟล์อเพื่อ่านข้อมูล
@@ -240,7 +240,7 @@ public:
     };
 
     // method เขียนข้อมูลลงในไฟล์ data.txt ด้วยข้อมูล vector Product
-    static void write(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)", bool showMessage = false){
+    static void write(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\data.txt)", bool showMessage = false){
         // ตัวแปรสำหรับเขียนไฟล์ข้อมูล
         ofstream writeFile;
         // เปิดไฟล์เพื่อเขียนข้อมูล
@@ -260,7 +260,7 @@ public:
     }
 
     // method (overloading) เขียนข้อมูลรายการสินค้าที่สั่งซื้อไปลงไฟล์ orders.txt โดยเอาข้อมูลจาก parameter orders มาเขียน
-    static void write(vector<product> orders, int totalNumbers, float totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\orders.txt)", bool showMessage = false){
+    static void write(vector<product> orders, int totalNumbers, float totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\orders.txt)", bool showMessage = false){
         // ตัวแปรสำหรับเขียนไฟล์ข้อมูล
         ofstream writeFile;
         // เปิดไฟล์เพื่อเขียนข้อมูล
@@ -296,7 +296,7 @@ public:
     }
 
     // method อัปเดตข้อมูลล่าสุดของไฟล์ data.txt และ ตัวแปรที่เก็บข้อมูลสินค้า data
-    static void update(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)"){
+    static void update(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\data.txt)"){
         write(path);
         read(path);
     }
