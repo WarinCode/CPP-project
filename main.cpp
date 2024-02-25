@@ -296,9 +296,9 @@ public:
     }
 
     // method อัปเดตข้อมูลล่าสุดของไฟล์ data.txt และ ตัวแปรที่เก็บข้อมูลสินค้า data
-    static void update(){
-        write();
-        read();
+    static void update(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txt\data.txt)"){
+        write(path);
+        read(path);
     }
 };
 
