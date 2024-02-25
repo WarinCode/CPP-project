@@ -65,23 +65,18 @@ git clone https://github.com/WarinCode/CPP-project.git
 cd CPP-project
 ```
 
-2. เข้าไปใน directory ของโปรเจค
-```
-cd CPP-project
-```
-
 3. ดาวโหลด์ library ลงโปรเจคจะได้ directory <code>libfort</code>
 ```
 git submodule add https://github.com/seleznevae/libfort.git
 ```
 
-4. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp ในโปรแกรม CLion จะได้โปรแกรมหน้าตาประมาณนี้
+4. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp จะได้โปรแกรมหน้าตาประมาณนี้
 
 <div align="center">
 <img src="imgs/preview.jpg" alt="preview" height="100%" width="100%"/>
 </div>
 
-4. ถ้าทำตามขั้นตอนที่ว่ามาทั้งหมดก็ถือว่าพร้อมใช้งานแต่ที่สำคัญในส่วนของการอ่านและเขียนไฟล์ข้อมูลให้ทำการเขียนทับ path ในส่วนของ method read และ write ของ class File
+5. ถ้าทำตามขั้นตอนที่ว่ามาทั้งหมดก็ถือว่าพร้อมใช้งานแต่ที่สำคัญในส่วนของการอ่านและเขียนไฟล์ข้อมูลให้ทำการเขียนทับ path ในส่วนของ method read และ write ของ class File
 <code>string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\data.txt)"</code> โดยให้เปลี่ยนเป็นชื่อผู้ใช้งานแทน <code>string path = R"(C:\Users\user\Desktop\CPP-project\txts\data.txt)"</code>
 ให้เปลี่ยนจาก <code>user</code> เป็นเครื่องชื่อผู้ใช้งานแทน
 
@@ -128,19 +123,19 @@ File::write(path.data);
 File::write(orders, quantity, total, path.orders);
 File::update(path.data);
 ```
-5. ถ้าหาก run ไฟล์ main.cpp ไม่ได้ หรือ ติดปัญหา compile ไม่ผ่านเพราะหาไฟล์ <code>fort.hpp</code> ไม่เจอแปลว่ายังไม่ได้ติดตั้งส่วนของ directory <code>libs/libfort</code> (ติดตั้ง library ไม่สำเร็จ)
+6. ถ้าหาก run ไฟล์ main.cpp ไม่ได้ หรือ ติดปัญหา compile ไม่ผ่านเพราะหาไฟล์ <code>fort.hpp</code> ไม่เจอแปลว่ายังไม่ได้ติดตั้งส่วนของ directory <code>libs/libfort</code> (ติดตั้ง library ไม่สำเร็จ)
 ให้เปลี่ยนจากการใช้ branch นี้เป็น brach main2 เพราะ branch นี้ไม่มีการใช้ library ใดๆสามารถรันใช้งานได้เลย
 ให้เปลี่ยน branch เป็น branch main2 กลับไปที่ terminal โดยใช้คำสั่งนี้ (terminal ต้องอยู่ใน path ของโฟลเดอร์โปรเจค CPP-project อยู่)
 ```
 git switch main2
 ```
 
-6. ตอนนี้เรากำลังทำงานอยู่ใน branch main2 โดยจะเจอไฟล์ main.cpp ให้ compile ไฟล์นั้นจะได้ program.exe ขึ้นมา
+7. ตอนนี้เรากำลังทำงานอยู่ใน branch main2 โดยจะเจอไฟล์ main.cpp ให้ compile ไฟล์นั้นจะได้ program.exe ขึ้นมา
 ```
 g++ main.cpp -o program.exe
 ```
 
-7. เปิดโปรแกรมที่ได้มาใน terminal
+8. เปิดโปรแกรมที่ได้มาใน terminal
 ```
 ./program.exe
 ```
