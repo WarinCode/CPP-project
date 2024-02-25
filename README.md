@@ -123,7 +123,7 @@ File::write(path.data);
 File::write(orders, quantity, total, path.orders);
 File::update(path.data);
 ```
-6. ถ้าหาก run ไฟล์ main.cpp ไม่ได้ หรือ ติดปัญหา compile ไม่ผ่านเพราะหาไฟล์ <code>fort.hpp</code> ไม่เจอแปลว่ายังไม่ได้ติดตั้งส่วนของ directory <code>libs/libfort</code> (ติดตั้ง library ไม่สำเร็จ)
+6. ถ้าหาก run ไฟล์ main.cpp ไม่ได้ หรือ ติดปัญหา compile ไม่ผ่านเพราะหาไฟล์ <code>fort.hpp</code> ไม่เจอแปลว่ายังไม่ได้ติดตั้งส่วนของ directory <code>libfort</code> (ติดตั้ง library ไม่สำเร็จ)
 ให้เปลี่ยนจากการใช้ branch นี้เป็น brach main2 เพราะ branch นี้ไม่มีการใช้ library ใดๆสามารถรันใช้งานได้เลย
 ให้เปลี่ยน branch เป็น branch main2 กลับไปที่ terminal โดยใช้คำสั่งนี้ (terminal ต้องอยู่ใน path ของโฟลเดอร์โปรเจค CPP-project อยู่)
 ```
