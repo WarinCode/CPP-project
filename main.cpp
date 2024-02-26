@@ -446,9 +446,9 @@ public:
     // method แสดงตารางสินค้า
     void showTable(){
         if(data.size() == 0){
-            cout << "Out of stock!" << endl;
+            cout << on_magenta << grey <<  "Out of stock!" << reset << endl;
         } else {
-            cout << endl << "\t\t\t" << on_bright_white << grey << "List of all products" << reset  << endl;
+            cout << endl << "\t\t\t" << on_bright_white << grey << "List of all products" << reset << endl;
             // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
             table << header << "No" <<"Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
             // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
@@ -464,7 +464,7 @@ public:
     // method (overloading) สำหรับเแสดงตารางสินค้า orders สินค้าที่สั่งไป
     void showTable(vector<product> list){
         if(list.size() == 0){
-            cout << "Out of stock!" << endl;
+            cout << on_magenta << grey << "Out of stock!" << reset << endl;
         } else {
             // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
             table << header << "No" << "Product" << "ID" << "$Price" << "Quantity" << "Sum" << "Brand" << "Category" << endr;
@@ -481,9 +481,9 @@ public:
     // method (overloading) สำหรับแสดงตารางสินค้าด้วยชื่อ Brand หรือ Category (ใช้คู่กับ method showProductCategory และ showProductBrand)
     void showTable(vector<Product> list){
         if(list.size() == 0){
-            cout << "Out of stock!" << endl;
+            cout << on_magenta << grey <<  "Out of stock!" << reset << endl;
         } else {
-            cout << endl << "\t\tList of all products" << endl;
+            cout << endl << "\t\t\t" << on_bright_white << grey << "List of all products" << reset << endl;
             // สร้างหัว columns
             table << header << "No" << "Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
             // loop ข้อมูลจาก parameter list โดยสร้างแต่ละ row
@@ -545,15 +545,9 @@ public:
     // method แสดงรายการสินค้า
     static void showListProducts(){
         if(isEmpty()){
-            cout << "Out of stock!" << endl;
+            cout << on_magenta << grey << "Out of stock!" << reset << endl;
         } else {
             int number = 1;
-//            cout << endl << "\t\tList of all products" << endl;
-            // แสดงรายการสินค้าทั้งหมด
-//            for(Product item : data){
-//                cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tCategory: " << item.getCategory() << "\tBrand: " << item.getBrand() << endl;
-//                number++;
-//            }
             // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
             Table table = Table();
             table.showTable();
@@ -564,12 +558,12 @@ public:
     static void showProductCategory(){
         string category;
 
-        cout << "Enter category:";
+        cout << yellow << "Enter category:" << reset;
         cin >> category;
 
         // เช็คว่ามีสินค้าหรือไม่
         if(isEmpty()){
-            cout << "Out of stock!" << endl;
+            cout << magenta << "Out of stock!" << reset << endl;
         } else {
             vector<Product> list;
             // เช็คว่าอยู่ในหมวดหมู่สินค้านั้นหรือไม่
@@ -587,7 +581,7 @@ public:
                 }
                 // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
                 if(!inStock){
-                    cout << "Error: No product category " <<  "\"" << category << "\"" << " in stock." << endl;
+                    cout << on_red << grey <<"Error:" << " No product category " <<"\"" << category << "\"" << " in stock." << reset << endl;
                     return;
                 } else {
                     // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
@@ -598,7 +592,7 @@ public:
                 }
 
             } else {
-                cout << "Error: " << "\"" << category << "\"" << " is not in categories of products." << endl;
+                cout << on_red << grey << "Error: " << "\"" << category << "\"" << " is not in categories of products." << reset << endl;
             }
         }
     }
@@ -607,11 +601,11 @@ public:
     static void showProductBrand(){
         string brand;
 
-        cout << "Enter brand name:";
+        cout << yellow << "Enter brand name:" << reset;
         cin >> brand;
 
         if(isEmpty()){
-            cout << "Out of stock!" << endl;
+            cout << on_magenta << grey << "Out of stock!" << reset << endl;
         } else {
             int number = 1;
             vector<Product> list;
@@ -627,7 +621,7 @@ public:
             }
             // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
             if(!inStock){
-                cout << "This product brand " << "\"" << brand << "\"" << " was not found in stock!" << endl;
+                cout << on_red << grey << "Error: This product brand " << "\"" << brand << "\"" << " was not found in stock!" << reset << endl;
                 return;
             } else {
                 // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
@@ -643,17 +637,17 @@ public:
     static void addProduct(int id){
         string selectCategory;
 
-        cout << "Product categories ";
+        cout << "Product categories";
         char comma = ',';
         int count = 0;
         // แสดงหมวดหมู่ของสินค้าที่สามารถเพิ่มได้
         for(string category : productCategories){
-            cout << "\"" << category << "\"";
+            cout << green << "\"" << category << "\"" << reset;
             if(count != NUMBER_CATEGORIES - 1) cout << comma << ' ';
             count++;
         }
 
-        cout << endl << "Select product category:";
+        cout << endl << yellow <<  "Select product category:" << reset;
         cin >> selectCategory;
 
         // ถ้ามีหมวดหมู่สินค้านั้นอยู่ในรายการ
@@ -662,32 +656,32 @@ public:
             Product newProduct; // ตัวแปรที่เก็บ object ของสินค้าที่เพิ่มเข้ามาใหม่
 
             // รับข้อมูลสินค้าใหม่ที่จะเพิ่ม
-            cout << "Product Name:";
+            cout << yellow << "Product Name:" << reset;
             cin >> p.name;
             // ตรวจสอบว่า name ว่าซ้ำกันไหม
             if(findProduct(p.name)){
-                cout << endl << "Error: The new product name must not be duplicated with the product that already has this name!" << endl;
+                cout << on_red << grey << "Error: The new product name must not be duplicated with the product that already has this name!" << reset << endl;
                 return;
             }
             // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
             else if(isdigit(p.name.at(0))){
-                cout << "Do not name the product beginning with a number!" << endl;
+                cout << on_red << grey << "Error: Do not name the product beginning with a number!" << reset << endl;
                 return;
             }
 
             // รับค่า parameter มาโดย id จะมีค่าเริ่มต้นที่สุ่มเอาไว้ให้
             p.id = id;
 
-            cout << "Pricing:";
+            cout << yellow << "Pricing:" << reset;
             cin >> p.price;
             //  ราคาต้องเป็นเลขจำนวนเต็มบวก
             if(!isPositiveNumber(p.price)){
-                cout << endl << "Error: Invalid price, Please enter only positive number." << endl;
+                cout << on_red << grey << "Error: Invalid price, Please enter only positive number." << endl;
                 return;
             }
 
-            cout << "If there is no product brand name, Enter -" << endl;
-            cout << "Product brand name:";
+            cout << yellow <<"If there is no product brand name, Enter -" << reset << endl;
+            cout << yellow << "Product brand name:" << endl;
             cin >> p.brand;
 
             // สร้าง array ชื่อ products ทำหน้าที่เก็บหมวดหมู่สินค้าทั้งหมด
@@ -720,16 +714,16 @@ public:
             // update รายการสินค้าล่าสุดของไฟลื data.txt และ ข้อมูล data
             File::update();
 
-            cout << endl << "Added a new product." << endl;
+            cout << green <<"Added a new product." << reset << endl;
         } else {
-            cout << endl << "Error: " << "\"" << selectCategory << "\"" << " is not in categories of products" << endl;
+            cout << on_red << grey << "Error: " << "\"" << selectCategory << "\"" << " is not in categories of products" << reset << endl;
         }
     }
 
     // method สำหรับเพิ่มจำนวนสินค้าใน stock
     static void addStockProduct(){
         string input;
-        cout << "Enter the product name or product id:";
+        cout << yellow << "Enter the product name or product id:" << reset;
         cin >> input;
 
         // ถ้ามีสินค้านั้นอย่ในข้อมูล
@@ -737,12 +731,12 @@ public:
             int number;
             int index = 0;
             // รับข้อมูล
-            cout << "Amount:";
+            cout << yellow <<"Amount:" << reset;
             cin >> number;
 
             // จำนวนสินค้าที่เพิ่มเข้ามาต้องเป็นเลขจำนวนเต็มบวก
             if(!isPositiveNumber(number)){
-                cout << "Invalid number, Please enter a positive number!" << endl;
+                cout << on_red << grey << "Invalid number, Please enter a positive number!" << reset << endl;
                 return;
             }
 
@@ -761,9 +755,9 @@ public:
             }
             // อัปเดตข้อมูล
             File::update();
-            cout << "Added new product quantity to stock" << endl;
+            cout << green <<"Added new product quantity to stock" << reset << endl;
         } else {
-            cout << "Error: " << "\"" << input << "\"" << "is not in data!" << endl;
+            cout << on_red << grey <<"Error: " << "\"" << input << "\"" << "is not in data!" << reset << endl;
         }
     }
 
@@ -771,7 +765,7 @@ public:
     static void deleteProduct() {
         string input;
 
-        cout << "Enter the product name or product id:";
+        cout << yellow << "Enter the product name or product id:" << reset;
         cin >> input;
 
         // ถ้ามีสินค้านั้นอย่ในข้อมูล
@@ -788,11 +782,11 @@ public:
                 }
                 index++;
             }
-            cout << "Successfully deleted product" << endl;
+            cout << green << "Successfully deleted product" << reset << endl;
             // อัปเดตข้อมูล
             File::update();
         } else {
-            cout << "Error: " << "\"" << input << "\"" << " is not in data!" << endl;
+            cout << on_red << grey << "Error: " << "\"" << input << "\"" << " is not in data!" << reset << endl;
         }
     }
 
@@ -800,7 +794,7 @@ public:
     static void editProduct() {
         string input;
 
-        cout << "Enter the product name or product id:";
+        cout << yellow << "Enter the product name or product id:" << reset;
         cin >> input;
 
         // ถ้ามีสินค้านั้นอยู่ในข้อมูล
@@ -823,14 +817,14 @@ public:
                      * ถ้าตอบ y ให้ดำเนินการแก้ไขข้อมูลในส่วนนั้น ถ้าตอบ n หรืออื่นๆคือผ่าน
                      * ถามว่าต้องการแก้ไขชื่อสินค้าไหม
                     */
-                    cout << "Do you want to edit the product name (y/n):";
+                    cout << cyan << "Do you want to edit the product name (y/n):" << reset;
                     cin >> yn.yn1;
                     if(tolower(yn.yn1) == 'y'){
-                        cout << "New product name:";
+                        cout << yellow << "New product name:" << reset;
                         cin >> p.name;
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.name)){
-                            cout << "Error: Cannot edit to name " << "\"" <<p.name << "\"" << " because the name is the same as an existing product name." << endl;
+                            cout << on_red << grey << "Error: Cannot edit to name " << "\"" <<p.name << "\"" << " because the name is the same as an existing product name." << reset << endl;
                             return;
                         } else {
                             // แก้ไขชื่อสินค้า
@@ -839,15 +833,15 @@ public:
                     }
 
                     // ถามว่าต้องการแก้ไขชื่อรหัสสินค้าไหม
-                    cout << "Do you want to edit the product id (y/n):";
+                    cout << cyan << "Do you want to edit the product id (y/n):" << reset;
                     cin >> yn.yn2;
                     if(tolower(yn.yn2) == 'y'){
-                        cout << "New product id:";
+                        cout << yellow << "New product id:" << reset;
                         cin >> p.id;
                         getchar();
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.id)){
-                            cout << "Error: Cannot edit to id " << "\"" <<p.id << "\"" << " because the id is the same as an existing product id." << endl;
+                            cout << on_red << grey <<"Error: Cannot edit to id " << "\"" <<p.id << "\"" << " because the id is the same as an existing product id." << reset << endl;
                             return;
                         } else {
                             // แก้ไขรหัสสินค้า
@@ -856,14 +850,14 @@ public:
                     }
 
                     // ถามว่าต้องการแก้ไขราคาสินค้าไหม
-                    cout << "Do you want to edit the product price (y/n):";
+                    cout << cyan << "Do you want to edit the product price (y/n):" << reset;
                     cin >> yn.yn3;
                     if(tolower(yn.yn3) == 'y'){
-                        cout << "New product price:";
+                        cout << yellow << "New product price:" << reset;
                         cin >> p.price;
                         // ตรวจสอบว่าเป็นเลขจำนวนเต็มบวกหรือไม่
                         if(!isPositiveNumber(p.price)){
-                            cout << "Error: Invalid price, Please enter a positive number!" << endl;
+                            cout << on_red << grey << "Error: Invalid price, Please enter a positive number!" << reset << endl;
                             return;
                         } else {
                             // แก้ไขราคาสินค้า
@@ -872,14 +866,14 @@ public:
                     }
 
                     // ถามว่าต้องการแก้ไขหมวดหมู่สินค้าไหม
-                    cout << "Do you want to edit the product category (y/n):";
+                    cout << cyan << "Do you want to edit the product category (y/n):" << reset;
                     cin >> yn.yn4;
                     if(tolower(yn.yn4) == 'y'){
-                        cout << "New product category:";
+                        cout << yellow << "New product category:" << reset;
                         cin >> p.category;
                         // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
                         if(!isCategory(p.category)){
-                            cout << "Error: " << "\"" << p.category << "\"" << " is not in categories of products" << endl;
+                            cout << on_red << grey << "Error: " << "\"" << p.category << "\"" << " is not in categories of products!" << reset << endl;
                             return;
                         } else {
                             // แก้ไขหมวดหมู่สินค้า
@@ -888,10 +882,10 @@ public:
                     }
 
                     // ถามว่าต้องการแก้ไขหมวดหมู่สินค้าไหม
-                    cout << "Do you want to edit the brand product (y/n):";
+                    cout << cyan << "Do you want to edit the brand product (y/n):" << reset;
                     cin >> yn.yn5;
                     if(tolower(yn.yn5) == 'y'){
-                        cout << "New brand product:";
+                        cout << yellow << "New brand product:" << reset;
                         cin >> p.brand;
                         // แก้ไขแบรนด์สินค้า
                         data.at(index).setBrand(p.brand);
@@ -903,9 +897,9 @@ public:
             }
             // อัปเดตข้อมูล
             File::update();
-            cout << "Successfully edited product" << endl;
+            cout << green << "Successfully edited product" << reset << endl;
         } else {
-            cout << "Error: " << "\"" << input << "\"" << " is not in data!" << endl;
+            cout << on_red << grey << "Error: " << "\"" << input << "\"" << " is not in data!" << reset << endl;
         }
     }
 
@@ -917,11 +911,11 @@ public:
         vector<product> orders = {}; // รายการ orders สินค้าที่สั่งซื้อทั้งหมด
         product order; // order สินค้า 1 ที่สั่ง 1 รายการ
 
-        cout << "Enter \"e\" to exit the sale." << endl;
+        cout << "Enter " << cyan << "\"e\"" << reset << " to exit the sale." << endl;
 
         // loop ไปเรื่อยๆจนกว่าผู้ใช้จะพิมพ์ตัว e
         while(isRunning){
-            cout << "Enter product name or product id:";
+            cout << yellow << "Enter product name or product id:" << reset;
             cin >> input;
 
             // เอา substring ตัวแรกของตัวแปร input
@@ -947,14 +941,14 @@ public:
                         quantity += item.quantity;
                         i++;
                     }
-                    cout << endl << "\t\tThe products you ordered." << endl;
+                    cout << endl << "\t\t" << on_bright_white << grey <<  "The products you ordered." << reset << endl;
                     // สร้าง object table เพื่อจะแสดงตารางสินค้า
                     Table table = Table();
                     // แสดงตารางรายละเอียดสินค้าและสรุปการสั่งซื้อสินค้า
                     table.showTable(orders);
                     // แสดงจำนวนเงินทั้งหมดที่ต้องจ่าย
-                    cout << endl << "Total number of products = " << quantity << endl;
-                    cout << "Total amount = " << total << " dollar." << endl;
+                    cout << endl << cyan << "Total number of products = " << quantity << reset << endl;
+                    cout << cyan << "Total amount = " << total << " dollar." << reset << endl;
                     // เขียนข้อมูลลงในไฟล์ orders.txt
                     File::write(orders, quantity, total);
                     // ลบรายการสินค้าทั้งหมดที่สั่่ง
@@ -981,18 +975,18 @@ public:
                             order.sum = 0; // ยอดรวมสินค้านั้นมีค่าเริ่มต้นเป็น 0
 
                             // รับค้าจำวนสินค้าที่สั่ง
-                            cout << "Quantity:";
+                            cout << yellow << "Quantity:" << reset;
                             cin >> order.quantity;
 
                             // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
                             if(!isPositiveNumber(order.quantity)) {
-                                cout << "Error: Invalid quantity, Please enter a positive number!";
+                                cout << on_red << grey <<"Error: Invalid quantity, Please enter a positive number!" << reset << endl;
                                 isRunning = false;
                                 return;
                             }
                             // สินค้าในคลังหมดไม่สามารถสั่งได้
                             else if(item.getStock() == 0){
-                                cout << "This product " << "\"" << item.getName() << "\"" << " is out of stock." << endl;
+                                cout << red << "This product " << "\"" << item.getName() << "\"" << " is out of stock." << reset << endl;
                             }
                             /* เงื่อนไข
                             * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
@@ -1032,7 +1026,7 @@ public:
                             }
                             // สั่งสินค้าเกินจำนวนในคลัง
                             else {
-                                cout << "Error: The quantity of products ordered is greater than the quantity of products in stock.";
+                                cout << on_red << grey << "Error: The quantity of products ordered is greater than the quantity of products in stock." << reset << endl;
                                 isRunning = false;
                                 return;
                             }
@@ -1040,7 +1034,7 @@ public:
                         j++;
                     }
                 } else {
-                    cout << "Error: " << "\"" << input << "\"" << " is not in data!" << endl;
+                    cout << on_red << grey << "Error: " << "\"" << input << "\"" << " is not in data!" << reset << endl;
                 }
             }
         }
@@ -1052,20 +1046,29 @@ namespace program {
     // function แสดงตัวเลือกการทำงานของโปรแกรม
     void showOptions(){
         // สร้าง array ไว้เก็บชุดความหมายของคำสั่ง
-        string meaningOfCommands[10] = { "Show list of all products", "Show list of product category", "Show list of product brand",
+        string meaningOfCommands[9] = { "Show list of all products", "Show list of product category", "Show list of product brand",
                                          "Sell proudcts", "Add product", "Delete product", "Edit product", "Add product to stock",
-                                         "Clear console screen", "Exit program" };
+                                         "Exit program" };
         // สร้าง object time ไว้แสดงเวลาสุดทุกครั้งที่ใข้งาน
         Time time = Time();
 
         cout << endl << blue << "Product management program" << reset << endl;
-        cout << "Current Time " << yellow << time.getHours() << ":" << time.getMinutes() << ":" << time.getSeconds() << reset << endl << endl;
+        cout << "Current Time " << cyan;
+        // ถ้าเวลายังอยู่ในเลขระหว่าง 1 - 9 ให้ใส่เลข 0 ติดนำหน้าเลขไปด้วย
+        time.getHours() < 10 ? cout << "0" << time.getHours() << ":" : cout << time.getHours() << ":";
+        time.getMinutes() < 10 ? cout << "0" << time.getMinutes() << ":" : cout << time.getMinutes() << ":";
+        time.getSeconds() < 10 ? cout << "0" << time.getSeconds() : cout << time.getSeconds();
+        cout << reset << endl;
 
-        for(int i = 0; i < 10; i++){
-            cout << bold << on_grey << cyan << i + 1 << ". " << reset << on_blue << grey << meaningOfCommands[i] << reset << endl;
+        for(int i = 0; i < 9; i++){
+            cout << on_bright_white << grey << " " << i + 1 << ". " << reset << on_blue << grey << " " <<  meaningOfCommands[i];
+            // เพิ่มข้อความเปล่าเพื่อช่องว่าให้สีพื้นหลังนั้นแสดงเท่ากัน
+            for(int j = meaningOfCommands[i].length(); j <= 30; j++){
+                cout << " ";
+            }
+            cout << reset << endl;
         }
-
-        cout << endl << blue << "Enter a number:" << reset;
+        cout << yellow << "Enter a number:" << reset;
     }
 
     // function ในการสร้างเลข id โดยที่เลข id จะสุ่มเลขอยู่ระหว่าง from ถึง to
@@ -1131,7 +1134,7 @@ int main(){
         }
         // เพิ่มสินค้า
         else if(select == 5){
-            // เมื่อเพิ่มสินค้าใหม่เข้าไปจะ gen id ให้อัตโนมัติ
+            // เมื่อเพิ่มสินค้าใหม่เข้าไปจะ gen id ให้อัตโนมัติโดยที่ id ไม่ซ้ำกัน
             ProductManagement::addProduct(program::generateId());
         }
         // ลบสินค้า
@@ -1146,18 +1149,14 @@ int main(){
         else if(select == 8){
             ProductManagement::addStockProduct();
         }
-        // ล้างหน้าจอ
-        else if(select == 9){
-            system("cls");
-        }
         // ออกจากโปรแกรม
-        else if(select == 10){
-            cout << endl << "Exit program." << endl;
+        else if(select == 9){
+            cout << endl << on_bright_white << grey << "Exit program." << reset << endl;
             break;
         }
         // ไม่มีในตัวเลือก
         else {
-            cout << endl << "\"" << select << "\"" << " is not available, Please select a number between 1 - 10." << endl;
+            cout << on_red << grey << "Error: " << "\"" << select << "\"" << " is not available, Please select a number between 1 - 9." << reset << endl;
         }
     }
     return 0;

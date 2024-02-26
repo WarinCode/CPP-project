@@ -48,3 +48,4 @@
 7526	Xiaomi-Pad6	361.54	17	XIAOMI	tablet
 8365	OPPO-Pad-Neo-LTE	303.37	15	OPPO	tablet
 8777	Asus-ROG-Phone-8Pro	1057.33	19	ASUS	phone
+10823	tesla-model-y	500	20	Tesla	car
