@@ -9,6 +9,8 @@ add_executable(CPP-project
         main.cpp
 )
 
-add_subdirectory(libfort)
+add_subdirectory(libs/libfort)
+add_subdirectory(libs/termcolor)
 
 target_link_libraries(CPP-project PRIVATE fort)
+target_link_libraries(CPP-project PRIVATE termcolor)

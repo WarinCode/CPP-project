@@ -8,6 +8,8 @@
  *  https://github.com/seleznevae/libfort
  *  https://seleznevae.github.io/libfort/index.html
  *  https://cplusplus.com/reference/cstdlib/rand
+ *  https://github.com/ikalnytskyi/termcolor
+ *  https://termcolor.readthedocs.io/#
  */
 
 /* รายชื่อสมาชิกในกลุ่มที่เขียนโปรแกรมนี้
@@ -31,6 +33,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <fort.hpp>
+#include <termcolor/termcolor.hpp>
 
 using namespace std;
 using std::ifstream;
@@ -38,6 +41,7 @@ using std::ofstream;
 using std::ios;
 using std::vector;
 using namespace fort;
+using namespace termcolor;
 
 // กำหนดจำนวนสินค้าตอนเริ่มต้น มี 20 จำนวน ของแต่ละสินค้า
 #define STOCK 20
@@ -232,9 +236,9 @@ public:
                 // เก็บข้อมูลทีละ object
                 data.push_back(getProducts);
             }
-            showMessage && cout << "Read file completed." << endl;
+            showMessage && cout << green << "Read file completed." << reset << endl;
         } else {
-            showMessage && cout << "Error: Cannot open file data.txt to read data!" << endl;
+            showMessage && cout << red << "Error: Cannot open file data.txt to read data!" << reset << endl;
         }
         readFile.close();
     };
@@ -252,9 +256,9 @@ public:
                 // เขียนข้อมูลทีละบรรทัด โดยข้อมูลสินค้าแต่ละส่วนจะเว้นระยะห่าง 1 tab
                 writeFile << item.getId() << "\t" << item.getName() << "\t" << item.getPrice() << "\t" << item.getStock() << "\t" << item.getBrand() << "\t" << item.getCategory() << endl;
             }
-            showMessage && cout << "Write file completed." << endl;
+            showMessage && cout << green << "Write file completed." << reset << endl;
         } else {
-            showMessage && cout << "Error: Cannot open file data.txt to write data!" << endl;
+            showMessage && cout << red << "Error: Cannot open file data.txt to write data!" << reset << endl;
         }
         writeFile.close();
     }
@@ -288,9 +292,9 @@ public:
                 writeFile <<  "-";
                 j == 170 && writeFile << endl;
             }
-            showMessage && cout << "Write file completed." << endl;
+            showMessage && cout << green << "Write file completed." << reset << endl;
         } else {
-            showMessage && cout << "Error: Cannot open file orders.txt to write data!" << endl;
+            showMessage && cout << red << "Error: Cannot open file orders.txt to write data!" << reset << endl;
         }
         writeFile.close();
     }
@@ -444,7 +448,7 @@ public:
         if(data.size() == 0){
             cout << "Out of stock!" << endl;
         } else {
-            cout << endl << "\t\tList of all products" << endl;
+            cout << endl << "\t\t\t" << on_bright_white << grey << "List of all products" << reset  << endl;
             // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
             table << header << "No" <<"Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
             // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
@@ -578,8 +582,6 @@ public:
                     // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                     if(item.getCategory() == category){
                         inStock = true;
-//                        cout << "No: " << number << "\tID: " << item.getId() << "\tName: " << item.getName() << "\tPrice: " << item.getPrice() << "\tStock: "<< item.getStock() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << endl;
-//                        number++;
                         list.push_back(item);
                     }
                 }
@@ -1049,22 +1051,21 @@ public:
 namespace program {
     // function แสดงตัวเลือกการทำงานของโปรแกรม
     void showOptions(){
+        // สร้าง array ไว้เก็บชุดความหมายของคำสั่ง
+        string meaningOfCommands[10] = { "Show list of all products", "Show list of product category", "Show list of product brand",
+                                         "Sell proudcts", "Add product", "Delete product", "Edit product", "Add product to stock",
+                                         "Clear console screen", "Exit program" };
         // สร้าง object time ไว้แสดงเวลาสุดทุกครั้งที่ใข้งาน
         Time time = Time();
 
-        cout << endl << "Product management program" << endl;
-        cout << "Current Time " << time.getHours() << ":" << time.getMinutes() << ":" << time.getSeconds() << endl;
-        cout << "1.) Show list of all products" << endl;
-        cout << "2.) Show list of product category" << endl;
-        cout << "3.) Show list of product brand" << endl;
-        cout << "4.) Sell proudcts" << endl;
-        cout << "5.) Add product" << endl;
-        cout << "6.) Delete product" << endl;
-        cout << "7.) Edit product" << endl;
-        cout << "8.) Add product to stock" << endl;
-        cout << "9.) Clear console screen" << endl;
-        cout << "10.) Exit program" << endl;
-        cout << "Enter a number:";
+        cout << endl << blue << "Product management program" << reset << endl;
+        cout << "Current Time " << yellow << time.getHours() << ":" << time.getMinutes() << ":" << time.getSeconds() << reset << endl << endl;
+
+        for(int i = 0; i < 10; i++){
+            cout << bold << on_grey << cyan << i + 1 << ". " << reset << on_blue << grey << meaningOfCommands[i] << reset << endl;
+        }
+
+        cout << endl << blue << "Enter a number:" << reset;
     }
 
     // function ในการสร้างเลข id โดยที่เลข id จะสุ่มเลขอยู่ระหว่าง from ถึง to
@@ -1158,7 +1159,6 @@ int main(){
         else {
             cout << endl << "\"" << select << "\"" << " is not available, Please select a number between 1 - 10." << endl;
         }
-    };
-
+    }
     return 0;
 }

@@ -3,8 +3,12 @@ cmake-build-debug/*
 *.idea
 .idea
 .idea/*
-libfort
-libfort/*
+libs
+libs/*
+libs/libfort
+libs/libfort/*
+libs/termcolor
+libs/termcolor/*
 .vs
 .vs/*
 out
