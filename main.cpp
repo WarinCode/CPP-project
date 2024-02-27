@@ -11,6 +11,7 @@
  *  https://github.com/ikalnytskyi/termcolor
  *  https://termcolor.readthedocs.io/#
  *  https://www.geeksforgeeks.org/std-string-replace-in-cpp/
+ *  https://weerasak.dev/posts/2023/03/18/basic-cmake-for-building-c-cpp-project/
  */
 
 /* รายชื่อสมาชิกในกลุ่มที่เขียนโปรแกรมนี้
@@ -34,6 +35,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <fort.hpp>
+#include <fort.h>
 #include <termcolor/termcolor.hpp>
 
 using namespace std;
@@ -231,7 +233,7 @@ public:
         // เช็คว่าสามารถเเปิดไฟล์ได้หรือไม่
         if(readFile.is_open()){
             // ล้างข้อมูลทั้งหมดที่เก็บไว้ในตัวแปร data
-            data.clear();
+            ::data.clear();
             string line;
             // loop อ่านไฟล์ data.txt ทีละบรรทัด
             while(std::getline(readFile, line)){
@@ -243,7 +245,7 @@ public:
                 // ในไฟลื data.txt จะอ่านข้อมูลตามนี้ในแต่ละบรรทัด: id   name    price   stock   brand   category
                 ss >> getProducts.id >> getProducts.name >> getProducts.price >> getProducts.stock >> getProducts.brand >>getProducts.category;
                 // เก็บข้อมูลทีละ object
-                data.push_back(getProducts);
+                ::data.push_back(getProducts);
             }
             if(showMessage) program::showSuccessfulMessage("Read file completed.");
         } else {
@@ -261,7 +263,7 @@ public:
         // เช็คว่าสามารถเเปิดไฟล์ได้หรือไม่
         if(writeFile.is_open()){
             // loop ข้อมูลตัวแปร data
-            for(Product item : data){
+            for(Product item : ::data){
                 // เขียนข้อมูลทีละบรรทัด โดยข้อมูลสินค้าแต่ละส่วนจะเว้นระยะห่าง 1 tab
                 writeFile << item.getId() << "\t" << item.getName() << "\t" << item.getPrice() << "\t" << item.getStock() << "\t" << item.getBrand() << "\t" << item.getCategory() << endl;
             }
@@ -450,18 +452,19 @@ public:
         table.set_border_style(FT_BASIC2_STYLE);
         // จัดกึ่งกลางเนื้อหาของตาราง
         table.set_cell_text_align(text_align::center);
+        table.column(1).set_cell_text_align(text_align::left);
     }
 
     // method แสดงตารางสินค้า
     void showTable(){
-        if(data.size() == 0){
+        if(::data.size() == 0){
             cout << on_magenta << grey <<  "Out of stock!" << reset << endl;
         } else {
             cout << endl << "\t\t\t" << on_bright_white << grey << "List of all products" << reset << endl;
             // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
             table << header << "No" <<"Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
             // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
-            for(Product item : data){
+            for(Product item : ::data){
                 table << number << item.getName() << item.getId() << item.getPrice() << item.getStock() << item.getBrand() << item.getCategory() << endr;
                 number++;
             }
@@ -497,7 +500,7 @@ public:
             table << header << "No" << "Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
             // loop ข้อมูลจาก parameter list โดยสร้างแต่ละ row
             for(Product item : list){
-                table << number << item.getId() << item.getName() << item.getPrice() << item.getStock() << item.getBrand() << item.getCategory() << endr;
+                table << number << item.getName() << item.getId() << item.getPrice() << item.getStock() << item.getBrand() << item.getCategory() << endr;
                 number++;
             }
             // แสดงตาราง
@@ -512,7 +515,7 @@ public:
 
     // method ในการตรวจสอบสินค้าว่ามีอยู่ในข้อมูลไหม ถ้ามีคืนค่า true ถ้าไม่ คืนค่า false
     static bool findProduct(string key){
-        for(Product item : data){
+        for(Product item : ::data){
             // key เป็นได้ทั้ง รหัสสินค้า หรือ ชื่อสินค้าก็ได้
             if(to_string(item.getId()) == key || item.getName() == key){
                 return true;
@@ -523,7 +526,7 @@ public:
 
     // method (overloading) เฉพาะสำหรับตรวจสอบเลข id
     static bool findProduct(int id){
-        for(Product item : data){
+        for(Product item : ::data){
             if(item.getId() == id){
                 return true;
             }
@@ -543,7 +546,7 @@ public:
 
     // method ในการเช็คว่าข้อมูลตอนนี้ว่างเปล่าหรือไม่ (ไม่มีสินค้าอยู่ในไฟล์ data.txt) ถ้าว่างเปล่าคืน true ถ่าไม่ว่างเปล่าคืน false
     static bool isEmpty(){
-        return data.size() == 0;
+        return ::data.size() == 0;
     }
 
     // method ในการตรวจสอบว่าค่า parameter ที่ส่งเข้ามานั้นเป็นเลขจำนวนเต็มบวกหรือไม่ ถ้าใช่คืน true ถ้าไม่คืน false
@@ -581,7 +584,7 @@ public:
                 // ตรวจสอบว่ามีหมวดหมู่สินค้านั้นอยู่ในคลัง
                 bool inStock = false;
                 // loop ข้อมูลสินค้า
-                for(Product item : data){
+                for(Product item : ::data){
                     // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                     if(item.getCategory() == category){
                         inStock = true;
@@ -591,7 +594,9 @@ public:
                 // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
                 if(!inStock){
                     err.push_back(" No product category ");
+                    err.push_back("\"");
                     err.push_back(category);
+                    err.push_back("\"");
                     err.push_back(" in stock.");
                     program::showErrorMessage();
                     return;
@@ -628,7 +633,7 @@ public:
             // ตรวจสอบว่าหาแบรนด์สินค้าเจอ
             bool inStock = false;
             // loop ข้อมูลสินค้า
-            for(Product item : data) {
+            for(Product item : ::data) {
                 // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
                 if (item.getBrand() == brand) {
                     inStock = true;
@@ -638,7 +643,9 @@ public:
             // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
             if(!inStock){
                 err.push_back("This product brand ");
+                err.push_back("\"");
                 err.push_back(brand);
+                err.push_back("\"");
                 err.push_back(" was not found in stock!");
                 program::showErrorMessage();
                 return;
@@ -682,7 +689,7 @@ public:
                 program::showErrorMessage("The new product name must not be duplicated with the product that already has this name!");
                 return;
             }
-            // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
+                // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
             else if(isdigit(p.name.at(0))){
                 program::showErrorMessage("Do not name the product beginning with a number!");
                 return;
@@ -729,12 +736,14 @@ public:
                 }
             }
             // นำ newProduct ที่ได้เพิ่มเข้าในรายการสินค้า data
-            data.push_back(newProduct);
+            ::data.push_back(newProduct);
             // update รายการสินค้าล่าสุดของไฟลื data.txt และ ข้อมูล data
             File::update();
             program::showSuccessfulMessage("Added a new product.");
         } else {
+            err.push_back("\"");
             err.push_back(selectCategory);
+            err.push_back("\"");
             err.push_back(" is not in categories of products");
             program::showErrorMessage();
         }
@@ -761,13 +770,13 @@ public:
             }
 
             // loop เช็คข้อมูลสินค้าทีละอัน เมื่อเช็คสินค้าเจอให้เพิ่มจำนวนสินค้าที่ระบุ
-            for(Product item : data){
+            for(Product item : ::data){
                 // เช็ค ชื่อ หรือ id สินค้า ว่าตรงกันไหม
                 if(input == to_string(item.getId()) || input == item.getName()){
                     // นำจำนวนค้าที่เหลือไปบวกกับจำนวนค้าที่เพิ่มเข้ามา
                     int remain = number + item.getStock();
                     // แก้ไขจำนวนใน stock
-                    data.at(index).setStock(remain);
+                    ::data.at(index).setStock(remain);
                     // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
                     break;
                 }
@@ -777,7 +786,9 @@ public:
             File::update();
             program::showSuccessfulMessage("Added new product quantity to stock");
         } else {
+            err.push_back("\"");
             err.push_back(input);
+            err.push_back("\"");
             err.push_back(" is not in data!");
             program::showErrorMessage();
         }
@@ -794,11 +805,11 @@ public:
         if (findProduct(input)) {
             int index = 0;
             // loop ข้อมูลใน data
-            for (Product item : data) {
+            for (Product item : ::data) {
                 // เช็คชื่อ และ id สินค้าว่าตรงกันไหม
                 if (to_string(item.getId()) == input || item.getName() == input) {
                     // ลบสินค้า(สมาชิกใน data)ออกจากตัวแปร data โดยเอาเลข index เป็นตัวบ่งบอกตำแหน่งของสมาชิกใน data
-                    data.erase(data.begin() + index);
+                    ::data.erase(::data.begin() + index);
                     // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
                     break;
                 }
@@ -808,7 +819,9 @@ public:
             // อัปเดตข้อมูล
             File::update();
         } else {
+            err.push_back("\"");
             err.push_back(input);
+            err.push_back("\"");
             err.push_back(" is not in data!");
             program::showErrorMessage();
         }
@@ -833,7 +846,7 @@ public:
             yesOrNo yn;
 
             // loop ข้อมูลสินค้าทั้งหมด
-            for (Product item : data) {
+            for (Product item : ::data) {
                 // เช็คว่าเป็นสินค้าชิ้นนั้น
                 if (to_string(item.getId()) == input || item.getName() == input) {
                     /*
@@ -849,13 +862,15 @@ public:
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.name)){
                             err.push_back(" Cannot edit to name ");
+                            err.push_back("\"");
                             err.push_back(p.name);
+                            err.push_back("\"");
                             err.push_back(" because the name is the same as an existing product name.");
                             program::showErrorMessage();
                             return;
                         } else {
                             // แก้ไขชื่อสินค้า
-                            data.at(index).setName(p.name);
+                            ::data.at(index).setName(p.name);
                         }
                     }
 
@@ -869,13 +884,15 @@ public:
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.id)){
                             err.push_back(" Cannot edit to id ");
+                            err.push_back("\"");
                             err.push_back(to_string(p.id));
+                            err.push_back("\"");
                             err.push_back(" because the id is the same as an existing product id.");
                             program::showErrorMessage();
                             return;
                         } else {
                             // แก้ไขรหัสสินค้า
-                            data.at(index).setId(p.id);
+                            ::data.at(index).setId(p.id);
                         }
                     }
 
@@ -891,7 +908,7 @@ public:
                             return;
                         } else {
                             // แก้ไขราคาสินค้า
-                            data.at(index).setPrice(p.price);
+                            ::data.at(index).setPrice(p.price);
                         }
                     }
 
@@ -903,13 +920,15 @@ public:
                         cin >> p.category;
                         // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
                         if(!isCategory(p.category)){
+                            err.push_back("\"");
                             err.push_back(p.category);
+                            err.push_back("\"");
                             err.push_back(" is not in categories of products!");
                             program::showErrorMessage();
                             return;
                         } else {
                             // แก้ไขหมวดหมู่สินค้า
-                            data.at(index).setCategory(p.category);
+                            ::data.at(index).setCategory(p.category);
                         }
                     }
 
@@ -920,7 +939,7 @@ public:
                         cout << yellow << "New brand product:" << reset;
                         cin >> p.brand;
                         // แก้ไขแบรนด์สินค้า
-                        data.at(index).setBrand(p.brand);
+                        ::data.at(index).setBrand(p.brand);
                     }
                     // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
                     break;
@@ -931,7 +950,9 @@ public:
             File::update();
             program::showSuccessfulMessage("Successfully edited product");
         } else {
+            err.push_back("\"");
             err.push_back(input);
+            err.push_back("\"");
             err.push_back(" is not in data!");
             program::showErrorMessage();
         }
@@ -991,13 +1012,13 @@ public:
                     File::update();
                 }
             }
-            // ดำเนินการสั่งสินค้าต่อ
+                // ดำเนินการสั่งสินค้าต่อ
             else {
                 // เช็คว่า ชื่อ หรือ id ที่พิมพ์มาอยู่ใน data หรือไม่
                 if(findProduct(input)){
                     int j = 0; // ตัวระบุเลข index ของ data
                     // loop ข้อมูลในตัวแปร data
-                    for(Product item : data){
+                    for(Product item : ::data){
                         // เช็ค ชื่อ หรือ id ว่าตรงกับสินค้าที่เลือก
                         if(to_string(item.getId()) == input || item.getName() == input){
                             // เก็บ order สินค้าที่สั่ง
@@ -1018,20 +1039,20 @@ public:
                                 isRunning = false;
                                 return;
                             }
-                            // สินค้าในคลังหมดไม่สามารถสั่งได้
+                                // สินค้าในคลังหมดไม่สามารถสั่งได้
                             else if(item.getStock() == 0){
                                 cout << red << "This product " << "\"" << item.getName() << "\"" << " is out of stock." << reset << endl;
                             }
-                            /* เงื่อนไข
-                            * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
-                            * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
-                            * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
-                            */
+                                /* เงื่อนไข
+                                * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
+                                * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
+                                * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
+                                */
                             else if((order.quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - order.quantity) >= 0)){
                                 // จำนวนที่เหลือของสินค้าในคลัง โดยหักลบกับจำนวนสินค้าที่สั่ง
                                 int remain = item.getStock() - order.quantity;
                                 // เปลี่ยนค่าใน stock มีจำนวนสินค้าที่เหลือตาม remain
-                                data.at(j).setStock(remain);
+                                ::data.at(j).setStock(remain);
 
                                 // ต้องการตรวจสอบข้อมูลสินค้าที่สั่ง (order) นั้นเป็นสินค้าชิ้นเดียวกับที่เราพึ่งสั่งไป(สำค้าอันเดียวกับใน orders)
                                 // ให้เก็บข้อมูลนั้นเป็นข้อมูลเดียวกันโดยไม่ต้องเพิ่ม element ตัวใหม่เข้าไป
@@ -1050,7 +1071,7 @@ public:
                                 if(isDuplicate){
                                     orders.at(k).quantity += order.quantity;
                                 }
-                                // ถ้าข้อมูลไม่ซ้ำกัยให้ orders เพิ่ม element(สินค้า) ตัวใหม่เข้าไป
+                                    // ถ้าข้อมูลไม่ซ้ำกัยให้ orders เพิ่ม element(สินค้า) ตัวใหม่เข้าไป
                                 else {
                                     // เพิ่มสินค้าเข้าใน orders ที่สั่ง
                                     orders.push_back(order);
@@ -1058,7 +1079,7 @@ public:
                                 // เขียนไฟล์ข้อมูล
                                 File::write();
                             }
-                            // สั่งสินค้าเกินจำนวนในคลัง
+                                // สั่งสินค้าเกินจำนวนในคลัง
                             else {
                                 program::showErrorMessage(" The quantity of products ordered is greater than the quantity of products in stock!");
                                 isRunning = false;
@@ -1068,7 +1089,9 @@ public:
                         j++;
                     }
                 } else {
+                    err.push_back("\"");
                     err.push_back(input);
+                    err.push_back("\"");
                     err.push_back(" is not in data!");
                     program::showErrorMessage();
                 }
@@ -1124,13 +1147,19 @@ int main(){
         }
         // ออกจากโปรแกรม
         else if(select == 9){
+            system("cls");
+        }
+        // ออกจากโปรแกรม
+        else if(select == 10){
             cout << endl << on_bright_white << grey << "Exit program." << reset << endl;
             break;
         }
         // ไม่มีในตัวเลือก
         else {
+            err.push_back("\"");
             err.push_back(to_string(select));
-            err.push_back(" is not available, Please select a number between 1 - 9.");
+            err.push_back("\"");
+            err.push_back(" is not available, Please select a number between 1 - 10.");
             program::showErrorMessage();
         }
     }
@@ -1141,9 +1170,9 @@ namespace program {
     // function แสดงตัวเลือกการทำงานของโปรแกรม
     void showOptions(){
         // สร้าง array ไว้เก็บชุดความหมายของคำสั่ง
-        string meaningOfCommands[9] = { "Show list of all products", "Show list of product category", "Show list of product brand",
+        string meaningOfCommands[10] = { "Show list of all products", "Show list of product category", "Show list of product brand",
                                         "Sell proudcts", "Add product", "Delete product", "Edit product", "Add product to stock",
-                                        "Exit program" };
+                                        "Clear console screen", "Exit program" };
         // สร้าง object time ไว้แสดงเวลาสุดทุกครั้งที่ใข้งาน
         Time time = Time();
 
@@ -1155,8 +1184,10 @@ namespace program {
         time.getSeconds() < 10 ? cout << "0" << time.getSeconds() : cout << time.getSeconds();
         cout << reset << endl << endl;
 
-        for(int i = 0; i < 9; i++){
-            cout << on_bright_white << grey << " " << i + 1 << ". " << reset << on_blue << grey << " " <<  meaningOfCommands[i];
+        string blank = " ";
+        for(int i = 0; i < 10; i++){
+            if(i == 9) blank.clear();
+            cout << on_bright_white << grey << " " << i + 1 << ". " << blank << reset << on_blue << grey << " " <<  meaningOfCommands[i];
             // เพิ่มข้อความเปล่าเพื่อช่องว่าให้สีพื้นหลังนั้นแสดงเท่ากัน
             for(int j = meaningOfCommands[i].length(); j <= 30; j++){
                 cout << " ";
@@ -1206,10 +1237,10 @@ namespace program {
                 int i = 1; // นับเลขว่าถึง loop รอบสุดท้ายหรือยัง
                 id = rand() % to + from; // สุ่มเลขใหม่
                 // ตรวจสอบเลข id
-                for(Product item : data){
+                for(Product item : ::data){
                     isDuplicate = ProductManagement::findProduct(id);
                     // เมื่อถึง loop รอบสุดท้ายของข้อมูล
-                    if(i == data.size()){
+                    if(i == ::data.size()){
                         // ถ้าเลข id นั้นไม่ซ้ำให้ออกจาก while loop แต่ถ้าเลข id นั้นยังซ้ำอยู่ก็ loop ไปเรื่อยๆจนกว่าจะไม่ซ้ำ
                         if(!isDuplicate) isDuplicate = false;
                     }
