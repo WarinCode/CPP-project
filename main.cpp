@@ -10,6 +10,7 @@
  *  https://cplusplus.com/reference/cstdlib/rand
  *  https://github.com/ikalnytskyi/termcolor
  *  https://termcolor.readthedocs.io/#
+ *  https://www.geeksforgeeks.org/std-string-replace-in-cpp/
  */
 
 /* รายชื่อสมาชิกในกลุ่มที่เขียนโปรแกรมนี้
@@ -36,10 +37,6 @@
 #include <termcolor/termcolor.hpp>
 
 using namespace std;
-using std::ifstream;
-using std::ofstream;
-using std::ios;
-using std::vector;
 using namespace fort;
 using namespace termcolor;
 
@@ -63,6 +60,90 @@ typedef struct {
     int quantity;
     float sum;
 } product;
+
+//  namespace ของโปรแกรมไว้เก็บ function ที่ไว้ใช้งาน
+namespace program{
+    // ประกาศ function prototypes ไว้ล่วงหน้า
+    void showOptions();
+    void showErrorMessage(string message);
+    void showErrorMessage();
+    void showSuccessfulMessage(string message);
+    int generateId(int from, int to);
+    // ประกาศ vector เพื่อเก็บข้อความ error แล้วนำไปแสดงผ่าน function showErrorMessage ที่เป็น overloading
+    vector<string> err = {};
+}
+using program::err;
+
+// class Time สำหรับการใช้บอกวันเวลาปัจจุบัน
+class Time{
+public:
+    time_t now; // เวลาปัจจุบัน
+    string dt; // datetime
+    tm* ltm; // localtime ต้องใช้เป็น pointer
+
+    // attributes วันที่และเวลา
+    int year;
+    int month;
+    int weekday;
+    int day;
+    int hours;
+    int minutes;
+    int seconds;
+
+    // array วัน และ เดือน
+    string days[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+    string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+    // constructor method
+    Time(){
+        // เวลาปัจจุบัน
+        now = time(0);
+        // ส่ง address now เข้าไปใน function ctime และ localtime
+        dt = ctime(&now);
+        ltm = localtime(&now);
+        // เข้าถึงตัวแปรข้างในของ struct tm
+        hours = ltm -> tm_hour;
+        minutes = ltm -> tm_min;
+        seconds = ltm -> tm_sec;
+        year = ltm -> tm_year + 1900; // ต้องบวก 1900 ไปด้วยถึงจะเป็นปีล่าสุด
+        // attribute month และ weekday ใช้คู่กับ array ได้เพราะสามารถใช้เลขเป็นเลข index ของ array
+        month = ltm -> tm_mon; // เลขระหว่าง 0 - 11
+        weekday = ltm -> tm_wday; // เลขระหว่าง 1 - 6
+        day = ltm -> tm_mday; // วันที่ เลขระหว่าง
+    }
+
+    // getter methods
+    string getDate(){
+        return dt;
+    }
+    int getYear(){
+        return year;
+    }
+    int getMonth(){
+        // ต้องบวก 1 เพราะ tm_mon คืนเลขกลับมาเป็น 1 - 11
+        return month + 1;
+    }
+    int getDay(){
+        return day;
+    }
+    int getHours(){
+        return hours;
+    }
+    int getMinutes(){
+        return minutes;
+    }
+    int getSeconds(){
+        return seconds;
+    }
+    // คืนกลับมาเป็นข้อความ สมาชิกใน array
+    string getDays(){
+        return days[weekday];
+    }
+    string getMonths(){
+        // ลบเลขออกไป 1 ถึงจะใช้เลข index 1 - 11 ได้พอดี
+        return months[getMonth() - 1];
+    }
+};
 
 // Superclass class Product เป็น class ต้นแบบที่ให้ subclass สืบทอดคุถสมบัติและพฤติกรรมต่างๆของคลาสนี้
 class Product {
@@ -138,78 +219,6 @@ public:
 // สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟลื data.txt และ ข้อมูล ที่ เพิ่ม ลบ แก้ไขเข้ามา
 vector<Product> data = {};
 
-// class Time สำหรับการใช้บอกวันเวลาปัจจุบัน
-class Time{
-public:
-    time_t now; // เวลาปัจจุบัน
-    string dt; // datetime
-    tm* ltm; // localtime ต้องใช้เป็น pointer
-
-    // attributes วันที่และเวลา
-    int year;
-    int month;
-    int weekday;
-    int day;
-    int hours;
-    int minutes;
-    int seconds;
-
-    // array วัน และ เดือน
-    string days[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
-    string months[12] = {"January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-
-    // constructor method
-    Time(){
-        // เวลาปัจจุบัน
-        now = time(0);
-        // ส่ง address now เข้าไปใน function ctime และ localtime
-        dt = ctime(&now);
-        ltm = localtime(&now);
-        // เข้าถึงตัวแปรข้างในของ struct tm
-        hours = ltm -> tm_hour;
-        minutes = ltm -> tm_min;
-        seconds = ltm -> tm_sec;
-        year = ltm -> tm_year + 1900; // ต้องบวก 1900 ไปด้วยถึงจะเป็นปีล่าสุด
-        // attribute month และ weekday ใช้คู่กับ array ได้เพราะสามารถใช้เลขเป็นเลข index ของ array
-        month = ltm -> tm_mon; // เลขระหว่าง 0 - 11
-        weekday = ltm -> tm_wday; // เลขระหว่าง 1 - 6
-        day = ltm -> tm_mday; // วันที่ เลขระหว่าง
-    }
-
-    // getter methods
-    string getDate(){
-        return dt;
-    }
-    int getYear(){
-        return year;
-    }
-    int getMonth(){
-        // ต้องบวก 1 เพราะ tm_mon คืนเลขกลับมาเป็น 1 - 11
-        return month + 1;
-    }
-    int getDay(){
-        return day;
-    }
-    int getHours(){
-        return hours;
-    }
-    int getMinutes(){
-        return minutes;
-    }
-    int getSeconds(){
-        return seconds;
-    }
-    // คืนกลับมาเป็นข้อความ สมาชิกใน array
-    string getDays(){
-        return days[weekday];
-    }
-    string getMonths(){
-        // ลบเลขออกไป 1 ถึงจะใช้เลข index 1 - 11 ได้พอดี
-        return months[getMonth() - 1];
-    }
-
-};
-
 // class File ใช้ในการจัดการไฟล์ data.txt เพื่อเขียนและอ่านข้อมูล
 class File {
 public:
@@ -236,9 +245,9 @@ public:
                 // เก็บข้อมูลทีละ object
                 data.push_back(getProducts);
             }
-            showMessage && cout << green << "Read file completed." << reset << endl;
+            if(showMessage) program::showSuccessfulMessage("Read file completed.");
         } else {
-            showMessage && cout << red << "Error: Cannot open file data.txt to read data!" << reset << endl;
+            if(showMessage) program::showErrorMessage("Cannot open file data.txt to read data!");
         }
         readFile.close();
     };
@@ -256,9 +265,9 @@ public:
                 // เขียนข้อมูลทีละบรรทัด โดยข้อมูลสินค้าแต่ละส่วนจะเว้นระยะห่าง 1 tab
                 writeFile << item.getId() << "\t" << item.getName() << "\t" << item.getPrice() << "\t" << item.getStock() << "\t" << item.getBrand() << "\t" << item.getCategory() << endl;
             }
-            showMessage && cout << green << "Write file completed." << reset << endl;
+            if(showMessage) program::showSuccessfulMessage("Write file completed.");
         } else {
-            showMessage && cout << red << "Error: Cannot open file data.txt to write data!" << reset << endl;
+            if(showMessage) program::showErrorMessage("Cannot open file data.txt to write data!");
         }
         writeFile.close();
     }
@@ -292,9 +301,9 @@ public:
                 writeFile <<  "-";
                 j == 170 && writeFile << endl;
             }
-            showMessage && cout << green << "Write file completed." << reset << endl;
+            if(showMessage) program::showSuccessfulMessage("Write file completed.");
         } else {
-            showMessage && cout << red << "Error: Cannot open file orders.txt to write data!" << reset << endl;
+            if(showMessage) program::showErrorMessage("Cannot open file orders.txt to write data!");
         }
         writeFile.close();
     }
@@ -581,7 +590,10 @@ public:
                 }
                 // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
                 if(!inStock){
-                    cout << on_red << grey <<"Error:" << " No product category " <<"\"" << category << "\"" << " in stock." << reset << endl;
+                    err.push_back(" No product category ");
+                    err.push_back(category);
+                    err.push_back(" in stock.");
+                    program::showErrorMessage();
                     return;
                 } else {
                     // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
@@ -592,7 +604,11 @@ public:
                 }
 
             } else {
-                cout << on_red << grey << "Error: " << "\"" << category << "\"" << " is not in categories of products." << reset << endl;
+                err.push_back("\"");
+                err.push_back(category);
+                err.push_back("\"");
+                err.push_back(" is not in categories of products.");
+                program::showErrorMessage();
             }
         }
     }
@@ -621,7 +637,10 @@ public:
             }
             // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
             if(!inStock){
-                cout << on_red << grey << "Error: This product brand " << "\"" << brand << "\"" << " was not found in stock!" << reset << endl;
+                err.push_back("This product brand ");
+                err.push_back(brand);
+                err.push_back(" was not found in stock!");
+                program::showErrorMessage();
                 return;
             } else {
                 // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
@@ -637,7 +656,7 @@ public:
     static void addProduct(int id){
         string selectCategory;
 
-        cout << "Product categories";
+        cout << "Product categories ";
         char comma = ',';
         int count = 0;
         // แสดงหมวดหมู่ของสินค้าที่สามารถเพิ่มได้
@@ -660,12 +679,12 @@ public:
             cin >> p.name;
             // ตรวจสอบว่า name ว่าซ้ำกันไหม
             if(findProduct(p.name)){
-                cout << on_red << grey << "Error: The new product name must not be duplicated with the product that already has this name!" << reset << endl;
+                program::showErrorMessage("The new product name must not be duplicated with the product that already has this name!");
                 return;
             }
             // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
             else if(isdigit(p.name.at(0))){
-                cout << on_red << grey << "Error: Do not name the product beginning with a number!" << reset << endl;
+                program::showErrorMessage("Do not name the product beginning with a number!");
                 return;
             }
 
@@ -676,7 +695,7 @@ public:
             cin >> p.price;
             //  ราคาต้องเป็นเลขจำนวนเต็มบวก
             if(!isPositiveNumber(p.price)){
-                cout << on_red << grey << "Error: Invalid price, Please enter only positive number." << endl;
+                program::showErrorMessage("Invalid price, Please enter only positive number.");
                 return;
             }
 
@@ -713,10 +732,11 @@ public:
             data.push_back(newProduct);
             // update รายการสินค้าล่าสุดของไฟลื data.txt และ ข้อมูล data
             File::update();
-
-            cout << green <<"Added a new product." << reset << endl;
+            program::showSuccessfulMessage("Added a new product.");
         } else {
-            cout << on_red << grey << "Error: " << "\"" << selectCategory << "\"" << " is not in categories of products" << reset << endl;
+            err.push_back(selectCategory);
+            err.push_back(" is not in categories of products");
+            program::showErrorMessage();
         }
     }
 
@@ -736,7 +756,7 @@ public:
 
             // จำนวนสินค้าที่เพิ่มเข้ามาต้องเป็นเลขจำนวนเต็มบวก
             if(!isPositiveNumber(number)){
-                cout << on_red << grey << "Invalid number, Please enter a positive number!" << reset << endl;
+                program::showErrorMessage("Invalid number, Please enter a positive number!");
                 return;
             }
 
@@ -755,9 +775,11 @@ public:
             }
             // อัปเดตข้อมูล
             File::update();
-            cout << green <<"Added new product quantity to stock" << reset << endl;
+            program::showSuccessfulMessage("Added new product quantity to stock");
         } else {
-            cout << on_red << grey <<"Error: " << "\"" << input << "\"" << "is not in data!" << reset << endl;
+            err.push_back(input);
+            err.push_back(" is not in data!");
+            program::showErrorMessage();
         }
     }
 
@@ -786,7 +808,9 @@ public:
             // อัปเดตข้อมูล
             File::update();
         } else {
-            cout << on_red << grey << "Error: " << "\"" << input << "\"" << " is not in data!" << reset << endl;
+            err.push_back(input);
+            err.push_back(" is not in data!");
+            program::showErrorMessage();
         }
     }
 
@@ -824,7 +848,10 @@ public:
                         cin >> p.name;
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.name)){
-                            cout << on_red << grey << "Error: Cannot edit to name " << "\"" <<p.name << "\"" << " because the name is the same as an existing product name." << reset << endl;
+                            err.push_back(" Cannot edit to name ");
+                            err.push_back(p.name);
+                            err.push_back(" because the name is the same as an existing product name.");
+                            program::showErrorMessage();
                             return;
                         } else {
                             // แก้ไขชื่อสินค้า
@@ -841,7 +868,10 @@ public:
                         getchar();
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.id)){
-                            cout << on_red << grey <<"Error: Cannot edit to id " << "\"" <<p.id << "\"" << " because the id is the same as an existing product id." << reset << endl;
+                            err.push_back(" Cannot edit to id ");
+                            err.push_back(to_string(p.id));
+                            err.push_back(" because the id is the same as an existing product id.");
+                            program::showErrorMessage();
                             return;
                         } else {
                             // แก้ไขรหัสสินค้า
@@ -857,7 +887,7 @@ public:
                         cin >> p.price;
                         // ตรวจสอบว่าเป็นเลขจำนวนเต็มบวกหรือไม่
                         if(!isPositiveNumber(p.price)){
-                            cout << on_red << grey << "Error: Invalid price, Please enter a positive number!" << reset << endl;
+                            program::showErrorMessage("Invalid price, Please enter a positive number!");
                             return;
                         } else {
                             // แก้ไขราคาสินค้า
@@ -873,7 +903,9 @@ public:
                         cin >> p.category;
                         // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
                         if(!isCategory(p.category)){
-                            cout << on_red << grey << "Error: " << "\"" << p.category << "\"" << " is not in categories of products!" << reset << endl;
+                            err.push_back(p.category);
+                            err.push_back(" is not in categories of products!");
+                            program::showErrorMessage();
                             return;
                         } else {
                             // แก้ไขหมวดหมู่สินค้า
@@ -897,9 +929,11 @@ public:
             }
             // อัปเดตข้อมูล
             File::update();
-            cout << green << "Successfully edited product" << reset << endl;
+            program::showSuccessfulMessage("Successfully edited product");
         } else {
-            cout << on_red << grey << "Error: " << "\"" << input << "\"" << " is not in data!" << reset << endl;
+            err.push_back(input);
+            err.push_back(" is not in data!");
+            program::showErrorMessage();
         }
     }
 
@@ -980,7 +1014,7 @@ public:
 
                             // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
                             if(!isPositiveNumber(order.quantity)) {
-                                cout << on_red << grey <<"Error: Invalid quantity, Please enter a positive number!" << reset << endl;
+                                program::showErrorMessage(" Invalid quantity, Please enter a positive number!");
                                 isRunning = false;
                                 return;
                             }
@@ -1026,7 +1060,7 @@ public:
                             }
                             // สั่งสินค้าเกินจำนวนในคลัง
                             else {
-                                cout << on_red << grey << "Error: The quantity of products ordered is greater than the quantity of products in stock." << reset << endl;
+                                program::showErrorMessage(" The quantity of products ordered is greater than the quantity of products in stock!");
                                 isRunning = false;
                                 return;
                             }
@@ -1034,76 +1068,14 @@ public:
                         j++;
                     }
                 } else {
-                    cout << on_red << grey << "Error: " << "\"" << input << "\"" << " is not in data!" << reset << endl;
+                    err.push_back(input);
+                    err.push_back(" is not in data!");
+                    program::showErrorMessage();
                 }
             }
         }
     }
 };
-
-// namespace ของโปรแกรมใช้สำหรับเก็บ function
-namespace program {
-    // function แสดงตัวเลือกการทำงานของโปรแกรม
-    void showOptions(){
-        // สร้าง array ไว้เก็บชุดความหมายของคำสั่ง
-        string meaningOfCommands[9] = { "Show list of all products", "Show list of product category", "Show list of product brand",
-                                         "Sell proudcts", "Add product", "Delete product", "Edit product", "Add product to stock",
-                                         "Exit program" };
-        // สร้าง object time ไว้แสดงเวลาสุดทุกครั้งที่ใข้งาน
-        Time time = Time();
-
-        cout << endl << blue << "Product management program" << reset << endl;
-        cout << "Current Time " << cyan;
-        // ถ้าเวลายังอยู่ในเลขระหว่าง 1 - 9 ให้ใส่เลข 0 ติดนำหน้าเลขไปด้วย
-        time.getHours() < 10 ? cout << "0" << time.getHours() << ":" : cout << time.getHours() << ":";
-        time.getMinutes() < 10 ? cout << "0" << time.getMinutes() << ":" : cout << time.getMinutes() << ":";
-        time.getSeconds() < 10 ? cout << "0" << time.getSeconds() : cout << time.getSeconds();
-        cout << reset << endl;
-
-        for(int i = 0; i < 9; i++){
-            cout << on_bright_white << grey << " " << i + 1 << ". " << reset << on_blue << grey << " " <<  meaningOfCommands[i];
-            // เพิ่มข้อความเปล่าเพื่อช่องว่าให้สีพื้นหลังนั้นแสดงเท่ากัน
-            for(int j = meaningOfCommands[i].length(); j <= 30; j++){
-                cout << " ";
-            }
-            cout << reset << endl;
-        }
-        cout << yellow << "Enter a number:" << reset;
-    }
-
-    // function ในการสร้างเลข id โดยที่เลข id จะสุ่มเลขอยู่ระหว่าง from ถึง to
-    int generateId(int from = 1000, int to = 10000){
-        // ตั้งค่าการสุ่ม
-        srand(time(NULL));
-        // ค่า id ที่ได้จากการสุ่ม มีเลข 4 หลัก
-        int id;
-        // สุ่มเลขระหว่าง from ถึง to จะได้ 4 หลัก
-        id = rand() % to + from;
-        // ตรวจสอบเลข id นั้นซ้ำกับเลข id สินค้าอื่นหรือไม่
-        bool isDuplicate = ProductManagement::findProduct(id);
-
-        // ถ้าเลข id นั้นซ้ำกับเลข id สินค้าอื่น
-        if(isDuplicate){
-            // loop ไปเรื่อยๆจนกว่าเลข id จะไม่ซ้ำ
-            while(isDuplicate){
-                int i = 1; // นับเลขว่าถึง loop รอบสุดท้ายหรือยัง
-                id = rand() % to + from; // สุ่มเลขใหม่
-                // ตรวจสอบเลข id
-                for(Product item : data){
-                    isDuplicate = ProductManagement::findProduct(id);
-                    // เมื่อถึง loop รอบสุดท้ายของข้อมูล
-                    if(i == data.size()){
-                        // ถ้าเลข id นั้นไม่ซ้ำให้ออกจาก while loop แต่ถ้าเลข id นั้นยังซ้ำอยู่ก็ loop ไปเรื่อยๆจนกว่าจะไม่ซ้ำ
-                        if(!isDuplicate) isDuplicate = false;
-                    }
-                    i++;
-                }
-            }
-        }
-
-        return id;
-    }
-}
 
 int main(){
     // เริ่มโปรแกรมให้อ่านข้อมูลจากไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
@@ -1135,7 +1107,8 @@ int main(){
         // เพิ่มสินค้า
         else if(select == 5){
             // เมื่อเพิ่มสินค้าใหม่เข้าไปจะ gen id ให้อัตโนมัติโดยที่ id ไม่ซ้ำกัน
-            ProductManagement::addProduct(program::generateId());
+            int id = program::generateId(1000,10000);
+            ProductManagement::addProduct(id);
         }
         // ลบสินค้า
         else if(select == 6){
@@ -1156,8 +1129,95 @@ int main(){
         }
         // ไม่มีในตัวเลือก
         else {
-            cout << on_red << grey << "Error: " << "\"" << select << "\"" << " is not available, Please select a number between 1 - 9." << reset << endl;
+            err.push_back(to_string(select));
+            err.push_back(" is not available, Please select a number between 1 - 9.");
+            program::showErrorMessage();
         }
     }
     return 0;
+}
+
+namespace program {
+    // function แสดงตัวเลือกการทำงานของโปรแกรม
+    void showOptions(){
+        // สร้าง array ไว้เก็บชุดความหมายของคำสั่ง
+        string meaningOfCommands[9] = { "Show list of all products", "Show list of product category", "Show list of product brand",
+                                        "Sell proudcts", "Add product", "Delete product", "Edit product", "Add product to stock",
+                                        "Exit program" };
+        // สร้าง object time ไว้แสดงเวลาสุดทุกครั้งที่ใข้งาน
+        Time time = Time();
+
+        cout << endl << blue << "Product management program" << reset << endl;
+        cout << "Current Time " << cyan;
+        // ถ้าเวลายังอยู่ในเลขระหว่าง 1 - 9 ให้ใส่เลข 0 ติดนำหน้าเลขไปด้วย
+        time.getHours() < 10 ? cout << "0" << time.getHours() << ":" : cout << time.getHours() << ":";
+        time.getMinutes() < 10 ? cout << "0" << time.getMinutes() << ":" : cout << time.getMinutes() << ":";
+        time.getSeconds() < 10 ? cout << "0" << time.getSeconds() : cout << time.getSeconds();
+        cout << reset << endl;
+
+        for(int i = 0; i < 9; i++){
+            cout << on_bright_white << grey << " " << i + 1 << ". " << reset << on_blue << grey << " " <<  meaningOfCommands[i];
+            // เพิ่มข้อความเปล่าเพื่อช่องว่าให้สีพื้นหลังนั้นแสดงเท่ากัน
+            for(int j = meaningOfCommands[i].length(); j <= 30; j++){
+                cout << " ";
+            }
+            cout << reset << endl;
+        }
+        cout << yellow << "Enter a number:" << reset;
+    }
+
+    // function ในการแสดงข้อความ Error
+    void showErrorMessage(string message){
+        // แสดงข้อความตามสีรูปแบบทีกำหนด
+        cout << on_bright_grey << red << " Error: " << reset << on_red << grey << " " << message << " " << reset << endl;
+    }
+
+    // function (overloading) แสดงข้อความ error ที่ต้องการแนบตัวแปรเข้าไปด้วย
+    void showErrorMessage(){
+        cout << on_bright_grey << red << " Error: " << reset << on_red << grey << " " << on_red << grey;
+        for(string element : err){
+            cout << element;
+        }
+        cout << " " << reset << endl;
+        err.clear();
+    }
+
+    // function ในการแสดงข้อความที่ทำสำเร็จ
+    void showSuccessfulMessage(string message){
+        // แสดงข้อความตามสีรูปแบบทีกำหนด
+        cout << on_bright_grey << green << " Successfully: " << reset << on_green << grey << " " << message << " " << reset << endl;
+    }
+
+    // function ในการสร้างเลข id โดยที่เลข id จะสุ่มเลขอยู่ระหว่าง from ถึง to
+    int generateId(int from, int to){
+        // ตั้งค่าการสุ่ม
+        srand(time(NULL));
+        // ค่า id ที่ได้จากการสุ่ม มีเลข 4 หลัก
+        int id;
+        // สุ่มเลขระหว่าง from ถึง to จะได้ 4 หลัก
+        id = rand() % to + from;
+        // ตรวจสอบเลข id นั้นซ้ำกับเลข id สินค้าอื่นหรือไม่
+        bool isDuplicate = ProductManagement::findProduct(id);
+
+        // ถ้าเลข id นั้นซ้ำกับเลข id สินค้าอื่น
+        if(isDuplicate){
+            // loop ไปเรื่อยๆจนกว่าเลข id จะไม่ซ้ำ
+            while(isDuplicate){
+                int i = 1; // นับเลขว่าถึง loop รอบสุดท้ายหรือยัง
+                id = rand() % to + from; // สุ่มเลขใหม่
+                // ตรวจสอบเลข id
+                for(Product item : data){
+                    isDuplicate = ProductManagement::findProduct(id);
+                    // เมื่อถึง loop รอบสุดท้ายของข้อมูล
+                    if(i == data.size()){
+                        // ถ้าเลข id นั้นไม่ซ้ำให้ออกจาก while loop แต่ถ้าเลข id นั้นยังซ้ำอยู่ก็ loop ไปเรื่อยๆจนกว่าจะไม่ซ้ำ
+                        if(!isDuplicate) isDuplicate = false;
+                    }
+                    i++;
+                }
+            }
+        }
+
+        return id;
+    }
 }

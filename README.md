@@ -65,12 +65,23 @@ git clone https://github.com/WarinCode/CPP-project.git
 cd CPP-project
 ```
 
-3. ดาวโหลด์ library ลงโปรเจคจะได้ directory <code>libfort</code>
+3. สร้าง directory สำหรับเก็บ libraries
 ```
-git submodule add https://github.com/seleznevae/libfort.git
+mkdir libs
 ```
 
-4. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp จะได้โปรแกรมหน้าตาประมาณนี้
+4. เข้าไปใน directory libs
+```
+cd libs
+```
+
+4. ติดตั้ง libraries 
+```
+git submodule add https://github.com/seleznevae/libfort.git
+git submodule add https://github.com/ikalnytskyi/termcolor.git
+```
+
+4. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม(icon เป็นรูปค้อน) จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp จะได้โปรแกรมหน้าตาประมาณนี้
 
 <div align="center">
 <img src="imgs/preview.jpg" alt="preview" height="100%" width="100%"/>
