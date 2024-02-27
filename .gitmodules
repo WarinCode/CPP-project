@@ -1,0 +1,6 @@
+[submodule "libfort"]
+	path = libfort
+	url = https://github.com/seleznevae/libfort.git
+[submodule "termcolor"]
+	path = termcolor
+	url = https://github.com/ikalnytskyi/termcolor.git
