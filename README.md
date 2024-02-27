@@ -9,8 +9,8 @@
 <h1 align="center">โปรแกรมระบบจัดการสินค้า</h1>
 
 โดยโปรเจคนี้มีทั้งหมด 2 branches ได้แก่
-1. <code>main</code> เป็น branch ที่มีการใช้ library เกี่ยวกับตารางโดยจะต้องมีการติดตั้ง library ซึ่งค่อนข้างยุ่งยากถ้าหากไม่สามารถใช้งาน branch นี้ได้ให้ใช้อีก branch นึงคือ
-2. <code>main2</code> เป็น branch ที่ไม่มีการใช้งาน library ใดๆสามารถ run โปรแกรมและใช้งานได้เลยโดยกดที่ลิ้งนี้ <a href="https://github.com/WarinCode/CPP-project/tree/main2">main2</a>
+1. <code>main</code> เป็น branch ที่มีการใช้ libraries ซึ่งค่อนข้างยุ่งยากถ้าหากไม่สามารถใช้งาน branch นี้ได้ให้ใช้อีก branch นึงคือ
+2. <code>main2</code> เป็น branch ที่ไม่มีการใช้งาน libraries ใดๆสามารถ run โปรแกรมและใช้งานได้เลยโดยกดที่ลิ้งนี้ <a href="https://github.com/WarinCode/CPP-project/tree/main2">main2</a>
 
 รายละเอียดโปรเจค : โปรเจคนี้ทำเกี่ยวกับ โปรเแกรมระบบจัดการสินค้าใน ร้านสินค้า , ร้านขายของ , ร้านสดวกซื้อ โดยการใช้งานเมื่อรันโปรแกรมผ่าน CLI ของโปรแกรมจะมีตัวเลือกคือตัวเลขให้ผู้ใช้งานป้อนตัวเลขใน
 terminal ก็จะแสดงข้อมูล หรือ การจัดการกับสินค้าต่างๆ ตามฟีเจอร์ที่ได้ระบุไว้ และ เมื่อมีการจัดการกับข้อมูลสินค้าโปรแกรมจะมีการเขียนและอ่านไฟล์ข้อมูล <code>data.txt</code> ใหม่และเมื่อมีการ
@@ -65,20 +65,9 @@ git clone https://github.com/WarinCode/CPP-project.git
 cd CPP-project
 ```
 
-3. สร้าง directory สำหรับเก็บ libraries
+3. โหลด source code ของ submodule จะได้ไฟล์ libraries
 ```
-mkdir libs
-```
-
-4. เข้าไปใน directory libs
-```
-cd libs
-```
-
-4. ติดตั้ง libraries 
-```
-git submodule add https://github.com/seleznevae/libfort.git
-git submodule add https://github.com/ikalnytskyi/termcolor.git
+git submodule update --init --recursive
 ```
 
 4. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม(icon เป็นรูปค้อน) จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp จะได้โปรแกรมหน้าตาประมาณนี้

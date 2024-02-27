@@ -1153,7 +1153,7 @@ namespace program {
         time.getHours() < 10 ? cout << "0" << time.getHours() << ":" : cout << time.getHours() << ":";
         time.getMinutes() < 10 ? cout << "0" << time.getMinutes() << ":" : cout << time.getMinutes() << ":";
         time.getSeconds() < 10 ? cout << "0" << time.getSeconds() : cout << time.getSeconds();
-        cout << reset << endl;
+        cout << reset << endl << endl;
 
         for(int i = 0; i < 9; i++){
             cout << on_bright_white << grey << " " << i + 1 << ". " << reset << on_blue << grey << " " <<  meaningOfCommands[i];
@@ -1163,7 +1163,7 @@ namespace program {
             }
             cout << reset << endl;
         }
-        cout << yellow << "Enter a number:" << reset;
+        cout << on_yellow << grey << "Enter a number:" << reset;
     }
 
     // function ในการแสดงข้อความ Error
