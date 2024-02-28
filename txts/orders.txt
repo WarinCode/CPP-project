@@ -1,0 +1,8 @@
+DATE: Wednesday 3 Febuary 2024
+TIME: 11:35:40
+LIST:
+1.) PRODUCT_NAME = tesla-model-y,		ID = 10823,		PRICE = 500,		 QUANTITY = 3,		 SUM = 1500,		 BRAND = Tesla,		 CATEGORY = car
+CONCLUSION:
+Total number of products = 3
+Total amount = 1500 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
