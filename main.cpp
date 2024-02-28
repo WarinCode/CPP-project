@@ -461,7 +461,7 @@ public:
         if(::data.size() == 0){
             cout << on_magenta << grey <<  "Out of stock!" << reset << endl;
         } else {
-            cout << endl << "\t\t\t" << on_bright_white << grey << "List of all products" << reset << endl;
+            cout << endl << "\t\t\t" << on_bright_white << grey << " List of all products " << reset << endl;
             // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
             table << header << "No" <<"Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
             // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
@@ -496,7 +496,7 @@ public:
         if(list.size() == 0){
             cout << on_magenta << grey <<  "Out of stock!" << reset << endl;
         } else {
-            cout << endl << "\t\t\t" << on_bright_white << grey << "List of all products" << reset << endl;
+            cout << endl << "\t\t\t" << on_bright_white << grey << " List of all products " << reset << endl;
             // สร้างหัว columns
             table << header << "No" << "Product" << "ID" << "$Price" << "Stock" << "Brand" << "Category" << endr;
             // loop ข้อมูลจาก parameter list โดยสร้างแต่ละ row
@@ -963,7 +963,7 @@ public:
                         quantity += item.quantity;
                         i++;
                     }
-                    cout << endl << "\t\t" << on_bright_white << grey <<  "The products you ordered." << reset << endl;
+                    cout << endl << "\t\t" << on_bright_white << grey <<  " The products you ordered. " << reset << endl;
                     // สร้าง object table เพื่อจะแสดงตารางสินค้า
                     Table table = Table();
                     // แสดงตารางรายละเอียดสินค้าและสรุปการสั่งซื้อสินค้า
