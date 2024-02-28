@@ -27,7 +27,7 @@ terminal ก็จะแสดงข้อมูล หรือ การจั
 
 วันที่เริ่มทำโปรแกรม : 13/2/2567
 
-วันที่ทำโปรแกรมเสร็จ : 25/2/2567
+วันที่ทำโปรแกรมเสร็จ : 28/2/2567
 
 ### ฟีเจอร์ของโปรแกรม
 - เพิ่มสินค้า
@@ -42,16 +42,26 @@ terminal ก็จะแสดงข้อมูล หรือ การจั
 
 ### เครื่องมือที่ต้องมีก่อนใช้งาน
 <span style= "display: flex;">
-    <img src="./imgs/icons/Git.svg" width="60px" alt="git" height="60px" /> &nbsp;&nbsp;
-    <img src="./imgs/icons/Powershell.svg" alt="powershell" width="60px" height="60px" /> &nbsp;&nbsp;
-    <img src="./imgs/icons/CLion.svg" alt="clion" width="60px" height="60px" /> &nbsp;&nbsp;
-    <img src="./imgs/icons/VSCode.svg" alt="vscode" width="60px" height="60px" />
+    <a href="https://git-scm.com/downloads" target="_blank">
+        <img src="./imgs/icons/Git.svg" width="60px" alt="git" height="60px" /> &nbsp;&nbsp;
+    </a>
+    <a href="https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4" target="_blank">
+        <img src="./imgs/icons/Powershell.svg" alt="powershell" width="60px" height="60px" /> &nbsp;&nbsp;
+    </a>
+    <a href="https://www.jetbrains.com/clion/download/#section=windows" target="_blank">
+        <img src="./imgs/icons/CLion.svg" alt="clion" width="60px" height="60px" /> &nbsp;&nbsp;
+    </a>
+    <a href="https://code.visualstudio.com/download" target="_blank">
+        <img src="./imgs/icons/VSCode.svg" alt="vscode" width="60px" height="60px" /> &nbsp;&nbsp;
+    </a>
+    <a href="https://visualstudio.microsoft.com/downloads/" target="_blank">
+        <img src="./imgs/icons/VisualStudio.svg" alt="visual-studio" width="60px" height="60px" />
+    </a>
 </span>
 
-
-- สามารถใช้ CMD, Powershell หรือ Windows Terminal ก็ได้เลือกใช้อันใดอันหนึ่ง
-- IDE ให้เลือกใช้ระหว่าง CLion หรือ VScode
-ถ้าใช้ CLion สามารถดาวโหลด์โปรเจค build และ run ใช้งานโปรแกรมได้เลย ส่วนถ้าใช้ Vscode จะต้องติดตั้ง MinGW ลงเครื่องและต้องลง extensions อีกหลายตัวที่เกี่ยวกับภาษา C , C++ ใน Vscode
+- คลิกที่รูป icon ของแต่ละโปรแกรมเพื่อดาวโหลด์ได้เลย
+- ถ้ามี cmd, powershell หรือ windows terminal อยู่แล้วไม่ต้องคลิก icon รูปที่ 2 ให้เลือกใช้สักอันนึงแทน
+- IDE ให้เลือกใช้อย่างใดอย่างหนึ่งส่วนผู้เขียนใช้ IDE เป็น CLion
 
 ### ขั้นตอนการติดตั้งและใช้งานโปรแกรม
 
@@ -70,13 +80,7 @@ cd CPP-project
 git submodule update --init --recursive
 ```
 
-4. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม(icon เป็นรูปค้อน) จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp จะได้โปรแกรมหน้าตาประมาณนี้
-
-<div align="center">
-<img src="imgs/preview.jpg" alt="preview" height="100%" width="100%"/>
-</div>
-
-5. ถ้าทำตามขั้นตอนที่ว่ามาทั้งหมดก็ถือว่าพร้อมใช้งานแต่ที่สำคัญในส่วนของการอ่านและเขียนไฟล์ข้อมูลให้ทำการเขียนทับ path ในส่วนของ method read และ write ของ class File
+4. ถ้าทำตามขั้นตอนที่ว่ามาทั้งหมดก็ถือว่าเกือบพร้อมใช้งานได้แล้วแต่ที่สำคัญในส่วนของการอ่านและเขียนไฟล์ข้อมูลให้ทำการเขียนทับ path ในส่วนของ method read , write และ update ของ class File
 <code>string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\data.txt)"</code> โดยให้เปลี่ยนเป็นชื่อผู้ใช้งานแทน <code>string path = R"(C:\Users\user\Desktop\CPP-project\txts\data.txt)"</code>
 ให้เปลี่ยนจาก <code>user</code> เป็นเครื่องชื่อผู้ใช้งานแทน
 
@@ -123,9 +127,14 @@ File::write(path.data);
 File::write(orders, quantity, total, path.orders);
 File::update(path.data);
 ```
-6. ถ้าหาก run ไฟล์ main.cpp ไม่ได้ หรือ ติดปัญหา compile ไม่ผ่านเพราะหาไฟล์ <code>fort.hpp</code> ไม่เจอแปลว่ายังไม่ได้ติดตั้งส่วนของ directory <code>libfort</code> (ติดตั้ง library ไม่สำเร็จ)
-ให้เปลี่ยนจากการใช้ branch นี้เป็น brach main2 เพราะ branch นี้ไม่มีการใช้ library ใดๆสามารถรันใช้งานได้เลย
-ให้เปลี่ยน branch เป็น branch main2 กลับไปที่ terminal โดยใช้คำสั่งนี้ (terminal ต้องอยู่ใน path ของโฟลเดอร์โปรเจค CPP-project อยู่)
+
+5. เปิด CLion ขึ้นมาแล้วเลือก build โปรแกรม(icon เป็นรูปค้อน) จากนั้นเลือก Configurations ให้เลือกเป็น <code>CPP-project</code> และ run ไฟล์ main.cpp จะได้โปรแกรมหน้าตาประมาณนี้
+
+<div align="center">
+    <img src="imgs/preview.jpg" alt="preview" height="100%" width="100%"/>
+</div>
+
+6. ถ้าหาก run ไฟล์ main.cpp ไม่ได้ หรือ ติดปัญหา compile ไม่ผ่านหรือติดตั้ง submodules ไม่ได้ให้ทำการเปลี่ยน branch เป็น branch main2 กลับไปที่ terminal โดยใช้คำสั่งนี้ (terminal ต้องอยู่ใน path ของโฟลเดอร์โปรเจค CPP-project อยู่)
 ```
 git switch main2
 ```

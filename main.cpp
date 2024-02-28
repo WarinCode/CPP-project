@@ -68,13 +68,10 @@ namespace program{
     // ประกาศ function prototypes ไว้ล่วงหน้า
     void showOptions();
     void showErrorMessage(string message);
-    void showErrorMessage();
+    void showErrorMessage(int size, string message[]);
     void showSuccessfulMessage(string message);
     int generateId(int from, int to);
-    // ประกาศ vector เพื่อเก็บข้อความ error แล้วนำไปแสดงผ่าน function showErrorMessage ที่เป็น overloading
-    vector<string> err = {};
 }
-using program::err;
 
 // class Time สำหรับการใช้บอกวันเวลาปัจจุบัน
 class Time{
@@ -136,6 +133,9 @@ public:
     }
     int getSeconds(){
         return seconds;
+    }
+    int getWeekDay(){
+        return weekday;
     }
     // คืนกลับมาเป็นข้อความ สมาชิกใน array
     string getDays(){
@@ -286,7 +286,8 @@ public:
             // สร้าง object time
             Time time = Time();
             // เขียนเวลาล่าสุดที่เขียนในไฟล์ orders.txt
-            writeFile << "DATE: " << time.getDate();
+            writeFile << "DATE: " << time.getDays() << " " << time.getWeekDay() << " " << time.getMonths() << " " << time.getYear() << endl;
+            writeFile << "TIME: " << time.getHours() << ":" << time.getMinutes() << ":" << time.getSeconds() << endl;
             writeFile << "LIST:" << endl;
             // loop ข้อมูลตัวแปร orders
             for(product order : orders){
@@ -593,12 +594,8 @@ public:
                 }
                 // ไม่มีสินค้าหมวดนี้อยู่ในคลังสินค้า
                 if(!inStock){
-                    err.push_back(" No product category ");
-                    err.push_back("\"");
-                    err.push_back(category);
-                    err.push_back("\"");
-                    err.push_back(" in stock.");
-                    program::showErrorMessage();
+                    string err[] = { " No product category ", "\"", category, "\"", " in stock." };
+                    program::showErrorMessage(5, err);
                     return;
                 } else {
                     // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
@@ -609,11 +606,8 @@ public:
                 }
 
             } else {
-                err.push_back("\"");
-                err.push_back(category);
-                err.push_back("\"");
-                err.push_back(" is not in categories of products.");
-                program::showErrorMessage();
+                string err[] = { "\"", category, "\"", " is not in categories of products." };
+                program::showErrorMessage(4, err);
             }
         }
     }
@@ -642,12 +636,8 @@ public:
             }
             // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
             if(!inStock){
-                err.push_back("This product brand ");
-                err.push_back("\"");
-                err.push_back(brand);
-                err.push_back("\"");
-                err.push_back(" was not found in stock!");
-                program::showErrorMessage();
+                string err[] = { "This product brand ", "\"", brand, "\"", " was not found in stock!" };
+                program::showErrorMessage(5, err);
                 return;
             } else {
                 // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
@@ -741,11 +731,8 @@ public:
             File::update();
             program::showSuccessfulMessage("Added a new product.");
         } else {
-            err.push_back("\"");
-            err.push_back(selectCategory);
-            err.push_back("\"");
-            err.push_back(" is not in categories of products");
-            program::showErrorMessage();
+            string err[] = { "\"", selectCategory, "\"", " is not in categories of products" };
+            program::showErrorMessage(4, err);
         }
     }
 
@@ -786,11 +773,8 @@ public:
             File::update();
             program::showSuccessfulMessage("Added new product quantity to stock");
         } else {
-            err.push_back("\"");
-            err.push_back(input);
-            err.push_back("\"");
-            err.push_back(" is not in data!");
-            program::showErrorMessage();
+            string err[] = { "\"", input, "\"", " is not in data!" };
+            program::showErrorMessage(4, err);
         }
     }
 
@@ -819,11 +803,8 @@ public:
             // อัปเดตข้อมูล
             File::update();
         } else {
-            err.push_back("\"");
-            err.push_back(input);
-            err.push_back("\"");
-            err.push_back(" is not in data!");
-            program::showErrorMessage();
+            string err[] = { "\"", input, "\"", " is not in data!" };
+            program::showErrorMessage(4, err);
         }
     }
 
@@ -861,12 +842,8 @@ public:
                         cin >> p.name;
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.name)){
-                            err.push_back(" Cannot edit to name ");
-                            err.push_back("\"");
-                            err.push_back(p.name);
-                            err.push_back("\"");
-                            err.push_back(" because the name is the same as an existing product name.");
-                            program::showErrorMessage();
+                            string err[5] = { " Cannot edit to name ", "\"", p.name, "\"", " because the name is the same as an existing product name." };
+                            program::showErrorMessage(5, err);
                             return;
                         } else {
                             // แก้ไขชื่อสินค้า
@@ -883,12 +860,8 @@ public:
                         getchar();
                         // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
                         if(findProduct(p.id)){
-                            err.push_back(" Cannot edit to id ");
-                            err.push_back("\"");
-                            err.push_back(to_string(p.id));
-                            err.push_back("\"");
-                            err.push_back(" because the id is the same as an existing product id.");
-                            program::showErrorMessage();
+                            string err[] = { " Cannot edit to id ", "\"", to_string(p.id), "\"", " because the id is the same as an existing product id." };
+                            program::showErrorMessage(5, err);
                             return;
                         } else {
                             // แก้ไขรหัสสินค้า
@@ -920,11 +893,8 @@ public:
                         cin >> p.category;
                         // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
                         if(!isCategory(p.category)){
-                            err.push_back("\"");
-                            err.push_back(p.category);
-                            err.push_back("\"");
-                            err.push_back(" is not in categories of products!");
-                            program::showErrorMessage();
+                            string err[4] = { "\"", p.category, "\"", " is not in categories of products!" };
+                            program::showErrorMessage(4, err);
                             return;
                         } else {
                             // แก้ไขหมวดหมู่สินค้า
@@ -950,11 +920,8 @@ public:
             File::update();
             program::showSuccessfulMessage("Successfully edited product");
         } else {
-            err.push_back("\"");
-            err.push_back(input);
-            err.push_back("\"");
-            err.push_back(" is not in data!");
-            program::showErrorMessage();
+            string err[] = { "\"", input, "\"", " is not in data!" };
+            program::showErrorMessage(4, err);
         }
     }
 
@@ -1012,7 +979,7 @@ public:
                     File::update();
                 }
             }
-                // ดำเนินการสั่งสินค้าต่อ
+            // ดำเนินการสั่งสินค้าต่อ
             else {
                 // เช็คว่า ชื่อ หรือ id ที่พิมพ์มาอยู่ใน data หรือไม่
                 if(findProduct(input)){
@@ -1089,11 +1056,8 @@ public:
                         j++;
                     }
                 } else {
-                    err.push_back("\"");
-                    err.push_back(input);
-                    err.push_back("\"");
-                    err.push_back(" is not in data!");
-                    program::showErrorMessage();
+                    string err[] = { "\"", input, "\"", " is not in data!" };
+                    program::showErrorMessage(4, err);
                 }
             }
         }
@@ -1156,11 +1120,8 @@ int main(){
         }
         // ไม่มีในตัวเลือก
         else {
-            err.push_back("\"");
-            err.push_back(to_string(select));
-            err.push_back("\"");
-            err.push_back(" is not available, Please select a number between 1 - 10.");
-            program::showErrorMessage();
+            string err[] = { "\"", to_string(select), "\"", " is not available, Please select a number between 1 - 10." };
+            program::showErrorMessage(4, err);
         }
     }
     return 0;
@@ -1204,13 +1165,12 @@ namespace program {
     }
 
     // function (overloading) แสดงข้อความ error ที่ต้องการแนบตัวแปรเข้าไปด้วย
-    void showErrorMessage(){
+    void showErrorMessage(int size, string message[]){
         cout << on_bright_grey << red << " Error: " << reset << on_red << grey << " " << on_red << grey;
-        for(string element : err){
-            cout << element;
+        for(int i = 0; i < size; i++){
+            cout << message[i];
         }
         cout << " " << reset << endl;
-        err.clear();
     }
 
     // function ในการแสดงข้อความที่ทำสำเร็จ

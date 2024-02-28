@@ -1,8 +1,0 @@
-DATE: Sun Feb 25 14:39:26 2024
-LIST:
-1.) PRODUCT_NAME = OPPO-Pad-Neo-LTE,		ID = 8365,		PRICE = 303.37,		 QUANTITY = 2,		 SUM = 606.74,		 BRAND = OPPO,		 CATEGORY = tablet
-2.) PRODUCT_NAME = Asus-ROG-Phone-8Pro,		ID = 8777,		PRICE = 1057.33,		 QUANTITY = 1,		 SUM = 1057.33,		 BRAND = ASUS,		 CATEGORY = phone
-CONCLUSION:
-Total number of products = 3
-Total amount = 1664.07 dollar.
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
