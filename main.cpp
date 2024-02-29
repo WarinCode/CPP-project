@@ -1064,6 +1064,20 @@ public:
     }
 };
 
+// สร้างตัวแปร enum เพื่อเก็บหมายเลขการทำงานของโปรแกรมไว้
+enum options {
+    ShowTable = 1,
+    ShowCategory,
+    ShowBrand,
+    Sell,
+    Add,
+    Delete,
+    Edit,
+    AddStock,
+    Clear,
+    Exit
+};
+
 int main(){
     // เริ่มโปรแกรมให้อ่านข้อมูลจากไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
     File::read();
@@ -1076,45 +1090,45 @@ int main(){
         cin >> select;
 
         // แสดงรายการสินค้าทั้งหมด
-        if(select == 1){
+        if(select == ShowTable){
             ProductManagement::showListProducts();
         }
         // แสดงเฉพาะหมวดหมู่สินค้าที่เลือก
-        else if(select == 2){
+        else if(select == ShowCategory){
             ProductManagement::showProductCategory();
         }
         // แสดงเฉพาะแบรนด์สินค้าที่เลือก
-        else if(select == 3){
+        else if(select == ShowBrand){
             ProductManagement::showProductBrand();
         }
         // สั่งซื้อสินค้า
-        else if(select == 4){
+        else if(select == Sell){
             ProductManagement::sellProducts();
         }
         // เพิ่มสินค้า
-        else if(select == 5){
+        else if(select == Add){
             // เมื่อเพิ่มสินค้าใหม่เข้าไปจะ gen id ให้อัตโนมัติโดยที่ id ไม่ซ้ำกัน
             int id = program::generateId(1000,10000);
             ProductManagement::addProduct(id);
         }
         // ลบสินค้า
-        else if(select == 6){
+        else if(select == Delete){
             ProductManagement::deleteProduct();
         }
         // แก้ไขสินค้า
-        else if(select == 7){
+        else if(select == Edit){
             ProductManagement::editProduct();
         }
         // เพิ่มจำนวนสินค้าในคลัง
-        else if(select == 8){
+        else if(select == AddStock){
             ProductManagement::addStockProduct();
         }
         // ออกจากโปรแกรม
-        else if(select == 9){
+        else if(select == Clear){
             system("cls");
         }
         // ออกจากโปรแกรม
-        else if(select == 10){
+        else if(select == Exit){
             cout << endl << on_bright_white << grey << "Exit program." << reset << endl;
             break;
         }

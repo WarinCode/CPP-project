@@ -6,3 +6,12 @@ CONCLUSION:
 Total number of products = 3
 Total amount = 1500 dollar.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATE: Thursday 4 Febuary 2024
+TIME: 13:50:15
+LIST:
+1.) PRODUCT_NAME = tesla-model-y,		ID = 1083,		PRICE = 500,		 QUANTITY = 2,		 SUM = 1000,		 BRAND = Tesla,		 CATEGORY = car
+2.) PRODUCT_NAME = OPPO-Pad-Neo-LTE,		ID = 8365,		PRICE = 303.37,		 QUANTITY = 2,		 SUM = 606.74,		 BRAND = OPPO,		 CATEGORY = tablet
+CONCLUSION:
+Total number of products = 4
+Total amount = 1606.74 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -46,6 +46,6 @@
 6066	Asus-TUF-Gaming-F15	556.36	20	ASUS	laptop
 6435	Lenovo-Tab-P11	389.37	20	Lenovo	tablet
 7526	Xiaomi-Pad6	361.54	16	XIAOMI	tablet
-8365	OPPO-Pad-Neo-LTE	303.37	15	OPPO	tablet
+8365	OPPO-Pad-Neo-LTE	303.37	13	OPPO	tablet
 8777	Asus-ROG-Phone-8Pro	1057.33	17	ASUS	phone
-1083	tesla-model-y	500	17	Tesla	car
+1083	tesla-model-y	500	15	Tesla	car
