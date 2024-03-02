@@ -19,8 +19,7 @@
 */
 
 /* ข้อบังคับการใช้งานโปรแกรม
- * 1. การตั้งชื่อสินค้าต้องตั้งชื่อที่ติดกันไม้เว้นวรรคเพราะหากตั้งชื่อที่มีความยาวและก็เว้นวรรคชื่อจะทำให้การอ่านไฟล์ข้อมูลผิดพลาดหากจะจำเป็นต้องตั้งชื่อยาวให้ใช้ - หรือ _
- * ขั้นแต่ละคำไว้
+ * 1. การตั้งชื่อสินค้าต้องตั้งชื่อที่ติดกันไม้เว้นวรรคเพราะหากตั้งชื่อที่มีความยาวและก็เว้นวรรคชื่อจะทำให้การอ่านไฟล์ข้อมูลผิดพลาดหากจะจำเป็นต้องตั้งชื่อยาวให้ใช้ - หรือ _ ขั้นแต่ละคำไว้
  * 2. การแก้ไขไฟล์ data.txt มีผลโดยตรงต่อตัวโปรแกรมเพราะฉะนั้นห้ามแก้ไขไฟล์ data.txt เด็ดขาด
  * 3. ห้ามย้ายไฟล์ หรือ ลบโฟลเดอร์ txt เพราะจะมีผลกับการอ่านเขียนข้อมูลในตัวโปรแกรม หัามลบโฟลเดอร์ txt และ ไฟล์ data.txt เด็ดขาด
  * 4. หากมีผู้ใดสนใจจะนำโปรแกรมนี้ไปพัฒนาต่อยอดสามารถเชิญนำไปพัฒนาต่อได้เลย
@@ -51,17 +50,6 @@ const string productCategories[NUMBER_CATEGORIES] = { "phone", "tablet", "laptop
                                                       "camera", "shoes", "watch", "sport", "musical instrument",
                                                       "furniture", "food"
 };
-// สร้่าง struct ไว้จัดการเก็บข้อมูลเป็นกลุ่มเมื่อ loop ข้อมูลมาจากตัวแปร data ได้
-typedef struct {
-    string name;
-    int id;
-    float price;
-    int stock;
-    string category;
-    string brand;
-    int quantity;
-    float sum;
-} product;
 
 //  namespace ของโปรแกรมไว้เก็บ function ที่ไว้ใช้งาน
 namespace program{
@@ -157,9 +145,8 @@ public:
     int stock; // จำนวนสินค้าที่เก็บไว้ในคลัง
     string category; // ประเภทของสินค้า
     string brand; // แบรนด์ของสินค้า
-
     // constructor method
-    Product(int Id, string Name, float Price, int Stock = STOCK, string Category = "any", string Brand = "no-brand-name"){
+    Product(int Id, string Name, float Price, int Stock = STOCK, string Brand = "-", string Category = "-"){
         // เมื่อสร้าง object ให้รับค่า arguments ที่ส่งมาจาก constructor แล้วมาเก็บไว้ใน attributes
         setId(Id);
         setName(Name);
@@ -168,13 +155,15 @@ public:
         setCategory(Category);
         setBrand(Brand);
     }
+
     // constructor method (overloading) สำหรับการสร้าง object ให้มีค่าเริ่มต้น
-    Product(string Category = "any", string Brand = "no-brand-name"){
+    Product(string Category = "-"){
         setId(0);
-        setName("");
+        setName("-");
+        setPrice(0);
         setStock(STOCK);
         setCategory(Category);
-        setBrand(Brand);
+        setBrand("-");
     }
 
     // getter methods ให้ข้อมูลใน attribute
@@ -221,6 +210,44 @@ public:
 // สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟลื data.txt และ ข้อมูล ที่ เพิ่ม ลบ แก้ไขเข้ามา
 vector<Product> data = {};
 
+// class Order ใช้สำหรับจัดเก็บข้อมูลสินค้าที่ผู้ใช้งานสั่งเข้ามา
+class Order: public Product {
+public:
+    int quantity; // จำนวนสินค้า
+    float sum; // ยอดรวมของสินค้านั้น
+
+    // ส่งค่า parameters ไปให้ constructor ใน class Product จัดการ
+    Order(int Id, string Name, float Price, string Brand = "-", string Category = "-", int Stock = STOCK):
+    Product(Id, Name, Price, Stock, Brand, Category){}
+
+    // getter methods
+    int getQuantity(){
+        return quantity;
+    }
+    float getSum(){
+        return sum;
+    }
+
+    // setter methods
+    void setQuantity(int Quantity){
+        quantity = Quantity;
+    }
+    void setSum(float Sum){
+        sum = Sum;
+    }
+};
+
+// class ReceiveProduct ใช้สำหรับการรับข้อมูลสินค้าที่อ่านได้จากไฟล์ข้อมูล data.txt และ ไว้จัดการเก็บข้อมูลเป็นกลุ่มเมื่อ loop ข้อมูลมาจากตัวแปร data ได้
+class ReceiveProduct {
+public:
+    string name;
+    int id;
+    float price;
+    int stock;
+    string category;
+    string brand;
+};
+
 // class File ใช้ในการจัดการไฟล์ data.txt เพื่อเขียนและอ่านข้อมูล
 class File {
 public:
@@ -236,16 +263,18 @@ public:
             ::data.clear();
             string line;
             // loop อ่านไฟล์ data.txt ทีละบรรทัด
-            while(std::getline(readFile, line)){
-                // สร้าง object สินค้า
-                Product getProducts = Product();
+            while(getline(readFile, line)){
+                // สร้าง object สินค้าเพื่อมารอรับข้อมูลสินค้าที่อ่านได้
+                ReceiveProduct rp;
                 // สร้างตัวแปร string stream สำหรับเก็บข้อความทีละบรรทัด
                 stringstream ss(line);
                 // ให้ตัวแปร ss นำเข้าข้อมูลสินค้าทีละตัวแปร
                 // ในไฟลื data.txt จะอ่านข้อมูลตามนี้ในแต่ละบรรทัด: id   name    price   stock   brand   category
-                ss >> getProducts.id >> getProducts.name >> getProducts.price >> getProducts.stock >> getProducts.brand >>getProducts.category;
+                ss >> rp.id >> rp.name >> rp.price >> rp.stock >> rp.brand >> rp.category;
+                // สร้าง object เพื่อเก็บข้อมูลสินค้าเข้าตัวแปร data
+                Product product = Product(rp.id, rp.name, rp.price, rp.stock, rp.brand, rp.category);
                 // เก็บข้อมูลทีละ object
-                ::data.push_back(getProducts);
+                ::data.push_back(product);
             }
             if(showMessage) program::showSuccessfulMessage("Read file completed.");
         } else {
@@ -275,7 +304,7 @@ public:
     }
 
     // method (overloading) เขียนข้อมูลรายการสินค้าที่สั่งซื้อไปลงไฟล์ orders.txt โดยเอาข้อมูลจาก parameter orders มาเขียน
-    static void write(vector<product> orders, int totalNumbers, float totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\orders.txt)", bool showMessage = false){
+    static void write(vector<Order> orders, int totalNumbers, float totalAmount, string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\orders.txt)", bool showMessage = false){
         // ตัวแปรสำหรับเขียนไฟล์ข้อมูล
         ofstream writeFile;
         // เปิดไฟล์เพื่อเขียนข้อมูล
@@ -290,9 +319,9 @@ public:
             writeFile << "TIME: " << time.getHours() << ":" << time.getMinutes() << ":" << time.getSeconds() << endl;
             writeFile << "LIST:" << endl;
             // loop ข้อมูลตัวแปร orders
-            for(product order : orders){
+            for(Order order : orders){
                 // เขียนข้อมูลสินค้าที่สั่งซื้อ
-                writeFile << i << ".) " << "PRODUCT_NAME = " <<  order.name << ",\t\tID = " << order.id << ",\t\tPRICE = " << order.price << ",\t\t QUANTITY = " << order.quantity << ",\t\t SUM = " << order.sum << ",\t\t BRAND = " << order.brand << ",\t\t CATEGORY = " << order.category << endl;
+                writeFile << i << ".) " << "PRODUCT_NAME = " <<  order.getName() << ",\t\tID = " << order.getId() << ",\t\tPRICE = " << order.getPrice() << ",\t\t QUANTITY = " << order.getQuantity() << ",\t\t SUM = " << order.getSum() << ",\t\t BRAND = " << order.getBrand() << ",\t\t CATEGORY = " << order.getCategory() << endl;
                 i++;
             }
             // เขียนสรุป จำนวนที่สั่งซื้อ และ ยอดจำนวนเงิน
@@ -322,119 +351,102 @@ public:
 // Subclass
 class Phone: public Product {
 public:
-    Phone(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[0], Brand){}
     Phone(): Product(productCategories[0]){}
 };
 
 // Subclass
 class Tablet: public Product {
 public:
-    Tablet(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[1], Brand){}
     Tablet(): Product(productCategories[1]){}
 };
 
 // Subclass
 class Laptop: public Product {
 public:
-    Laptop(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[2], Brand){}
     Laptop(): Product(productCategories[2]){}
 };
 
 // Subclass
 class Computer: public Product {
 public:
-    Computer(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[3], Brand){}
     Computer(): Product(productCategories[3]){}
 };
 
 // Subclass
 class Car: public Product {
 public:
-    Car(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[4], Brand){}
     Car(): Product(productCategories[4]){}
 };
 
 // Subclass
 class HealthAndBeauty: public Product {
 public:
-    HealthAndBeauty(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[5], Brand){}
     HealthAndBeauty(): Product(productCategories[5]){}
 };
 
 // Subclass
 class Game: public Product {
 public:
-    Game(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[6], Brand){}
     Game(): Product(productCategories[6]){}
 };
 
 // Subclass
 class Bag: public Product {
 public:
-    Bag(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[7], Brand){}
     Bag(): Product(productCategories[7]){}
 };
 
 // Subclass
 class ElectricalAppliance: public Product {
 public:
-    ElectricalAppliance(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[8], Brand){}
     ElectricalAppliance(): Product(productCategories[8]){}
 };
 
 // Subclass
 class Pet: public Product {
 public:
-    Pet(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[9], Brand){}
     Pet(): Product(productCategories[9]){}
 };
 
 // Subclass
 class Camera: public Product {
 public:
-    Camera(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[10], Brand){}
     Camera(): Product(productCategories[10]){}
 };
 
 // Subclass
 class Shoes: public Product {
 public:
-    Shoes(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[11], Brand){}
     Shoes(): Product(productCategories[11]){}
 };
 
 // Subclass
 class Watch: public Product {
 public:
-    Watch(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[12], Brand){}
     Watch(): Product(productCategories[12]){}
 };
 
 // Subclass
 class Sport: public Product {
 public:
-    Sport(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[13], Brand){}
     Sport(): Product(productCategories[13]){}
 };
 
 // Subclass
 class MusicalInstrument: public Product {
 public:
-    MusicalInstrument(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[14], Brand){}
     MusicalInstrument(): Product(productCategories[14]){}
 };
 
 // Subclass
 class Furniture: public Product {
 public:
-    Furniture(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[15], Brand){}
     Furniture(): Product(productCategories[15]){}
 };
 
 // Subclass
 class Food: public Product {
 public:
-    Food(int Id, string Name, float Price, string Brand, int Stock = STOCK): Product(Id, Name, Price, Stock, productCategories[16], Brand){}
     Food(): Product(productCategories[16]){}
 };
 
@@ -475,15 +487,15 @@ public:
     }
 
     // method (overloading) สำหรับเแสดงตารางสินค้า orders สินค้าที่สั่งไป
-    void showTable(vector<product> list){
-        if(list.size() == 0){
+    void showTable(vector<Order> orders){
+        if(orders.size() == 0){
             cout << on_magenta << grey << "Out of stock!" << reset << endl;
         } else {
             // สร้างส่วนหัวของตารางโดยมีแต่ละ columds ตามนี้
             table << header << "No" << "Product" << "ID" << "$Price" << "Quantity" << "Sum" << "Brand" << "Category" << endr;
             // loop เอาข้อมูลที่ได้มาแสดงผลทีละ row
-            for(product item : list){
-                table << number << item.name << item.id << item.price << item.quantity << item.sum << item.brand << item.category << endr;
+            for(Order order : orders){
+                table << number << order.getName() << order.getId() << order.getPrice() << order.getQuantity() << order.getSum() << order.getBrand() << order.getCategory() << endr;
                 number++;
             }
             // แสดงตาราง
@@ -629,7 +641,7 @@ public:
             // loop ข้อมูลสินค้า
             for(Product item : ::data) {
                 // แสดงสินค้าเฉพาะหมวดหมู่สินค้าที่เลือก
-                if (item.getBrand() == brand) {
+                if (item.getBrand() == brand && brand != "-") {
                     inStock = true;
                     list.push_back(item);
                 }
@@ -668,7 +680,7 @@ public:
 
         // ถ้ามีหมวดหมู่สินค้านั้นอยู่ในรายการ
         if(isCategory(selectCategory)){
-            product p; // สร้างตัวแปร p เพิ่อมารอรับข้อมูลสินค้าใหม่
+            ReceiveProduct p; // สร้างตัวแปร p เพิ่อมารอรับข้อมูลสินค้าใหม่
             Product newProduct; // ตัวแปรที่เก็บ object ของสินค้าที่เพิ่มเข้ามาใหม่
 
             // รับข้อมูลสินค้าใหม่ที่จะเพิ่ม
@@ -799,7 +811,7 @@ public:
                 }
                 index++;
             }
-            cout << green << "Successfully deleted product" << reset << endl;
+            program::showSuccessfulMessage("Successfully deleted product");
             // อัปเดตข้อมูล
             File::update();
         } else {
@@ -819,7 +831,7 @@ public:
         if(findProduct(input)){
             int index = 0;
             // สร้างตัวแปรมารอรับข้อมูลที่ผู้ใช้งานป้อนเข้ามา
-            product p;
+            ReceiveProduct p;
             // คำตอบที่ผู้ใช้งานตอบมีแค่ y หรือ n เท่านั้น
             typedef struct {
                 char yn1, yn2, yn3, yn4, yn5;
@@ -930,8 +942,7 @@ public:
         string input;
         bool isRunning = true; // ตัวแปรควบคุมการทำงาน while loop ถ้ามีค่า true แปลยังสามารถสั่งสินค้าต่อได้เรื่อยๆ ถ้า false หยุดดำเนินการสั่งซื้อ
         char e; // ตัวแปร อักษร e(end) เมื่อผู้ใช้งานพิมพ์ตัวอักษร e คือจบการสั่งซื้อสินค้า
-        vector<product> orders = {}; // รายการ orders สินค้าที่สั่งซื้อทั้งหมด
-        product order; // order สินค้า 1 ที่สั่ง 1 รายการ
+        vector<Order> orders; // รายการ orders สินค้าที่สั่งซื้อทั้งหมด
 
         cout << "Enter " << cyan << "\"e\"" << reset << " to exit the sale." << endl;
 
@@ -952,15 +963,16 @@ public:
                 // ถ้ายังไม่มีการสั่งสินค้าไม่ต้องแสดงรายละเอียดการสั่งซื้อ
                 if(orders.size() != 0){
                     // คำนวณจำนวนเงินทั้งหมดที่สั่งสินค้า และ แสดงรายการสินค้าที่สั่งซื้อ
-                    for(product item : orders){
-                        // คำนวณยอดเงินสินค้าต่อ 1 รายการ
-                        item.sum = item.quantity * item.price;
+                    for(Order item : orders){
+                        // คำนวณยอดเงินสินค้าต่อ 1 รายการ และแก้ไขยอดรวมสินค้านั้น
+                        float result = item.getQuantity() * item.getPrice();
+                        item.setSum(result);
                         // แก้ไขค่ายอดรวมของสินค้าของแต่ละสินค้า
-                        orders.at(i).sum = item.sum;
+                        orders.at(i).setSum(item.getSum());
                         // คำนวณเงินที่ต้องจ่ายทั้งหมดที่สั่งสินค้ามา
-                        total += item.sum;
+                        total += item.getSum();
                         // เพิ่มจำนวนสินค้า
-                        quantity += item.quantity;
+                        quantity += item.getQuantity();
                         i++;
                     }
                     cout << endl << "\t\t" << on_bright_white << grey <<  " The products you ordered. " << reset << endl;
@@ -984,21 +996,20 @@ public:
                 // เช็คว่า ชื่อ หรือ id ที่พิมพ์มาอยู่ใน data หรือไม่
                 if(findProduct(input)){
                     int j = 0; // ตัวระบุเลข index ของ data
+                    int quantity; // จำนวนสินค้า
                     // loop ข้อมูลในตัวแปร data
                     for(Product item : ::data){
                         // เช็ค ชื่อ หรือ id ว่าตรงกับสินค้าที่เลือก
                         if(to_string(item.getId()) == input || item.getName() == input){
-                            // เก็บ order สินค้าที่สั่ง
-                            order.name = item.getName();
-                            order.id = item.getId();
-                            order.price = item.getPrice();
-                            order.category = item.getCategory();
-                            order.brand = item.getBrand();
-                            order.sum = 0; // ยอดรวมสินค้านั้นมีค่าเริ่มต้นเป็น 0
+                            // เก็บ order สินค้าที่สั่ง (ส่งค่า args ให้ class Order เพื่อให้ค่า args ส่งไปยัง constructor ของ class Product ไว้จัดเก็บข้อมูลสินค้าที่สั่ง)
+                            Order order = Order(item.getId(), item.getName(), item.getPrice(), item.getBrand(), item.getCategory()); // order สินค้า 1 รายการ
 
                             // รับค้าจำวนสินค้าที่สั่ง
                             cout << yellow << "Quantity:" << reset;
-                            cin >> order.quantity;
+                            cin >> quantity;
+
+                            order.setSum(0); // ยอดรวมสินค้านั้นมีค่าเริ่มต้นเป็น 0
+                            order.setQuantity(quantity); //จำนวนสินค้าที่สั่ง
 
                             // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
                             if(!isPositiveNumber(order.quantity)) {
@@ -1006,18 +1017,18 @@ public:
                                 isRunning = false;
                                 return;
                             }
-                                // สินค้าในคลังหมดไม่สามารถสั่งได้
+                            // สินค้าในคลังหมดไม่สามารถสั่งได้
                             else if(item.getStock() == 0){
                                 cout << red << "This product " << "\"" << item.getName() << "\"" << " is out of stock." << reset << endl;
                             }
-                                /* เงื่อนไข
-                                * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
-                                * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
-                                * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
-                                */
-                            else if((order.quantity <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - order.quantity) >= 0)){
+                            /* เงื่อนไข
+                            * จำนวนที่สั่งต้องน้อยกวาหรือเท่ากับสินค้าในคลัง (จำนวนที่สั่งต้องไม่มากเกินจำนวนสินค้าในคลัง)
+                            * สินค้าในคลังต้องไม่หมด (ถ้าสินค้าในคลังหมดไม่สามารถสั่งได้)
+                            * ประมาณจำนวนสินค้านั้นในคลังก่อนเมื่อลองหักลบแล้วจำนวนสินค้าในคลังต้องไม่ติดลบ (ไม่สามารถสั่งเกินจำนวนสินค้าในคลังได้)
+                            */
+                            else if((order.getQuantity() <= item.getStock()) && (item.getStock() != 0) && ((item.getStock() - order.getQuantity()) >= 0)){
                                 // จำนวนที่เหลือของสินค้าในคลัง โดยหักลบกับจำนวนสินค้าที่สั่ง
-                                int remain = item.getStock() - order.quantity;
+                                int remain = item.getStock() - order.getQuantity();
                                 // เปลี่ยนค่าใน stock มีจำนวนสินค้าที่เหลือตาม remain
                                 ::data.at(j).setStock(remain);
 
@@ -1026,9 +1037,9 @@ public:
                                 int k = 0; // เลข index
                                 bool isDuplicate = false; // เป็นสินค้าซ้ำกันหรือไม่
                                 // loop ข้อมูลเพื่อเช็คว่าซ้ำกันไหม
-                                for(product o: orders){
+                                for(Order o: orders){
                                     // ถ้าชื่อหรือ id ซ้ากับสินค้าที่สั่งอยู่ให้ isDuplicate เป็น true
-                                    if(o.name == order.name || o.id == order.id){
+                                    if(o.getName() == order.getName() || o.getId() == order.getId()){
                                         isDuplicate = true;
                                         break;
                                     }
@@ -1036,9 +1047,11 @@ public:
                                 }
                                 // ถ้าข้อมูลนั้นซ้ำกันให้เพิ่มจำนวนสินค้าที่สั่งอยู่
                                 if(isDuplicate){
-                                    orders.at(k).quantity += order.quantity;
+                                    // จำนวนสินค้าที่เคยสั่งรวมกับจำนวนสินค้าที่พึ่งสั่ง
+                                    int addQuantity = orders.at(k).getQuantity() + order.getQuantity();
+                                    orders.at(k).setQuantity(addQuantity);
                                 }
-                                    // ถ้าข้อมูลไม่ซ้ำกัยให้ orders เพิ่ม element(สินค้า) ตัวใหม่เข้าไป
+                                // ถ้าข้อมูลไม่ซ้ำกัยให้ orders เพิ่ม element(สินค้า) ตัวใหม่เข้าไป
                                 else {
                                     // เพิ่มสินค้าเข้าใน orders ที่สั่ง
                                     orders.push_back(order);

@@ -15,3 +15,21 @@ CONCLUSION:
 Total number of products = 4
 Total amount = 1606.74 dollar.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATE: Saturday 6 March 2024
+TIME: 15:0:27
+LIST:
+1.) PRODUCT_NAME = tesla-model-y,		ID = 9889,		PRICE = 60000,		 QUANTITY = 1,		 SUM = 60000,		 BRAND = Tesla,		 CATEGORY = car
+2.) PRODUCT_NAME = tesla-model-x,		ID = 7512,		PRICE = 50000,		 QUANTITY = 2,		 SUM = 100000,		 BRAND = Tesla,		 CATEGORY = car
+3.) PRODUCT_NAME = Apple-iMac24,		ID = 5132,		PRICE = 1583.64,		 QUANTITY = 1,		 SUM = 1583.64,		 BRAND = Apple,		 CATEGORY = computer
+CONCLUSION:
+Total number of products = 4
+Total amount = 161584 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATE: Saturday 6 March 2024
+TIME: 15:5:25
+LIST:
+1.) PRODUCT_NAME = MSI-Raider-GE68HX,		ID = 5740,		PRICE = 2198.44,		 QUANTITY = 3,		 SUM = 6595.32,		 BRAND = MSI,		 CATEGORY = laptop
+CONCLUSION:
+Total number of products = 3
+Total amount = 6595.32 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------

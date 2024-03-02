@@ -40,12 +40,13 @@
 2948	OPPO-Reno11	417.2	17	Oppo	phone
 4352	SamsungGalaxy-A05s	138.88	18	Samsung	phone
 4636	Asus-Vivobook-Go15	275.54	20	ASUS	laptop
-5132	Apple-iMac24	1583.64	17	Apple	computer
+5132	Apple-iMac24	1583.64	16	Apple	computer
 5488	ACER-DESKTOP-AIO-Aspire-C24	681.88	20	ACER	computer
-5740	MSI-Raider-GE68HX	2198.44	20	MSI	laptop
+5740	MSI-Raider-GE68HX	2198.44	17	MSI	laptop
 6066	Asus-TUF-Gaming-F15	556.36	20	ASUS	laptop
 6435	Lenovo-Tab-P11	389.37	20	Lenovo	tablet
 7526	Xiaomi-Pad6	361.54	16	XIAOMI	tablet
 8365	OPPO-Pad-Neo-LTE	303.37	13	OPPO	tablet
 8777	Asus-ROG-Phone-8Pro	1057.33	17	ASUS	phone
-1083	tesla-model-y	500	15	Tesla	car
+7512	tesla-model-x	50000	28	Tesla	car
+9889	tesla-model-y	60000	19	Tesla	car
