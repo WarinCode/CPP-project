@@ -465,7 +465,8 @@ public:
         table.set_border_style(FT_BASIC2_STYLE);
         // จัดกึ่งกลางเนื้อหาของตาราง
         table.set_cell_text_align(text_align::center);
-        table.column(1).set_cell_text_align(text_align::left);
+     
+        // จัดตำแหน่งของ column ชื่อสินค้าให้ชิดซ้าย table.column(1).set_cell_text_align(text_align::left);
     }
 
     // method แสดงตารางสินค้า
@@ -573,7 +574,7 @@ public:
             cout << on_magenta << grey << "Out of stock!" << reset << endl;
         } else {
             int number = 1;
-            // แสดงตารางสินค้าโดยส่ง argument list เข้าไป
+            // แสดงตารางสินค้า
             Table table = Table();
             table.showTable();
         }
@@ -691,7 +692,7 @@ public:
                 program::showErrorMessage("The new product name must not be duplicated with the product that already has this name!");
                 return;
             }
-                // ห้ามตั้งชือสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
+                // ห้ามตั้งชื่อสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
             else if(isdigit(p.name.at(0))){
                 program::showErrorMessage("Do not name the product beginning with a number!");
                 return;
@@ -702,7 +703,7 @@ public:
 
             cout << yellow << "Pricing:" << reset;
             cin >> p.price;
-            //  ราคาต้องเป็นเลขจำนวนเต็มบวก
+            //  ราคาต้องเป็นเลขจำนวนเต็มบวกเท่านั้น
             if(!isPositiveNumber(p.price)){
                 program::showErrorMessage("Invalid price, Please enter only positive number.");
                 return;
@@ -727,7 +728,7 @@ public:
                     products[i].setId(p.id);
                     products[i].setName(p.name);
                     products[i].setPrice(p.price);
-                    // ดึง substring ออกมาแล้วเช็คว่าเป็น - หรือไม่ ถ้าไม่มี brand พิมพ์ - แบรนด์จะมีค่า no-brand-name แต่ถ้าไม่ได้พิมพ์ - แบรนด์จะเป็นค่าที่ผู้ใช้งานป้อนมา
+                    // ดึง substring ออกมาแล้วเช็คว่าเป็น - หรือไม่ ถ้าไม่มี brand พิมพ์ - แบรนด์จะมีความหมายคือไม่มีชื่อแบรนด์สินค้า  แต่ถ้าไม่ได้พิมพ์ - แบรนด์จะเป็นค่าที่ผู้ใช้งานป้อนมา
                     if(p.brand.at(0) != '-'){
                         products[i].setBrand(p.brand);
                     }
@@ -739,7 +740,7 @@ public:
             }
             // นำ newProduct ที่ได้เพิ่มเข้าในรายการสินค้า data
             ::data.push_back(newProduct);
-            // update รายการสินค้าล่าสุดของไฟลื data.txt และ ข้อมูล data
+            // update รายการสินค้าล่าสุดของไฟล์ data.txt และ ข้อมูล data
             File::update();
             program::showSuccessfulMessage("Added a new product.");
         } else {
@@ -762,7 +763,7 @@ public:
             cout << yellow <<"Amount:" << reset;
             cin >> number;
 
-            // จำนวนสินค้าที่เพิ่มเข้ามาต้องเป็นเลขจำนวนเต็มบวก
+            // จำนวนสินค้าที่เพิ่มเข้ามาต้องเป็นเลขจำนวนเต็มบวกเท่านั้น
             if(!isPositiveNumber(number)){
                 program::showErrorMessage("Invalid number, Please enter a positive number!");
                 return;
@@ -797,7 +798,7 @@ public:
         cout << yellow << "Enter the product name or product id:" << reset;
         cin >> input;
 
-        // ถ้ามีสินค้านั้นอย่ในข้อมูล
+        // ถ้ามีสินค้านั้นอยู่ในข้อมูล
         if (findProduct(input)) {
             int index = 0;
             // loop ข้อมูลใน data
@@ -914,7 +915,7 @@ public:
                         }
                     }
 
-                    // ถามว่าต้องการแก้ไขหมวดหมู่สินค้าไหม
+                    // ถามว่าต้องการแก้ไขชื่อแบรนด์สินค้าไหม
                     cout << cyan << "Do you want to edit the brand product (y/n):" << reset;
                     cin >> yn.yn5;
                     if(tolower(yn.yn5) == 'y'){
@@ -1004,7 +1005,7 @@ public:
                             // เก็บ order สินค้าที่สั่ง (ส่งค่า args ให้ class Order เพื่อให้ค่า args ส่งไปยัง constructor ของ class Product ไว้จัดเก็บข้อมูลสินค้าที่สั่ง)
                             Order order = Order(item.getId(), item.getName(), item.getPrice(), item.getBrand(), item.getCategory()); // order สินค้า 1 รายการ
 
-                            // รับค้าจำวนสินค้าที่สั่ง
+                            // รับค้าจำนวนสินค้าที่สั่ง
                             cout << yellow << "Quantity:" << reset;
                             cin >> quantity;
 
@@ -1051,7 +1052,7 @@ public:
                                     int addQuantity = orders.at(k).getQuantity() + order.getQuantity();
                                     orders.at(k).setQuantity(addQuantity);
                                 }
-                                // ถ้าข้อมูลไม่ซ้ำกัยให้ orders เพิ่ม element(สินค้า) ตัวใหม่เข้าไป
+                                // ถ้าข้อมูลไม่ซ้ำกันให้ orders เพิ่ม element(สินค้า) ตัวใหม่เข้าไป
                                 else {
                                     // เพิ่มสินค้าเข้าใน orders ที่สั่ง
                                     orders.push_back(order);
@@ -1077,7 +1078,7 @@ public:
     }
 };
 
-// สร้างตัวแปร enum เพื่อเก็บหมายเลขการทำงานของโปรแกรมไว้
+// สร้างตัวแปรเป็น enum เพื่อเก็บหมายเลขการทำงานของโปรแกรมไว้
 enum options {
     ShowTable = 1,
     ShowCategory,
@@ -1094,7 +1095,7 @@ enum options {
 int main(){
     // เริ่มโปรแกรมให้อ่านข้อมูลจากไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
     File::read();
-    // ตัวเลือกที่ผู้ใช้งานเลือกว่าจะใช้ง่านคำสั่งอะไร
+    // ตัวเลือกที่ผู้ใช้งานเลือกว่าจะใช้งานคำสั่งอะไร
     int select;
     // วน loop ไปเรื่อยๆเพื่อรอให้ผู้ใช้งานป้อนตัวเลขให้โปรแกรมทำงานตามหมายเลขนั้น
     while(true){
