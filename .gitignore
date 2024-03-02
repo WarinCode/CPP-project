@@ -5,3 +5,9 @@ cmake-build-debug/*
 .idea/*
 .vs
 .vs/*
+out
+out/*
+out/build
+out/build/*
+build
+build/*
