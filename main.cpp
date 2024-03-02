@@ -210,7 +210,7 @@ public:
 // สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟลื data.txt และ ข้อมูล ที่ เพิ่ม ลบ แก้ไขเข้ามา
 vector<Product> data = {};
 
-// class Order ใช้สำหรับจัดเก็บข้อมูลสินค้าที่ผู้ใช้งานสั่งเข้ามา
+// Subclass class Order ใช้สำหรับจัดเก็บข้อมูลสินค้าที่ผู้ใช้งานสั่งเข้ามา
 class Order: public Product {
 public:
     int quantity; // จำนวนสินค้า
@@ -347,7 +347,7 @@ public:
     }
 };
 
-// สร้าง class หมวดหมู่สินค้า หรือ ประเภทสินค้าต่อไปนี้ โดยให้ subclass(หมวดหมู่สินค้า) สืบทอดคุณสมบัติทุกอย่าง ของ superclass(class สินค้า)
+// สร้าง class หมวดหมู่สินค้า หรือ ประเภทสินค้าต่อไปนี้ โดยให้ subclass(หมวดหมู่สินค้า) สืบทอดคุณสมบัติทุกอย่าง ของ superclass(class Product)
 // Subclass
 class Phone: public Product {
 public:
