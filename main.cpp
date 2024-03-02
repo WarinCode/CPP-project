@@ -1064,7 +1064,7 @@ int main(){
         else {
             cout << endl << "\"" << select << "\"" << " is not available, Please select a number between 1 - 10." << endl;
         }
-    };
+    }
 
     return 0;
 }

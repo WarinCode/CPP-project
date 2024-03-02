@@ -1,0 +1,374 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						6
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.27"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "libfort",
+					"childIndexes" : 
+					[
+						2,
+						3,
+						4,
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-libfort-Debug-4bd0c08e6c03f85f1f9d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "libfort",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "libfort/lib",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-libfort.lib-Debug-ca836ac1eb97dde265f0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "libfort/lib",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "libfort/src",
+					"jsonFile" : "directory-libfort.src-Debug-157fe63c8bcab6233e93.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "libfort/src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "libfort/tests",
+					"jsonFile" : "directory-libfort.tests-Debug-16d64ff91fffe4bcd3a9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "libfort/tests",
+					"targetIndexes" : 
+					[
+						19,
+						20,
+						21
+					]
+				},
+				{
+					"build" : "libfort/examples",
+					"jsonFile" : "directory-libfort.examples-Debug-5d63707d6023a9827c93.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "libfort/examples",
+					"targetIndexes" : 
+					[
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18
+					]
+				},
+				{
+					"build" : "termcolor",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-termcolor-Debug-6e89a5c7b2a01158b8e7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "termcolor"
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CPP-project",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5
+					],
+					"name" : "libfort",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						6
+					],
+					"name" : "termcolor",
+					"parentIndex" : 0
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CPP-project::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CPP-project-Debug-6ed5086f7d8cdc2c8282.json",
+					"name" : "CPP-project",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "fort::@7dc5682e7875cda0f078",
+					"jsonFile" : "target-fort-Debug-ef518bb527b0dce13554.json",
+					"name" : "fort",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "fort_dev::@05101ab1fd91e47366bf",
+					"jsonFile" : "target-fort_dev-Debug-2860cecae71e90e0c039.json",
+					"name" : "fort_dev",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "headers::@896b8734032e84071b95",
+					"jsonFile" : "target-headers-Debug-4d926090e15a88f062f5.json",
+					"name" : "headers",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_beautiful_table::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_beautiful_table-Debug-fec88b1c8cfd35d4eba9.json",
+					"name" : "libfort_beautiful_table",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_beautiful_table_cpp::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_beautiful_table_cpp-Debug-3e2c8522198955123670.json",
+					"name" : "libfort_beautiful_table_cpp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_complex_layout::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_complex_layout-Debug-598c067760c13d5956bb.json",
+					"name" : "libfort_complex_layout",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_complex_layout_cpp::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_complex_layout_cpp-Debug-b845d2ae09daf3b2565d.json",
+					"name" : "libfort_complex_layout_cpp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_custom_border_style::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_custom_border_style-Debug-64fc67b8ab8d466e6318.json",
+					"name" : "libfort_custom_border_style",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_custom_table::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_custom_table-Debug-d6a5938f455ee86e08f6.json",
+					"name" : "libfort_custom_table",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_custom_table_cpp::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_custom_table_cpp-Debug-106cab6a06c850570119.json",
+					"name" : "libfort_custom_table_cpp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_fill_table::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_fill_table-Debug-9136d27784a987f681c7.json",
+					"name" : "libfort_fill_table",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_fill_table_cpp::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_fill_table_cpp-Debug-4f9c61f7f843ba974127.json",
+					"name" : "libfort_fill_table_cpp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_math_table::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_math_table-Debug-fa0c2f61f5d6eac7787e.json",
+					"name" : "libfort_math_table",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_non_ascii_table::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_non_ascii_table-Debug-459a9ca682efe87aca0b.json",
+					"name" : "libfort_non_ascii_table",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_non_ascii_table_cpp::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_non_ascii_table_cpp-Debug-890ce60159d59d1d53ba.json",
+					"name" : "libfort_non_ascii_table_cpp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_print_styles::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_print_styles-Debug-bdfe14ff71e8a97cc629.json",
+					"name" : "libfort_print_styles",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_simple_table::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_simple_table-Debug-10b68cbc0cf1d6fdb455.json",
+					"name" : "libfort_simple_table",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "libfort_simple_table_cpp::@5d0d0bd82e338193a713",
+					"jsonFile" : "target-libfort_simple_table_cpp-Debug-a19923c48a9100fd401d.json",
+					"name" : "libfort_simple_table_cpp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "libfort_test::@373d9706e9596d7d273d",
+					"jsonFile" : "target-libfort_test-Debug-2b113ca8ad7c62cdf4fe.json",
+					"name" : "libfort_test",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "libfort_test_cpp::@373d9706e9596d7d273d",
+					"jsonFile" : "target-libfort_test_cpp-Debug-38979f9e503d98c8ed7b.json",
+					"name" : "libfort_test_cpp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "libfort_test_dev::@373d9706e9596d7d273d",
+					"jsonFile" : "target-libfort_test_dev-Debug-5285f90b988aa3e82631.json",
+					"name" : "libfort_test_dev",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/ACER USER5949486/Desktop/CPP-project/out/build/x64-debug",
+		"source" : "C:/Users/ACER USER5949486/Desktop/CPP-project"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
