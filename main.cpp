@@ -10,7 +10,6 @@
  *  https://cplusplus.com/reference/cstdlib/rand
  *  https://github.com/ikalnytskyi/termcolor
  *  https://termcolor.readthedocs.io/#
- *  https://www.geeksforgeeks.org/std-string-replace-in-cpp/
  *  https://weerasak.dev/posts/2023/03/18/basic-cmake-for-building-c-cpp-project/
  */
 
@@ -51,7 +50,7 @@ const string productCategories[NUMBER_CATEGORIES] = { "phone", "tablet", "laptop
                                                       "furniture", "food"
 };
 
-//  namespace ของโปรแกรมไว้เก็บ function ที่ไว้ใช้งาน
+//  namespace ของโปรแกรมไว้เก็บ functions ที่ไว้ใช้งาน
 namespace program{
     // ประกาศ function prototypes ไว้ล่วงหน้า
     void showOptions();
@@ -59,6 +58,7 @@ namespace program{
     void showErrorMessage(int size, string message[]);
     void showSuccessfulMessage(string message);
     int generateId(int from, int to);
+    string addZeroNumber(int num);
 }
 
 // class Time สำหรับการใช้บอกวันเวลาปัจจุบัน
@@ -95,8 +95,8 @@ public:
         year = ltm -> tm_year + 1900; // ต้องบวก 1900 ไปด้วยถึงจะเป็นปีล่าสุด
         // attribute month และ weekday ใช้คู่กับ array ได้เพราะสามารถใช้เลขเป็นเลข index ของ array
         month = ltm -> tm_mon; // เลขระหว่าง 0 - 11
-        weekday = ltm -> tm_wday; // เลขระหว่าง 1 - 6
-        day = ltm -> tm_mday; // วันที่ เลขระหว่าง
+        weekday = ltm -> tm_wday; // เลขระหว่าง 0 - 6
+        day = ltm -> tm_mday; // เลขระหว่าง 1 - 31
     }
 
     // getter methods
@@ -130,7 +130,7 @@ public:
         return days[weekday];
     }
     string getMonths(){
-        // ลบเลขออกไป 1 ถึงจะใช้เลข index 0 - 11 ได้พอดี
+        // ลบเลขออกไป 1 ถึงจะใช้เลข index 0 - 11
         return months[getMonth() - 1];
     }
 };
@@ -206,8 +206,8 @@ public:
         brand = Brand;
     }
 };
-// จุดสำคัญของโปรแกรม
-// สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟล์ data.txt และ ข้อมูล ที่ เพิ่ม ลบ แก้ไขเข้ามา
+
+// สร้างตัวแปร data เก็บข้อมูลสินค้าทั้งหมดจากในไฟล์ data.txt และ ข้อมูลที่ เพิ่ม , ลบ และ แก้ไขเข้ามา
 vector<Product> data = {};
 
 // Subclass class Order ใช้สำหรับจัดเก็บข้อมูลสินค้าที่ผู้ใช้งานสั่งเข้ามา
@@ -217,8 +217,7 @@ public:
     float sum; // ยอดรวมของสินค้านั้น
 
     // ส่งค่า parameters ไปให้ constructor ใน class Product จัดการ
-    Order(int Id, string Name, float Price, string Brand = "-", string Category = "-", int Stock = STOCK):
-    Product(Id, Name, Price, Stock, Brand, Category){}
+    Order(int Id, string Name, float Price, string Brand = "-", string Category = "-", int Stock = STOCK): Product(Id, Name, Price, Stock, Brand, Category){}
 
     // getter methods
     int getQuantity(){
@@ -253,9 +252,9 @@ class File {
 public:
     // method อ่านข้อมูลในไฟล์ data.txt แล้วมาเก็บไว้ในตัวแปร data
     static void read(string path = R"(C:\Users\ACER USER5949486\Desktop\CPP-project\txts\data.txt)", bool showMessage = false){
-        // ตัวแปรสำหรับอ่านไฟลืข้อมูล
+        // ตัวแปรสำหรับอ่านไฟล์ข้อมูล
         ifstream readFile;
-        // เปิดไฟล์อเพื่อ่านข้อมูล
+        // เปิดไฟล์เพื่ออ่านข้อมูล
         readFile.open(path ,ios::in);
         // เช็คว่าสามารถเเปิดไฟล์ได้หรือไม่
         if(readFile.is_open()){
@@ -269,7 +268,7 @@ public:
                 // สร้างตัวแปร string stream สำหรับเก็บข้อความทีละบรรทัด
                 stringstream ss(line);
                 // ให้ตัวแปร ss นำเข้าข้อมูลสินค้าทีละตัวแปร
-                // ในไฟลื data.txt จะอ่านข้อมูลตามนี้ในแต่ละบรรทัด: id   name    price   stock   brand   category
+                // ในไฟล์ data.txt จะอ่านข้อมูลตามนี้ในแต่ละบรรทัด: id   name    price   stock   brand   category
                 ss >> rp.id >> rp.name >> rp.price >> rp.stock >> rp.brand >> rp.category;
                 // สร้าง object เพื่อเก็บข้อมูลสินค้าเข้าตัวแปร data
                 Product product = Product(rp.id, rp.name, rp.price, rp.stock, rp.brand, rp.category);
@@ -315,8 +314,8 @@ public:
             // สร้าง object time
             Time time = Time();
             // เขียนเวลาล่าสุดที่เขียนในไฟล์ orders.txt
-            writeFile << "DATE: " << time.getDays() << " " << time.getWeekDay() << " " << time.getMonths() << " " << time.getYear() << endl;
-            writeFile << "TIME: " << time.getHours() << ":" << time.getMinutes() << ":" << time.getSeconds() << endl;
+            writeFile << "DATE: " << time.getDays() << " " << time.getDay() << " " << time.getMonths() << " " << time.getYear() << endl;
+            writeFile << "TIME: " << program::addZeroNumber(time.getHours()) << ":" << program::addZeroNumber(time.getMinutes()) << ":" << program::addZeroNumber(time.getSeconds()) << endl;
             writeFile << "LIST:" << endl;
             // loop ข้อมูลตัวแปร orders
             for(Order order : orders){
@@ -347,7 +346,7 @@ public:
     }
 };
 
-// สร้าง class หมวดหมู่สินค้า หรือ ประเภทสินค้าต่อไปนี้ โดยให้ subclass(หมวดหมู่สินค้า) สืบทอดคุณสมบัติทุกอย่าง ของ superclass(class Product)
+// สร้าง class หมวดหมู่สินค้า หรือ ประเภทสินค้าต่อไปนี้ โดยให้ subclass(หมวดหมู่สินค้า) สืบทอดคุณสมบัติทุกๆอย่าง ของ superclass(สินค้า)
 // Subclass
 class Phone: public Product {
 public:
@@ -450,7 +449,7 @@ public:
     Food(): Product(productCategories[16]){}
 };
 
-// class สำหรับแสดงตารางสินค้าจากข้อมูลของตัวแปร data หรือ จากค่า argument ที่ส่งมา
+// class Table สำหรับแสดงตารางสินค้าจากข้อมูลของตัวแปร data หรือ จากค่า argument ที่ส่งมา
 class Table{
 private:
     // ตารางสำหรับแสดงสินค้า
@@ -465,8 +464,8 @@ public:
         table.set_border_style(FT_BASIC2_STYLE);
         // จัดกึ่งกลางเนื้อหาของตาราง
         table.set_cell_text_align(text_align::center);
-     
-        // จัดตำแหน่งของ column ชื่อสินค้าให้ชิดซ้าย table.column(1).set_cell_text_align(text_align::left);
+        // จัดตำแหน่งของ column ชื่อสินค้าให้ชิดซ้าย
+        table.column(1).set_cell_text_align(text_align::left);
     }
 
     // method แสดงตารางสินค้า
@@ -523,7 +522,7 @@ public:
     }
 };
 
-// class ProductManagement มีหน้าที่จัดการเกี่ยวกับสินค้าต่างๆภายในโปรแกรม
+// class ProductManagement มีหน้าที่จัดการเกี่ยวกับข้อมูลสินค้าภายในโปรแกรม
 class ProductManagement {
 public:
 
@@ -617,7 +616,7 @@ public:
                     // ล้างข้อมูลใน list ใหม่
                     list.clear();
                 }
-
+            // ไม่อยู่ในหมวดหมู่สินค้าแสดงข้อความ error
             } else {
                 string err[] = { "\"", category, "\"", " is not in categories of products." };
                 program::showErrorMessage(4, err);
@@ -632,6 +631,7 @@ public:
         cout << yellow << "Enter brand name:" << reset;
         cin >> brand;
 
+        // เช็คว่ามีสินค้าหรือไม่
         if(isEmpty()){
             cout << on_magenta << grey << "Out of stock!" << reset << endl;
         } else {
@@ -647,7 +647,7 @@ public:
                     list.push_back(item);
                 }
             }
-            // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลัง
+            // ถ้าไม่พบแบรนด์สินค้านี้ ... ในคลังให้แสดงข้อความ error
             if(!inStock){
                 string err[] = { "This product brand ", "\"", brand, "\"", " was not found in stock!" };
                 program::showErrorMessage(5, err);
@@ -743,7 +743,9 @@ public:
             // update รายการสินค้าล่าสุดของไฟล์ data.txt และ ข้อมูล data
             File::update();
             program::showSuccessfulMessage("Added a new product.");
-        } else {
+        }
+        // ไม่อยู่ในหมวดหมู่สินค้าแสดงข้อความ error
+        else {
             string err[] = { "\"", selectCategory, "\"", " is not in categories of products" };
             program::showErrorMessage(4, err);
         }
@@ -759,7 +761,7 @@ public:
         if(findProduct(input)){
             int number;
             int index = 0;
-            // รับข้อมูล
+
             cout << yellow <<"Amount:" << reset;
             cin >> number;
 
@@ -785,7 +787,9 @@ public:
             // อัปเดตข้อมูล
             File::update();
             program::showSuccessfulMessage("Added new product quantity to stock");
-        } else {
+        }
+        // ไม่มีสินค้านั้นอยู่ในข้อมูลแสดงช้อความ error
+        else {
             string err[] = { "\"", input, "\"", " is not in data!" };
             program::showErrorMessage(4, err);
         }
@@ -815,7 +819,9 @@ public:
             program::showSuccessfulMessage("Successfully deleted product");
             // อัปเดตข้อมูล
             File::update();
-        } else {
+        }
+        // ไม่มีสินค้านั้นอยู่ในข้อมูลแสดงช้อความ error
+        else {
             string err[] = { "\"", input, "\"", " is not in data!" };
             program::showErrorMessage(4, err);
         }
@@ -932,7 +938,9 @@ public:
             // อัปเดตข้อมูล
             File::update();
             program::showSuccessfulMessage("Successfully edited product");
-        } else {
+        }
+        // ไม่มีสินค้านั้นอยู่ในข้อมูลแสดงช้อความ error
+        else {
             string err[] = { "\"", input, "\"", " is not in data!" };
             program::showErrorMessage(4, err);
         }
@@ -942,20 +950,17 @@ public:
     static void sellProducts(){
         string input;
         bool isRunning = true; // ตัวแปรควบคุมการทำงาน while loop ถ้ามีค่า true แปลยังสามารถสั่งสินค้าต่อได้เรื่อยๆ ถ้า false หยุดดำเนินการสั่งซื้อ
-        char e; // ตัวแปร อักษร e(end) เมื่อผู้ใช้งานพิมพ์ตัวอักษร e คือจบการสั่งซื้อสินค้า
         vector<Order> orders; // รายการ orders สินค้าที่สั่งซื้อทั้งหมด
 
-        cout << "Enter " << cyan << "\"e\"" << reset << " to exit the sale." << endl;
+        cout << "Enter " << cyan << "\"end\"" << reset << " to exit the sale." << endl;
 
         // loop ไปเรื่อยๆจนกว่าผู้ใช้จะพิมพ์ตัว e
         while(isRunning){
             cout << yellow << "Enter product name or product id:" << reset;
             cin >> input;
 
-            // เอา substring ตัวแรกของตัวแปร input
-            e = input.at(0);
-            // เช็คว่าอักตรตัว e หรือไม่ ถ้าใช้ ให้ออกจากการขายสินค้า
-            if(tolower(e) == 'e'){
+            // เช็คว่าพิมพ์คำว่า end หรือไม่ ถ้าใช้ ให้ออกจากการขายสินค้า
+            if(input == "end"){
                 float total = 0; // จำนวนเงินทั้งหมด
                 int quantity = 0; // จำนวนสินค้าทั้งหมด
                 int i = 0; // ลำดับสินค้าที่สั่ง
@@ -1010,7 +1015,7 @@ public:
                             cin >> quantity;
 
                             order.setSum(0); // ยอดรวมสินค้านั้นมีค่าเริ่มต้นเป็น 0
-                            order.setQuantity(quantity); //จำนวนสินค้าที่สั่ง
+                            order.setQuantity(quantity); // จำนวนสินค้าที่สั่ง
 
                             // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
                             if(!isPositiveNumber(order.quantity)) {
@@ -1033,7 +1038,7 @@ public:
                                 // เปลี่ยนค่าใน stock มีจำนวนสินค้าที่เหลือตาม remain
                                 ::data.at(j).setStock(remain);
 
-                                // ต้องการตรวจสอบข้อมูลสินค้าที่สั่ง (order) นั้นเป็นสินค้าชิ้นเดียวกับที่เราพึ่งสั่งไป(สำค้าอันเดียวกับใน orders)
+                                // ต้องการตรวจสอบข้อมูลสินค้าที่สั่ง (order) นั้นเป็นสินค้าชิ้นเดียวกับที่เราพึ่งสั่งไป (สินค้าอันเดียวกับใน orders)
                                 // ให้เก็บข้อมูลนั้นเป็นข้อมูลเดียวกันโดยไม่ต้องเพิ่ม element ตัวใหม่เข้าไป
                                 int k = 0; // เลข index
                                 bool isDuplicate = false; // เป็นสินค้าซ้ำกันหรือไม่
@@ -1060,7 +1065,7 @@ public:
                                 // เขียนไฟล์ข้อมูล
                                 File::write();
                             }
-                                // สั่งสินค้าเกินจำนวนในคลัง
+                            // สั่งสินค้าเกินจำนวนในคลัง
                             else {
                                 program::showErrorMessage(" The quantity of products ordered is greater than the quantity of products in stock!");
                                 isRunning = false;
@@ -1069,7 +1074,9 @@ public:
                         }
                         j++;
                     }
-                } else {
+                }
+                // ชื่อ หรือ id ที่ใส่มาไม่อยู่ในข้อมูลแสดงข้อความ error
+                else {
                     string err[] = { "\"", input, "\"", " is not in data!" };
                     program::showErrorMessage(4, err);
                 }
@@ -1137,7 +1144,7 @@ int main(){
         else if(select == AddStock){
             ProductManagement::addStockProduct();
         }
-        // ออกจากโปรแกรม
+        // ล้างหน้าจอ
         else if(select == Clear){
             system("cls");
         }
@@ -1152,6 +1159,7 @@ int main(){
             program::showErrorMessage(4, err);
         }
     }
+
     return 0;
 }
 
@@ -1167,13 +1175,10 @@ namespace program {
 
         cout << endl << blue << "Product management program" << reset << endl;
         cout << "Current Time " << cyan;
-        // ถ้าเวลายังอยู่ในเลขระหว่าง 1 - 9 ให้ใส่เลข 0 ติดนำหน้าเลขไปด้วย
-        time.getHours() < 10 ? cout << "0" << time.getHours() << ":" : cout << time.getHours() << ":";
-        time.getMinutes() < 10 ? cout << "0" << time.getMinutes() << ":" : cout << time.getMinutes() << ":";
-        time.getSeconds() < 10 ? cout << "0" << time.getSeconds() : cout << time.getSeconds();
-        cout << reset << endl << endl;
+        cout << addZeroNumber(time.getHours()) << ":" << addZeroNumber(time.getMinutes()) << ":" << addZeroNumber(time.getSeconds()) << reset << endl << endl;
 
         string blank = " ";
+        // loop แสดงข้อความตัวเลือกของโปรแกรมโดยสีพื้นหลังจะต้องเท่ากัน
         for(int i = 0; i < 10; i++){
             if(i == 9) blank.clear();
             cout << on_bright_white << grey << " " << i + 1 << ". " << blank << reset << on_blue << grey << " " <<  meaningOfCommands[i];
@@ -1186,7 +1191,7 @@ namespace program {
         cout << on_yellow << grey << "Enter a number:" << reset;
     }
 
-    // function ในการแสดงข้อความ Error
+    // function ในการแสดงข้อความ error
     void showErrorMessage(string message){
         // แสดงข้อความตามสีรูปแบบทีกำหนด
         cout << on_bright_grey << red << " Error: " << reset << on_red << grey << " " << message << " " << reset << endl;
@@ -1238,5 +1243,12 @@ namespace program {
         }
 
         return id;
+    }
+
+    // funciton ในการเพิ่มเลข 0 นำหน้าตัวเลขเมื่อเลขนั้นน้อยกว่า 10
+    string addZeroNumber(int num){
+        string newNum = "0";
+        newNum.append(to_string(num));
+        return num < 10 ? newNum : to_string(num);
     }
 }
