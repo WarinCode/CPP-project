@@ -59,6 +59,7 @@ namespace program{
     void showSuccessfulMessage(string message);
     int generateId(int from, int to);
     string addZeroNumber(int num);
+    bool yesOrNo(string yn);
 }
 
 // class Time สำหรับการใช้บอกวันเวลาปัจจุบัน
@@ -841,7 +842,7 @@ public:
             ReceiveProduct p;
             // คำตอบที่ผู้ใช้งานตอบมีแค่ y หรือ n เท่านั้น
             typedef struct {
-                char yn1, yn2, yn3, yn4, yn5;
+                string yn1, yn2, yn3, yn4, yn5;
             } yesOrNo;
             yesOrNo yn;
 
@@ -849,95 +850,153 @@ public:
             for (Product item : ::data) {
                 // เช็คว่าเป็นสินค้าชิ้นนั้น
                 if (to_string(item.getId()) == input || item.getName() == input) {
+                    // แสดงข้อมูลสินค้าเพื่อที่จะแก้ไข
+                    cout << yellow << "You selected this product to edit." << reset << endl;
+                    cout << on_yellow << grey << " Product: " << item.getName() << "\tID: " << item.getId() << "\tPrice: " << item.getPrice() << "\tBrand: " << item.getBrand() << "\tCategory: " << item.getCategory() << " " << reset << endl << endl;
+
                     /*
                      * ถามว่าต้องการแก้ไขข้อมูลสินค้าในส่วนไหนบ้างโดยตอบ y และ n
                      * ถ้าตอบ y ให้ดำเนินการแก้ไขข้อมูลในส่วนนั้น ถ้าตอบ n หรืออื่นๆคือผ่าน
                      * ถามว่าต้องการแก้ไขชื่อสินค้าไหม
+                     * จะต้องตอบเป๋น y หรือ n เท่านั้นไม่งั้นจะ loop เรื่อยๆ
                     */
-                    cout << cyan << "Do you want to edit the product name (y/n):" << reset;
-                    cin >> yn.yn1;
-                    if(tolower(yn.yn1) == 'y'){
-                        cout << yellow << "New product name:" << reset;
-                        cin >> p.name;
-                        // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
-                        if(findProduct(p.name)){
-                            string err[5] = { " Cannot edit to name ", "\"", p.name, "\"", " because the name is the same as an existing product name." };
-                            program::showErrorMessage(5, err);
-                            return;
-                        } else {
-                            // แก้ไขชื่อสินค้า
-                            ::data.at(index).setName(p.name);
+                    while(true){
+                        cout << cyan << "Do you want to edit the product name (y/n):" << reset;
+                        cin >> yn.yn1;
+                        // เมื่อตอบ y
+                        if(program::yesOrNo(yn.yn1)){
+                            cout << yellow << "New product name:" << reset;
+                            cin >> p.name;
+                            // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
+                            if(findProduct(p.name)){
+                                string err[5] = { " Cannot edit to name ", "\"", p.name, "\"", " because the name is the same as an existing product name." };
+                                program::showErrorMessage(5, err);
+                                // clear ข้อความเก่าเพื่อรับข้อความใหม่
+                                yn.yn1.clear();
+                                cout << endl;
+                            } else {
+                                // แก้ไขชื่อสินค้า
+                                ::data.at(index).setName(p.name);
+                                // แสดงข้อความว่าแก้ไขสำเร็จ
+                                program::showSuccessfulMessage("edited product name.");
+                                // ออกจาก while loop
+                                break;
+                            }
+                        }
+                        // เมื่อตอบ n
+                        else if(!program::yesOrNo(yn.yn1) && tolower(yn.yn1.at(0)) == 'n' && yn.yn1.length() == 1){
+                            break;
+                        }
+                        // ไม่มีอยู่ในตัวเลือกทำให้วน loop ใหม่
+                        else {
+                            program::showErrorMessage("Please answer only \"y\" or \"n\" !");
                         }
                     }
 
-                    // ถามว่าต้องการแก้ไขชื่อรหัสสินค้าไหม
-                    cout << cyan << "Do you want to edit the product id (y/n):" << reset;
-                    cin >> yn.yn2;
-                    if(tolower(yn.yn2) == 'y'){
-                        cout << yellow << "New product id:" << reset;
-                        cin >> p.id;
-                        getchar();
-                        // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
-                        if(findProduct(p.id)){
-                            string err[] = { " Cannot edit to id ", "\"", to_string(p.id), "\"", " because the id is the same as an existing product id." };
-                            program::showErrorMessage(5, err);
-                            return;
+                    while(true){
+                        // ถามว่าต้องการแก้ไขชื่อรหัสสินค้าไหม
+                        cout << cyan << "Do you want to edit the product id (y/n):" << reset;
+                        cin >> yn.yn2;
+
+                        if(program::yesOrNo(yn.yn2)){
+                            cout << yellow << "New product id:" << reset;
+                            cin >> p.id;
+                            // ตรวจสอบว่า name ที่แก้ไขว่าซ้ำกันกับข้อมูลที่มีแล้วไหม
+                            if(findProduct(p.id)){
+                                string err[] = { " Cannot edit to id ", "\"", to_string(p.id), "\"", " because the id is the same as an existing product id." };
+                                program::showErrorMessage(5, err);
+                                yn.yn2.clear();
+                                cout << endl;
+                            } else {
+                                // แก้ไขรหัสสินค้า
+                                ::data.at(index).setId(p.id);
+                                program::showSuccessfulMessage("edited product id.");
+                                break;
+                            }
+                        } else if(!program::yesOrNo(yn.yn2) && tolower(yn.yn2.at(0)) == 'n' && yn.yn2.length() == 1){
+                            break;
                         } else {
-                            // แก้ไขรหัสสินค้า
-                            ::data.at(index).setId(p.id);
+                            program::showErrorMessage("Please answer only \"y\" or \"n\" !");
                         }
                     }
 
-                    // ถามว่าต้องการแก้ไขราคาสินค้าไหม
-                    cout << cyan << "Do you want to edit the product price (y/n):" << reset;
-                    cin >> yn.yn3;
-                    if(tolower(yn.yn3) == 'y'){
-                        cout << yellow << "New product price:" << reset;
-                        cin >> p.price;
-                        // ตรวจสอบว่าเป็นเลขจำนวนเต็มบวกหรือไม่
-                        if(!isPositiveNumber(p.price)){
-                            program::showErrorMessage("Invalid price, Please enter a positive number!");
-                            return;
+                    while(true){
+                        // ถามว่าต้องการแก้ไขราคาสินค้าไหม
+                        cout << cyan << "Do you want to edit the product price (y/n):" << reset;
+                        cin >> yn.yn3;
+
+                        if(program::yesOrNo(yn.yn3)){
+                            cout << yellow << "New product price:" << reset;
+                            cin >> p.price;
+                            // ตรวจสอบว่าเป็นเลขจำนวนเต็มบวกหรือไม่
+                            if(!isPositiveNumber(p.price)){
+                                program::showErrorMessage("Invalid price, Please enter a positive number!");
+                                return;
+                            } else {
+                                // แก้ไขราคาสินค้า
+                                ::data.at(index).setPrice(p.price);
+                                program::showSuccessfulMessage("edited product price.");
+                                break;
+                            }
+                        } else if(!program::yesOrNo(yn.yn3) && tolower(yn.yn3.at(0)) == 'n' && yn.yn3.length() == 1 ){
+                            break;
                         } else {
-                            // แก้ไขราคาสินค้า
-                            ::data.at(index).setPrice(p.price);
+                            program::showErrorMessage("Please answer only \"y\" or \"n\" !");
                         }
                     }
 
-                    // ถามว่าต้องการแก้ไขหมวดหมู่สินค้าไหม
-                    cout << cyan << "Do you want to edit the product category (y/n):" << reset;
-                    cin >> yn.yn4;
-                    if(tolower(yn.yn4) == 'y'){
-                        cout << yellow << "New product category:" << reset;
-                        cin >> p.category;
-                        // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
-                        if(!isCategory(p.category)){
-                            string err[4] = { "\"", p.category, "\"", " is not in categories of products!" };
-                            program::showErrorMessage(4, err);
-                            return;
+                    while(true){
+                        // ถามว่าต้องการแก้ไขหมวดหมู่สินค้าไหม
+                        cout << cyan << "Do you want to edit the product category (y/n):" << reset;
+                        cin >> yn.yn4;
+
+                        if(program::yesOrNo(yn.yn4)){
+                            cout << yellow << "New product category:" << reset;
+                            cin >> p.category;
+                            // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
+                            if(!isCategory(p.category)){
+                                string err[4] = { "\"", p.category, "\"", " is not in categories of products!" };
+                                program::showErrorMessage(4, err);
+                                return;
+                            } else {
+                                // แก้ไขหมวดหมู่สินค้า
+                                ::data.at(index).setCategory(p.category);
+                                program::showSuccessfulMessage("edited product category.");
+                                break;
+                            }
+                        } else if(!program::yesOrNo(yn.yn4) && tolower(yn.yn4.at(0)) == 'n' && yn.yn4.length() == 1){
+                            break;
                         } else {
-                            // แก้ไขหมวดหมู่สินค้า
-                            ::data.at(index).setCategory(p.category);
+                            program::showErrorMessage("Please answer only \"y\" or \"n\" !");
                         }
                     }
 
-                    // ถามว่าต้องการแก้ไขชื่อแบรนด์สินค้าไหม
-                    cout << cyan << "Do you want to edit the brand product (y/n):" << reset;
-                    cin >> yn.yn5;
-                    if(tolower(yn.yn5) == 'y'){
-                        cout << yellow << "New brand product:" << reset;
-                        cin >> p.brand;
-                        // แก้ไขแบรนด์สินค้า
-                        ::data.at(index).setBrand(p.brand);
+                    while(true){
+                        // ถามว่าต้องการแก้ไขชื่อแบรนด์สินค้าไหม
+                        cout << cyan << "Do you want to edit the brand product (y/n):" << reset;
+                        cin >> yn.yn5;
+
+                        if(program::yesOrNo(yn.yn5)){
+                            cout << yellow << "New brand product:" << reset;
+                            cin >> p.brand;
+                            // แก้ไขแบรนด์สินค้า
+                            ::data.at(index).setBrand(p.brand);
+                            program::showSuccessfulMessage("edited product brand name.");
+                            break;
+                        } else if(!program::yesOrNo(yn.yn5) && tolower(yn.yn5.at(0)) == 'n' && yn.yn5.length() == 1){
+                            break;
+                        } else {
+                            program::showErrorMessage("Please answer only \"y\" or \"n\" !");
+                        }
                     }
-                    // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop
+
+                    // เมื่อเจอสินค้าที่ระบุแล้วให้หยุด loop (ออกจาก for loop)
                     break;
                 }
                 index++;
             }
             // อัปเดตข้อมูล
             File::update();
-            program::showSuccessfulMessage("Successfully edited product");
         }
         // ไม่มีสินค้านั้นอยู่ในข้อมูลแสดงช้อความ error
         else {
@@ -1019,7 +1078,7 @@ public:
 
                             // จำนวนสินค้าต้องเป็นเลขจำนวนเต็มบวก
                             if(!isPositiveNumber(order.quantity)) {
-                                program::showErrorMessage(" Invalid quantity, Please enter a positive number!");
+                                program::showErrorMessage("Invalid quantity, Please enter a positive number!");
                                 isRunning = false;
                                 return;
                             }
@@ -1250,5 +1309,15 @@ namespace program {
         string newNum = "0";
         newNum.append(to_string(num));
         return num < 10 ? newNum : to_string(num);
+    }
+
+    // function ในการรับข้อมูลนั้นเป็น y หรือ n ไหม ถ้าเป็น y คืน true ถ้าเป็น n หรือตัวอื่นๆจะคืน false
+    bool yesOrNo(string yn){
+        // ตัวอักษรนั้นต้องเป็น 1 ตัวอักษร
+        if(yn.length() == 1){
+            return tolower(yn.at(0)) == 'y';
+        } else {
+            return false;
+        }
     }
 }
