@@ -6,7 +6,7 @@
 
 > ส่งงาน project วิชา Computer Programming ปี 1 ภาคปลาย
 
-<h1 align="center">โปรแกรมระบบจัดการสินค้า</h1>
+<h1 align="center">โปรแกรมจัดการสินค้า</h1>
 
 โดยโปรเจคนี้มีทั้งหมด 2 branches ได้แก่
 1. <code>main</code> เป็น branch ที่มีการใช้ libraries ซึ่งค่อนข้างยุ่งยากถ้าหากไม่สามารถใช้งาน branch นี้ได้ให้ใช้อีก branch นึงคือ
