@@ -57,6 +57,7 @@ namespace program{
     void showErrorMessage(string message);
     void showErrorMessage(int size, string message[]);
     void showSuccessfulMessage(string message);
+    void showProductCategories();
     int generateId(int from, int to);
     string addZeroNumber(int num);
     bool yesOrNo(string yn);
@@ -667,15 +668,8 @@ public:
     static void addProduct(int id){
         string selectCategory;
 
-        cout << "Product categories ";
-        char comma = ',';
-        int count = 0;
-        // แสดงหมวดหมู่ของสินค้าที่สามารถเพิ่มได้
-        for(string category : productCategories){
-            cout << green << "\"" << category << "\"" << reset;
-            if(count != NUMBER_CATEGORIES - 1) cout << comma << ' ';
-            count++;
-        }
+        // แสดงหมวดหมู่สินค้าให้เลือกเพิ่มสินค้า
+        program::showProductCategories();
 
         cout << endl << yellow <<  "Select product category:" << reset;
         cin >> selectCategory;
@@ -693,7 +687,7 @@ public:
                 program::showErrorMessage("The new product name must not be duplicated with the product that already has this name!");
                 return;
             }
-                // ห้ามตั้งชื่อสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
+            // ห้ามตั้งชื่อสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
             else if(isdigit(p.name.at(0))){
                 program::showErrorMessage("Do not name the product beginning with a number!");
                 return;
@@ -873,7 +867,12 @@ public:
                                 program::showErrorMessage(5, err);
                                 // clear ข้อความเก่าเพื่อรับข้อความใหม่
                                 yn.yn1.clear();
-                                cout << endl;
+                            }
+                            // ห้ามตั้งชื่อสินค้าอักษรตัวแรกขึ้นต้นด้วยตัวเลข
+                            else if(isdigit(p.name.at(0))){
+                                program::showErrorMessage("Do not name the product beginning with a number!");
+                                // clear ข้อความเก่าเพื่อรับข้อความใหม่
+                                yn.yn1.clear();
                             } else {
                                 // แก้ไขชื่อสินค้า
                                 ::data.at(index).setName(p.name);
@@ -951,6 +950,9 @@ public:
                         cin >> yn.yn4;
 
                         if(program::yesOrNo(yn.yn4)){
+                            // แสดงหมวดหมู่สินค้าที่ให้เลือกแก้ไขหมวดหมู่สินค้า
+                            program::showProductCategories();
+                            cout << endl << yellow << "Select a product category to edit." << reset;
                             cout << yellow << "New product category:" << reset;
                             cin >> p.category;
                             // ตรวจสอบว่าอยู่ในหมวดหมู่สินค้าที่ได้กำหนดไว้หรือไม่
@@ -1269,6 +1271,19 @@ namespace program {
     void showSuccessfulMessage(string message){
         // แสดงข้อความตามสีรูปแบบทีกำหนด
         cout << on_bright_grey << green << " Successfully: " << reset << on_green << grey << " " << message << " " << reset << endl;
+    }
+
+    // fucntion ในการแสดงหมวดหมู่สินค้าทั้งหมด
+    void showProductCategories(){
+        cout << "Product categories ";
+        char comma = ',';
+        int count = 0;
+        // แสดงหมวดหมู่ของสินค้าที่สามารถเพิ่มได้
+        for(string category : productCategories){
+            cout << green << "\"" << category << "\"" << reset;
+            if(count != NUMBER_CATEGORIES - 1) cout << comma << ' ';
+            count++;
+        }
     }
 
     // function ในการสร้างเลข id โดยที่เลข id จะสุ่มเลขอยู่ระหว่าง from ถึง to

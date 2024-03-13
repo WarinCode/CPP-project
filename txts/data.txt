@@ -1,4 +1,4 @@
-9452	iPhone15Pro	1368.17	20	Apple	phone
+9452	iPhone15Pro	1368.17	19	Apple	phone
 3423	iPhone15ProMax	1172.31	20	Apple	phone
 1093	iPhone15	920.5	20	Apple	phone
 8394	iPhone15Plus	1060.4	20	Apple	phone
@@ -9,7 +9,7 @@
 3045	iPhone13Pro	720.85	20	Apple	phone
 5064	iPhone13ProMax	776.51	20	Apple	phone
 1032	iPhone13mini	637.35	20	Apple	phone
-1304	iPhone13	692.99	20	Apple	phone
+1304	iPhone13	692.99	17	Apple	phone
 4064	iPhone12Pro	609.52	20	Apple	phone
 4502	iPhone12ProMax	665.18	20	Apple	phone
 1232	iPhone12mini	720.85	20	Apple	phone
@@ -40,14 +40,15 @@
 2948	OPPO-Reno11	417.2	17	Oppo	phone
 4352	SamsungGalaxy-A05s	138.88	18	Samsung	phone
 4636	Asus-Vivobook-Go15	275.54	20	ASUS	laptop
-5132	Apple-iMac24	1583.64	16	Apple	computer
+5132	Apple-iMac24	1583.64	14	Apple	computer
 5488	ACER-DESKTOP-AIO-Aspire-C24	681.88	20	ACER	computer
-5740	MSI-Raider-GE68HX	2198.44	17	MSI	laptop
+5740	MSI-Raider-GE68HX	2198.44	15	MSI	laptop
 6066	Asus-TUF-Gaming-F15	556.36	20	ASUS	laptop
-6435	Lenovo-Tab-P11	389.37	20	Lenovo	tablet
-7526	Xiaomi-Pad6	361.54	16	XIAOMI	tablet
-8365	OPPO-Pad-Neo-LTE	303.37	13	OPPO	tablet
+6435	Lenovo-Tab-P11	389.37	17	Lenovo	tablet
+7526	Xiaomi-Pad6	361.54	14	XIAOMI	tablet
+8365	OPPO-Pad-Neo-LTE	303.37	0	OPPO	tablet
 8777	Asus-ROG-Phone-8Pro	1057.33	17	ASUS	phone
 7512	tesla-model-x	50000	20	Tesla	car
 9889	tesla-model-y	60000	19	Tesla	car
-5656	tesla-model-e	30000	18	Tesla	car
+5656	tesla-model-e	30000	16	Tesla	car
+7218	Nike-Zoom-Vomero5	167.93	25	Nike	shoes

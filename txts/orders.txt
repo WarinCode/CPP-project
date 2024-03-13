@@ -49,3 +49,38 @@ CONCLUSION:
 Total number of products = 8
 Total amount = 400000 dollar.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATE: Friday 8 March 2024
+TIME: 10:28:28
+LIST:
+1.) PRODUCT_NAME = tesla-model-e,		ID = 5656,		PRICE = 30000,		 QUANTITY = 2,		 SUM = 60000,		 BRAND = Tesla,		 CATEGORY = car
+2.) PRODUCT_NAME = MSI-Raider-GE68HX,		ID = 5740,		PRICE = 2198.44,		 QUANTITY = 2,		 SUM = 4396.88,		 BRAND = MSI,		 CATEGORY = laptop
+3.) PRODUCT_NAME = Xiaomi-Pad6,		ID = 7526,		PRICE = 361.54,		 QUANTITY = 1,		 SUM = 361.54,		 BRAND = XIAOMI,		 CATEGORY = tablet
+CONCLUSION:
+Total number of products = 5
+Total amount = 64758.4 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------DATE: Tuesday 12 March 2024
+DATE: Tuesday 12 March 2024
+TIME: 22:08:10
+LIST:
+1.) PRODUCT_NAME = iPhone13,		ID = 1304,		PRICE = 692.99,		 QUANTITY = 3,		 SUM = 2078.97,		 BRAND = Apple,		 CATEGORY = phone
+2.) PRODUCT_NAME = Apple-iMac24,		ID = 5132,		PRICE = 1583.64,		 QUANTITY = 2,		 SUM = 3167.28,		 BRAND = Apple,		 CATEGORY = computer
+CONCLUSION:
+Total number of products = 5
+Total amount = 5246.25 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATE: Tuesday 12 March 2024
+TIME: 22:34:53
+LIST:
+1.) PRODUCT_NAME = Xiaomi-Pad6,		ID = 7526,		PRICE = 361.54,		 QUANTITY = 1,		 SUM = 361.54,		 BRAND = XIAOMI,		 CATEGORY = tablet
+CONCLUSION:
+Total number of products = 1
+Total amount = 361.54 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DATE: Tuesday 12 March 2024
+TIME: 23:43:51
+LIST:
+1.) PRODUCT_NAME = OPPO-Pad-Neo-LTE,		ID = 8365,		PRICE = 303.37,		 QUANTITY = 13,		 SUM = 3943.81,		 BRAND = OPPO,		 CATEGORY = tablet
+CONCLUSION:
+Total number of products = 13
+Total amount = 3943.81 dollar.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
